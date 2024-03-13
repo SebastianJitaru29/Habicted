@@ -1,4 +1,4 @@
-📱 # Group Habit Tracking App Read Me
+# Group Habit Tracking App Read Me 📱
 
 Welcome to our group habit tracking app repository! This Read Me provides an overview of our project, its purpose, features, and how to set it up for development or production use.
 
