@@ -21,10 +21,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
@@ -35,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import com.example.habicted_app.R
 import com.example.habicted_app.ui.theme.HabictedAppTheme
 import com.example.habicted_app.ui.theme.righteousFamily
+import com.example.habicted_app.utils.ValidateEmail
 
 @Composable
 fun WelcomeScreen(
@@ -106,14 +109,20 @@ fun ActionButtons(onLogIn: () -> Unit, onSignUp: () -> Unit) {
 }
 
 @Composable
-fun EmailInputField() {
-    //TODO: Implement viewModel
-    var email by rememberSaveable { mutableStateOf("") }
+fun EmailInputField(modifier: Modifier = Modifier) {
+    //TODO: use viewModel if needed
+    var emailInput by rememberSaveable { mutableStateOf("") }
+    var isFocused by remember { mutableStateOf(false) }
+    var hasBeenTouched by rememberSaveable { mutableStateOf(false) }
+
+    fun isEmailValid(email: String): Boolean {
+        return ValidateEmail().validate(email).successful
+    }
 
     OutlinedTextField(
-        value = email,
+        value = emailInput,
         onValueChange = {
-            email = it
+            emailInput = it
         },
         label = {
             Text(
@@ -121,10 +130,28 @@ fun EmailInputField() {
                 style = MaterialTheme.typography.bodyMedium,
             )
         },
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .onFocusChanged { focusState ->
+                isFocused = focusState.isFocused
+                if (!hasBeenTouched && focusState.isFocused) {
+                    hasBeenTouched = true
+                }
+            },
         textStyle = MaterialTheme.typography.bodyMedium,
-        singleLine = true
+        singleLine = true,
+        isError = !isEmailValid(emailInput) && hasBeenTouched && !isFocused,
+        supportingText = {
+            if (!isEmailValid(emailInput) && hasBeenTouched && !isFocused) {
+                ValidateEmail().validate(emailInput).errorMessage?.let {
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            }
+        }
     )
 }
 
