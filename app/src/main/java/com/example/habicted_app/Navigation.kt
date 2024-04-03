@@ -12,7 +12,7 @@ import com.example.habicted_app.Destinations.MAIN_ROUTE
 import com.example.habicted_app.Destinations.REGISTER_ROUTE
 import com.example.habicted_app.Destinations.WELCOME_ROUTE
 import com.example.habicted_app.routes.WelcomeRoute
-import com.example.habicted_app.screen.LoginPage
+import com.example.habicted_app.screen.RegisterScreen
 
 object Destinations {
     const val WELCOME_ROUTE = "welcome"
@@ -42,7 +42,7 @@ fun HabiictedNavHost(
                 )
             }
             composable(route = REGISTER_ROUTE) {
-                LoginPage(navController)
+                RegisterScreen(navController)
             }
         }
         navigation(startDestination = HOME_ROUTE, route = MAIN_ROUTE) {
