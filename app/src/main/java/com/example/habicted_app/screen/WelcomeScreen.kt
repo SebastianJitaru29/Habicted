@@ -73,7 +73,7 @@ fun ActionButtons(onLogIn: () -> Unit, onSignUp: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Button(
-            onClick = onLogIn,
+            onClick = onLogIn, //TODO: check no errors in text fields then check if credentials ok
             shape = RoundedCornerShape(49.dp),
             modifier = Modifier
                 .fillMaxWidth()
@@ -104,7 +104,7 @@ fun ActionButtons(onLogIn: () -> Unit, onSignUp: () -> Unit) {
 @Composable
 fun PreviewEmailOutlinedTextField() {
     HabictedAppTheme {
-        WelcomeScreen(onLogIn = { }, onSignUp = {})
+        WelcomeScreen(onLogIn = {}, onSignUp = {})
     }
 }
 

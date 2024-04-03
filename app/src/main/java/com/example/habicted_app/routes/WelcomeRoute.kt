@@ -7,15 +7,15 @@ import com.example.habicted_app.viewModels.WelcomeViewModel
 
 @Composable
 fun WelcomeRoute(
-    onNavigateToLogIn: () -> Unit,
+    onConfirmLogIn: () -> Unit,
     onNavigateToSignUp: () -> Unit,
 ) {
     val welcomeViewModel: WelcomeViewModel = viewModel()
 
     WelcomeScreen(
         onLogIn = {
-//            if (welcomeViewModel.handleLogIn())
-            onNavigateToLogIn()
+            // If login ok then do:
+            onConfirmLogIn()
         },
         onSignUp = onNavigateToSignUp
 //        onSignInSignUp = { email ->
