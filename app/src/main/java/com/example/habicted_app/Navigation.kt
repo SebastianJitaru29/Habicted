@@ -13,6 +13,7 @@ import com.example.habicted_app.Destinations.REGISTER_ROUTE
 import com.example.habicted_app.Destinations.WELCOME_ROUTE
 import com.example.habicted_app.routes.RegisterRoute
 import com.example.habicted_app.routes.WelcomeRoute
+import com.example.habicted_app.screen.MainScreen
 
 object Destinations {
     const val WELCOME_ROUTE = "welcome"
@@ -30,7 +31,7 @@ fun HabiictedNavHost(
         navigation(startDestination = LOG_IN_ROUTE, route = WELCOME_ROUTE) {
             composable(route = LOG_IN_ROUTE) {
                 WelcomeRoute(
-                    onNavigateToLogIn = {
+                    onConfirmLogIn = {
                         navController.navigate(MAIN_ROUTE) {
                             // when the user navigates to the MAIN_ROUTE, they won't be able to go back to the LOG_IN_ROUTE
                             popUpTo(WELCOME_ROUTE) { inclusive = true }
@@ -47,8 +48,7 @@ fun HabiictedNavHost(
         }
         navigation(startDestination = HOME_ROUTE, route = MAIN_ROUTE) {
             composable(route = HOME_ROUTE) {
-                Greeting(name = "world")
-
+                MainScreen()
             }
         }
     }
