@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import com.example.habicted_app.Greeting
 import com.example.habicted_app.R
+import com.example.habicted_app.screen.GroupScreen
 
 interface HomeDestination {
     val icon: @Composable () -> Unit
@@ -41,7 +42,7 @@ object Groups : HomeDestination {
             )
         }
     override val route = "home"
-    override val screen = @Composable { Greeting(name = "Groups") }
+    override val screen = @Composable { GroupScreen()}
 }
 
 object Settings : HomeDestination {

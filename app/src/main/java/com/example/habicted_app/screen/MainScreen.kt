@@ -1,5 +1,6 @@
 package com.example.habicted_app.screen
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,18 +20,20 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.habicted_app.routes.HomeDestination
 import com.example.habicted_app.routes.Overview
 import com.example.habicted_app.routes.allItemsNav
 import com.example.habicted_app.ui.theme.HabictedAppTheme
+import kotlin.coroutines.coroutineContext
 
 @Composable
 fun MainScreen(modifier: Modifier = Modifier) {
     var currentIndex: Int by rememberSaveable {
         mutableStateOf(0)
     }
-
+    val context = LocalContext.current
 
     Scaffold(
         bottomBar = {
@@ -46,7 +49,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { /*TODO*/ }
+                onClick = { Toast.makeText(context,"clicked",Toast.LENGTH_LONG).show() }
             ) {
                 Icon(Icons.Filled.Add, "Floating action button.")
             }
