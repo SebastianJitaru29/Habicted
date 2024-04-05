@@ -1,19 +1,12 @@
 package com.example.habicted_app.routes
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import com.example.habicted_app.Greeting
 import com.example.habicted_app.R
 import com.example.habicted_app.screen.GroupScreen
-import com.example.habicted_app.screen.TaskScreen
+import com.example.habicted_app.screen.taskscreen.TaskScreen
 
 interface HomeDestination {
     val icon: @Composable () -> Unit
@@ -31,7 +24,7 @@ object Overview : HomeDestination {
             )
         }
     override val route = "home"
-    override val screen = @Composable { TaskScreen()}
+    override val screen = @Composable { TaskScreen() }
 }
 
 object Groups : HomeDestination {
