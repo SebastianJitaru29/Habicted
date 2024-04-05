@@ -1,8 +1,8 @@
-package com.example.habicted_app.screen.taskscreen
+package com.example.habicted_app.screen.taskscreen.data
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.material3.SelectableDates
+import com.example.habicted_app.screen.taskscreen.models.CalendarUiModel
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
@@ -14,7 +14,7 @@ class CalendarDataSource {
         @RequiresApi(Build.VERSION_CODES.O)
         get() {return LocalDate.now()}
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getData(startDate: LocalDate = today, lastSelectedDate:LocalDate): CalendarUiModel{
+    fun getData(startDate: LocalDate = today, lastSelectedDate:LocalDate): CalendarUiModel {
         val firstDayOfWeek = startDate.with(DayOfWeek.MONDAY)
         val endDayOfWeek = firstDayOfWeek.plusDays(7)
         val visibleDates = getDatesBetween(firstDayOfWeek,endDayOfWeek)

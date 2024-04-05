@@ -1,18 +1,18 @@
-package com.example.habicted_app.screen.taskscreen
+package com.example.habicted_app.screen.taskscreen.models
 
 import android.os.Build
 import androidx.annotation.RequiresApi
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.Date
+
 //Data class to hold real calendar data
 
 data class CalendarUiModel(
-    val selectedDate:Date,  //Date selected by the user
+    val selectedDate: Date,  //Date selected by the user
     val visibleDates: List<Date> //Dates shown in the UI
 ){
     val startDate: Date = visibleDates.first()
-    val endDate:  Date = visibleDates.last()
+    val endDate: Date = visibleDates.last()
 
     data class Date(
         val date: LocalDate,
