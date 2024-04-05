@@ -30,7 +30,7 @@ object Overview : HomeDestination {
             )
         }
     override val route = "home"
-    override val screen = @Composable { Greeting(name = "HOME") }
+    override val screen = @Composable { Greeting(name = "TASKS SCREEN") }
 }
 
 object Groups : HomeDestination {

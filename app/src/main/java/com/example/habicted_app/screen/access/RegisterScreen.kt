@@ -1,4 +1,4 @@
-package com.example.habicted_app.screen
+package com.example.habicted_app.screen.access
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,6 +27,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.habicted_app.R
+import com.example.habicted_app.screen.EmailInputField
+import com.example.habicted_app.screen.PasswordInputField
 import com.example.habicted_app.ui.theme.righteousFamily
 
 @OptIn(ExperimentalMaterial3Api::class)

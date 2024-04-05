@@ -1,7 +1,9 @@
-package com.example.habicted_app.screen
+package com.example.habicted_app.screen.access
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +18,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +28,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.habicted_app.R
+import com.example.habicted_app.screen.EmailInputField
+import com.example.habicted_app.screen.PasswordInputField
 import com.example.habicted_app.ui.theme.HabictedAppTheme
 import com.example.habicted_app.ui.theme.righteousFamily
 
@@ -33,6 +38,7 @@ fun WelcomeScreen(
     modifier: Modifier = Modifier,
     onLogIn: () -> Unit,
     onSignUp: () -> Unit,
+    onForgotedPassword: () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -60,18 +66,34 @@ fun WelcomeScreen(
                     style = MaterialTheme.typography.bodyMedium,
                 )
             }
+
         }
-        Spacer(modifier = Modifier.height(32.dp))
-        ActionButtons(onLogIn = onLogIn, onSignUp = onSignUp)
+
+        Spacer(modifier = Modifier.height(10.dp))
+        ActionButtons(onLogIn = onLogIn, onSignUp = onSignUp, onForgotedPassword = onForgotedPassword)
     }
 }
 
 @Composable
-fun ActionButtons(onLogIn: () -> Unit, onSignUp: () -> Unit) {
+fun ActionButtons(onLogIn: () -> Unit, onSignUp: () -> Unit, onForgotedPassword: () ->Unit) {
+
+
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+        Row(
+            horizontalArrangement = Arrangement.End,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            TextButton(
+                onClick = onForgotedPassword,
+            ) {
+                Text(text = stringResource(id = R.string.forgotpass))
+            }
+        }
+
         Button(
             onClick = onLogIn, //TODO: check no errors in text fields then check if credentials ok
             shape = RoundedCornerShape(49.dp),
@@ -104,7 +126,7 @@ fun ActionButtons(onLogIn: () -> Unit, onSignUp: () -> Unit) {
 @Composable
 fun PreviewEmailOutlinedTextField() {
     HabictedAppTheme {
-        WelcomeScreen(onLogIn = {}, onSignUp = {})
+        WelcomeScreen(onLogIn = {}, onSignUp = {}, onForgotedPassword = {})
     }
 }
 
