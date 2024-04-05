@@ -145,7 +145,7 @@ fun CalendarHeader(){
 fun CalendarApp(modifier: Modifier=Modifier){
     Column(modifier= modifier.fillMaxSize()) {
         CalendarHeader()
-        com.example.habicted_app.screen.CalendarContent()
+        CalendarContent()
     }
 }
 
@@ -181,8 +181,8 @@ fun CalendarItem(day:String,date:String){
 @Composable
 fun CalendarContent(modifier: Modifier = Modifier){
     LazyRow {
-        items(items = List(7) { Pair("Sun", "21") }) { date ->
-            CalendarItem(date.first, date.second)
+        items(count = 7) { index ->
+            CalendarItem(day = "Day ${index + 1}", date = "21") // Assuming 21 is the date
         }
     }
 }
