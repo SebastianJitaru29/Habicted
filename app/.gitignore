@@ -1,2 +1,29 @@
 /build
-/.idea
+# Android Studio
+*.iml
+.gradle/
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+/.idea/modules.xml
+/.idea/.name
+/.idea/compiler.xml
+/.idea/gradle.xml
+/.idea/misc.xml
+/.idea/modules
+/.idea/vcs.xml
+/.idea/assetWizardSettings.xml
+
+# Gradle
+build/
+captures/
+
+# Android
+*.apk
+*.ap_
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
