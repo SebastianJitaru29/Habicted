@@ -13,6 +13,7 @@ import androidx.compose.ui.res.painterResource
 import com.example.habicted_app.Greeting
 import com.example.habicted_app.R
 import com.example.habicted_app.screen.GroupScreen
+import com.example.habicted_app.screen.TaskScreen
 
 interface HomeDestination {
     val icon: @Composable () -> Unit
@@ -30,7 +31,7 @@ object Overview : HomeDestination {
             )
         }
     override val route = "home"
-    override val screen = @Composable { Greeting(name = "TASKS SCREEN") }
+    override val screen = @Composable { TaskScreen()}
 }
 
 object Groups : HomeDestination {
