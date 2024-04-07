@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.habicted_app.routes.HomeDestination
 import com.example.habicted_app.routes.Overview
@@ -36,6 +37,8 @@ fun MainScreen(navController: NavHostController, modifier: Modifier = Modifier) 
         mutableStateOf(0)
     }
     val context = LocalContext.current
+    val navBackStackEntry = navController.currentBackStackEntryAsState().value
+    val currentDestination = navBackStackEntry?.destination?.route
 
     Scaffold(
         bottomBar = {
@@ -51,11 +54,28 @@ fun MainScreen(navController: NavHostController, modifier: Modifier = Modifier) 
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { Toast.makeText(context,"clicked",Toast.LENGTH_LONG).show() }
+                onClick = {
+                    // Check the current destination
+                    when (currentDestination) { //Aixo no funcionara a no ser que cambiem tema rutes
+                        "main" -> {
+                            // Show "Hello" message if on screen A
+                            Toast.makeText(context, "Hello", Toast.LENGTH_SHORT).show()
+                        }
+                        "home" -> {
+                            // Show "World" message if on screen B
+                            Toast.makeText(context, "World", Toast.LENGTH_SHORT).show()
+                        }
+                        // Add more cases for other screens if needed
+                        else -> {
+                            // Handle other cases or do nothing
+                        }
+                    }
+                }
             ) {
                 Icon(Icons.Filled.Add, "Floating action button.")
             }
         }
+
     ) { innerPadding ->
 
         Box(modifier = modifier.padding(innerPadding)) {
@@ -65,6 +85,7 @@ fun MainScreen(navController: NavHostController, modifier: Modifier = Modifier) 
 }
 
 @Composable
+@Preview
 fun NavBarPrev() {
     val navController = rememberNavController()
     HabictedAppTheme {

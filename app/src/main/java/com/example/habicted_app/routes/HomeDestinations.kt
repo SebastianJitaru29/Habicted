@@ -1,5 +1,6 @@
 package com.example.habicted_app.routes
 
+import SettingsScreen
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.material3.Icon
@@ -59,7 +60,7 @@ object Settings : HomeDestination {
     override val route = "settings"
     override val screen = @Composable { navController: NavHostController ->
         // Replace Greeting with your actual settings screen implementation
-        Greeting(name = "Settings")
+        SettingsScreen()
     }
 }
 

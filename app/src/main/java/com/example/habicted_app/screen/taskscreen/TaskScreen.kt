@@ -26,11 +26,13 @@ import androidx.compose.ui.unit.dp
 import com.example.habicted_app.R
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.habicted_app.screen.taskscreen.components.CalendarApp
+import com.example.habicted_app.sensor.BiometricPromptManager
 import com.example.habicted_app.ui.theme.HabictedAppTheme
 
 @RequiresApi(Build.VERSION_CODES.O)
