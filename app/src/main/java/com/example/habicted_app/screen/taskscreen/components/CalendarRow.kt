@@ -1,10 +1,11 @@
-package com.example.habicted_app.screen.taskscreen
+package com.example.habicted_app.screen.taskscreen.components
 
 import TaskListApp
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,7 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.habicted_app.screen.taskscreen.data.CalendarDataSource
-import com.example.habicted_app.screen.taskscreen.models.CalendarUiModel
+import com.example.habicted_app.screen.taskscreen.data.CalendarData
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -43,7 +44,7 @@ fun CalendarApp(modifier: Modifier = Modifier) {
     // we use `mutableStateOf` and `remember` inside composable function to schedules recomposition
     var calendarUiModel by remember { mutableStateOf(dataSource.getData(lastSelectedDate = dataSource.today)) }
 
-    Column(modifier = modifier.fillMaxSize()) {
+    Column(modifier = modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         CalendarHeader(
             data = calendarUiModel,
             onPrevClickListener = { startDate ->
@@ -73,14 +74,14 @@ fun CalendarApp(modifier: Modifier = Modifier) {
         })
         Spacer(modifier = Modifier.height(16.dp))
 
-        Column (modifier.align(Alignment.CenterHorizontally)){
+        Column (modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally){
             TaskListApp()
         }
     }
 }
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CalendarHeader(data: CalendarUiModel, onPrevClickListener: (LocalDate) -> Unit,
+fun CalendarHeader(data: CalendarData, onPrevClickListener: (LocalDate) -> Unit,
                    onNextClickListener: (LocalDate) -> Unit,){
 
     Row {
@@ -108,8 +109,8 @@ fun CalendarHeader(data: CalendarUiModel, onPrevClickListener: (LocalDate) -> Un
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CalendarContent(data: CalendarUiModel,
-                    onDateClickListener: (CalendarUiModel.Date) -> Unit,){
+fun CalendarContent(data: CalendarData,
+                    onDateClickListener: (CalendarData.Date) -> Unit,){
     LazyRow {
         items(items = data.visibleDates) { date ->
             CalendarItem(
@@ -121,7 +122,7 @@ fun CalendarContent(data: CalendarUiModel,
 }
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CalendarItem(date: CalendarUiModel.Date, onClickListener: (CalendarUiModel.Date) -> Unit){
+fun CalendarItem(date: CalendarData.Date, onClickListener: (CalendarData.Date) -> Unit){
     Card(
         modifier = Modifier
             .padding(vertical = 4.dp, horizontal = 4.dp)

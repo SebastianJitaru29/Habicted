@@ -22,6 +22,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.habicted_app.routes.HomeDestination
 import com.example.habicted_app.routes.Overview
 import com.example.habicted_app.routes.allItemsNav
@@ -29,7 +31,7 @@ import com.example.habicted_app.ui.theme.HabictedAppTheme
 import kotlin.coroutines.coroutineContext
 
 @Composable
-fun MainScreen(modifier: Modifier = Modifier) {
+fun MainScreen(navController: NavHostController, modifier: Modifier = Modifier) {
     var currentIndex: Int by rememberSaveable {
         mutableStateOf(0)
     }
@@ -57,17 +59,17 @@ fun MainScreen(modifier: Modifier = Modifier) {
     ) { innerPadding ->
 
         Box(modifier = modifier.padding(innerPadding)) {
-            allItemsNav.get(currentIndex).screen()
+            allItemsNav.get(currentIndex).screen(navController)
         }
     }
 }
 
-
-@Preview
 @Composable
 fun NavBarPrev() {
+    val navController = rememberNavController()
     HabictedAppTheme {
-        MainScreen()
+        MainScreen(navController = navController)
     }
 }
+
 

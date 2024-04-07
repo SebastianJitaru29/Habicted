@@ -2,7 +2,6 @@ package com.example.habicted_app.screen.taskscreen.data
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.example.habicted_app.screen.taskscreen.models.CalendarUiModel
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
@@ -14,7 +13,7 @@ class CalendarDataSource {
         @RequiresApi(Build.VERSION_CODES.O)
         get() {return LocalDate.now()}
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getData(startDate: LocalDate = today, lastSelectedDate:LocalDate): CalendarUiModel {
+    fun getData(startDate: LocalDate = today, lastSelectedDate:LocalDate): CalendarData {
         val firstDayOfWeek = startDate.with(DayOfWeek.MONDAY)
         val endDayOfWeek = firstDayOfWeek.plusDays(7)
         val visibleDates = getDatesBetween(firstDayOfWeek,endDayOfWeek)
@@ -36,8 +35,8 @@ class CalendarDataSource {
     private fun toUiModel(
         dateList: List<LocalDate>,
         lastSelectedDate: LocalDate
-    ): CalendarUiModel {
-        return CalendarUiModel(
+    ): CalendarData {
+        return CalendarData(
             selectedDate = toItemUiModel(lastSelectedDate, true),
             visibleDates = dateList.map {
                 toItemUiModel(it, it.isEqual(lastSelectedDate))
@@ -46,7 +45,7 @@ class CalendarDataSource {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun toItemUiModel(date: LocalDate, isSelectedDate: Boolean) = CalendarUiModel.Date(
+    private fun toItemUiModel(date: LocalDate, isSelectedDate: Boolean) = CalendarData.Date(
         isSelected = isSelectedDate,
         isToday = date.isEqual(today),
         date = date,

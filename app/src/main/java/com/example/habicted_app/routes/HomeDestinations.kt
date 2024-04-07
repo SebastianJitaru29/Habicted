@@ -1,8 +1,11 @@
 package com.example.habicted_app.routes
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
+import androidx.navigation.NavHostController
 import com.example.habicted_app.Greeting
 import com.example.habicted_app.R
 import com.example.habicted_app.screen.GroupScreen
@@ -11,7 +14,7 @@ import com.example.habicted_app.screen.taskscreen.TaskScreen
 interface HomeDestination {
     val icon: @Composable () -> Unit
     val route: String
-    val screen: @Composable () -> Unit
+    val screen: @Composable (NavHostController) -> Unit
 }
 
 
@@ -24,7 +27,10 @@ object Overview : HomeDestination {
             )
         }
     override val route = "home"
-    override val screen = @Composable { TaskScreen() }
+    @RequiresApi(Build.VERSION_CODES.O)
+    override val screen = @Composable { navController: NavHostController ->
+        TaskScreen(navController = navController)
+    }
 }
 
 object Groups : HomeDestination {
@@ -35,8 +41,11 @@ object Groups : HomeDestination {
                 contentDescription = "Groups"
             )
         }
-    override val route = "home"
-    override val screen = @Composable { GroupScreen()}
+    override val route = "groups"
+    override val screen = @Composable { navController: NavHostController ->
+        // Replace GroupScreen with your actual implementation
+        GroupScreen()
+    }
 }
 
 object Settings : HomeDestination {
@@ -44,12 +53,16 @@ object Settings : HomeDestination {
         @Composable {
             Icon(
                 painter = painterResource(id = R.drawable.outline_settings_24),
-                contentDescription = "Home"
+                contentDescription = "Settings"
             )
         }
-    override val route = "home"
-    override val screen = @Composable { Greeting(name = "Settings") }
+    override val route = "settings"
+    override val screen = @Composable { navController: NavHostController ->
+        // Replace Greeting with your actual settings screen implementation
+        Greeting(name = "Settings")
+    }
 }
+
 
 // Screens to be displayed in the top RallyTabRow
 val allItemsNav = listOf(Overview, Groups, Settings)

@@ -4,6 +4,8 @@ import android.content.res.Configuration
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 
 import androidx.compose.foundation.layout.Row
@@ -26,12 +28,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.habicted_app.screen.taskscreen.components.CalendarApp
 import com.example.habicted_app.ui.theme.HabictedAppTheme
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TaskScreen(
-    modifier: Modifier= Modifier,
+    navController: NavHostController,
+    modifier: Modifier = Modifier,
     /*onProfilePic: () -> Unit*/
 ) {
     Column(
@@ -39,62 +45,72 @@ fun TaskScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        TopRow()
+        TopRow(navController = navController)
         Spacer(modifier = Modifier.height(16.dp))
         CalendarApp()
     }
 }
+
 @Composable
-fun TopRow(){
-    Row (
+fun TopRow(navController: NavHostController) {
+    Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth()
     ) {
-      ProfilePicture(
-        painter = painterResource(id = R.drawable.outline_groups_24),
-        contentDescription = "Profile Picture"
-      )
-      Spacer(modifier = Modifier.width(16.dp))
-      Column {
-        Text(
-            text = "Welcome!",
-            textAlign = TextAlign.Start,
-            modifier = Modifier.fillMaxWidth()
+        ProfilePicture(
+            painter = painterResource(id = R.drawable.outline_groups_24),
+            contentDescription = "Profile Picture",
+            onClick = { navController.navigate("profile") }
         )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = "Username",
-            textAlign = TextAlign.Start,
-            modifier = Modifier.fillMaxWidth()
-        )
-      }
+        Spacer(modifier = Modifier.width(16.dp))
+        Column {
+            Text(
+                text = "Welcome!",
+                textAlign = TextAlign.Start,
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "Username",
+                textAlign = TextAlign.Start,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
     }
-
 }
 
 @Composable
 fun ProfilePicture(
     painter: Painter,
     contentDescription: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
 ) {
-    Image(
-        painter = painter,
-        contentDescription = contentDescription,
+    Box(
         modifier = modifier
             .size(64.dp)
             .clip(CircleShape)
-    )
+            .clickable(onClick = onClick)
+    ) {
+        Image(
+            painter = painter,
+            contentDescription = contentDescription,
+            modifier = Modifier
+                .size(64.dp)
+                .clip(CircleShape)
+        )
+    }
 }
+
 //Modifier change the size, layout, behaivour and appearance of a Composable
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(name = "Welcome dark theme", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(name = "Welcome light theme", uiMode = Configuration.UI_MODE_NIGHT_NO)
-
 @Composable
 fun Preview() {
+    val navController = rememberNavController()
     HabictedAppTheme {
-        TaskScreen(/*onProfilePic = {}*/)
+        TaskScreen(navController = navController)
     }
 }
