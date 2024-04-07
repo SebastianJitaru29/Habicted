@@ -1,10 +1,12 @@
 package com.example.habicted_app.screen.taskscreen
 
+import TaskListApp
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -69,6 +71,11 @@ fun CalendarApp(modifier: Modifier = Modifier) {
                 }
             )
         })
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Column (modifier.align(Alignment.CenterHorizontally)){
+            TaskListApp()
+        }
     }
 }
 @RequiresApi(Build.VERSION_CODES.O)
