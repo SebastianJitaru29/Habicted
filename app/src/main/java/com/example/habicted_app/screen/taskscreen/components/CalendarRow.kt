@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.habicted_app.screen.taskscreen.TaskUIState
 import com.example.habicted_app.screen.taskscreen.data.CalendarDataSource
 import com.example.habicted_app.screen.taskscreen.data.CalendarData
 import java.time.LocalDate
@@ -39,7 +40,7 @@ import java.time.format.FormatStyle
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CalendarApp(modifier: Modifier = Modifier) {
+fun CalendarApp(modifier: Modifier = Modifier, taskList: List<TaskUIState>) {
     val dataSource = CalendarDataSource()
     // we use `mutableStateOf` and `remember` inside composable function to schedules recomposition
     var calendarUiModel by remember { mutableStateOf(dataSource.getData(lastSelectedDate = dataSource.today)) }
@@ -51,13 +52,19 @@ fun CalendarApp(modifier: Modifier = Modifier) {
                 // refresh the CalendarUiModel with new data
                 // by get data with new Start Date (which is the startDate-1 from the visibleDates)
                 val finalStartDate = startDate.minusDays(1)
-                calendarUiModel = dataSource.getData(startDate = finalStartDate, lastSelectedDate = calendarUiModel.selectedDate.date)
+                calendarUiModel = dataSource.getData(
+                    startDate = finalStartDate,
+                    lastSelectedDate = calendarUiModel.selectedDate.date
+                )
             },
             onNextClickListener = { endDate ->
                 // refresh the CalendarUiModel with new data
                 // by get data with new Start Date (which is the endDate+2 from the visibleDates)
                 val finalStartDate = endDate.plusDays(2)
-                calendarUiModel = dataSource.getData(startDate = finalStartDate, lastSelectedDate = calendarUiModel.selectedDate.date)
+                calendarUiModel = dataSource.getData(
+                    startDate = finalStartDate,
+                    lastSelectedDate = calendarUiModel.selectedDate.date
+                )
             }
         )
         CalendarContent(data = calendarUiModel, onDateClickListener = { date ->
@@ -74,15 +81,18 @@ fun CalendarApp(modifier: Modifier = Modifier) {
         })
         Spacer(modifier = Modifier.height(16.dp))
 
-        Column (modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally){
-            TaskListApp()
+        Column(modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+            TaskListApp(taskList)
         }
     }
 }
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CalendarHeader(data: CalendarData, onPrevClickListener: (LocalDate) -> Unit,
-                   onNextClickListener: (LocalDate) -> Unit,){
+fun CalendarHeader(
+    data: CalendarData, onPrevClickListener: (LocalDate) -> Unit,
+    onNextClickListener: (LocalDate) -> Unit,
+) {
 
     Row {
         Text(
@@ -98,7 +108,7 @@ fun CalendarHeader(data: CalendarData, onPrevClickListener: (LocalDate) -> Unit,
                 contentDescription = "Previous"
             )
         }
-        IconButton(onClick = { onNextClickListener(data.endDate.date)}) {
+        IconButton(onClick = { onNextClickListener(data.endDate.date) }) {
             Icon(
                 imageVector = Icons.Filled.ChevronRight,
                 contentDescription = "Next"
@@ -109,8 +119,10 @@ fun CalendarHeader(data: CalendarData, onPrevClickListener: (LocalDate) -> Unit,
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CalendarContent(data: CalendarData,
-                    onDateClickListener: (CalendarData.Date) -> Unit,){
+fun CalendarContent(
+    data: CalendarData,
+    onDateClickListener: (CalendarData.Date) -> Unit,
+) {
     LazyRow {
         items(items = data.visibleDates) { date ->
             CalendarItem(
@@ -120,9 +132,10 @@ fun CalendarContent(data: CalendarData,
         }
     }
 }
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CalendarItem(date: CalendarData.Date, onClickListener: (CalendarData.Date) -> Unit){
+fun CalendarItem(date: CalendarData.Date, onClickListener: (CalendarData.Date) -> Unit) {
     Card(
         modifier = Modifier
             .padding(vertical = 4.dp, horizontal = 4.dp)

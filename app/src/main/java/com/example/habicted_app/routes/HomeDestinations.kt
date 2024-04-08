@@ -37,7 +37,12 @@ object Overview : HomeDestination {
         val viewModel = UserViewModel(LocalUserRepository())
         val username = viewModel.userName.value ?: "User"
         val profileId = viewModel.profilePicture.value ?: R.drawable.outline_groups_24
-        TaskScreen(navController = navController, username = username, profilePicture = profileId)
+        TaskScreen(
+            navController = navController,
+            username = username,
+            profilePicture = profileId,
+            tasksList = emptyList()
+        )
     }
 }
 

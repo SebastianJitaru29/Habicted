@@ -1,4 +1,6 @@
 import android.content.res.Configuration
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -25,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.getString
+import com.example.habicted_app.data.repository.local.LocalTaskRepository
 import com.example.habicted_app.screen.taskscreen.TaskUIState
 import com.example.habicted_app.screen.taskscreen.data.ListDataSource
 import com.example.habicted_app.screen.taskscreen.data.TaskListElement
@@ -53,6 +56,7 @@ fun TasksListRecylcerView(tasksList: List<TaskUIState>, modifier: Modifier = Mod
 
 @Composable
 fun TaskCard(task: TaskUIState, modifier: Modifier = Modifier) {
+    val isCheck = remember { mutableStateOf(task.isChecked) }
     val context = LocalContext.current
     val biometricPromptManager =
         remember { BiometricPromptManager(activity = context as AppCompatActivity) }
@@ -72,7 +76,7 @@ fun TaskCard(task: TaskUIState, modifier: Modifier = Modifier) {
             )
             CheckboxWithBiometric(
                 biometricPromptManager = biometricPromptManager,
-                isChecked = task.isChecked
+                isChecked = isCheck// task.isDone, TODO
             )
         }
     }
@@ -81,7 +85,7 @@ fun TaskCard(task: TaskUIState, modifier: Modifier = Modifier) {
 @Composable
 fun CheckboxWithBiometric(
     biometricPromptManager: BiometricPromptManager,
-    isChecked: Boolean,
+    isChecked: MutableState<Boolean>,
     biometricResutl: (Boolean) -> Unit = {}
 ) {
     val authenticationSucceeded = rememberSaveable { mutableStateOf(false) }
@@ -91,12 +95,12 @@ fun CheckboxWithBiometric(
             when (result) {
                 is BiometricPromptManager.BiometricResult.AuthenticationSuccess -> {
                     authenticationSucceeded.value = true
-                    isChecked = true
+                    isChecked.value = true
                 }
 
                 else -> {
                     authenticationSucceeded.value = false
-                    isChecked= false
+                    isChecked.value = false
                 }
             }
         }
@@ -126,11 +130,22 @@ fun CheckboxWithBiometric(
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(name = "Welcome dark theme", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(name = "Welcome light theme", uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 fun Preview1() {
+    val taskRepository = LocalTaskRepository()
+    val tasks = taskRepository.getTasks()
+        .map {
+            TaskUIState(
+                name = it.name,
+                color = "",
+                date = it.date,
+                isChecked = it.isDone
+            )
+        }
     HabictedAppTheme {
-        TaskListApp()
+        TaskListApp(tasks)
     }
 }

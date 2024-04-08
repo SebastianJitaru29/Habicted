@@ -39,6 +39,7 @@ fun TaskScreen(
     modifier: Modifier = Modifier,
     username: String,
     profilePicture: Int,
+    tasksList: List<TaskUIState>
     /*onProfilePic: () -> Unit*/
 ) {
     Column(
@@ -48,7 +49,7 @@ fun TaskScreen(
     ) {
         TopRow(navController = navController, username = username, profilePicture = profilePicture)
         Spacer(modifier = Modifier.height(16.dp))
-        CalendarApp()
+        CalendarApp(taskList = tasksList)
     }
 }
 
@@ -115,7 +116,8 @@ fun Preview() {
         TaskScreen(
             navController = navController,
             username = "User",
-            profilePicture = R.drawable.outline_groups_24
+            profilePicture = R.drawable.outline_groups_24,
+            tasksList = emptyList()
         )
     }
 }

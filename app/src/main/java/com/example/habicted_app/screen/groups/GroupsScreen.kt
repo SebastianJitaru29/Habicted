@@ -416,6 +416,7 @@ private fun GroupsCardsPrev() {
             listOf(
                 Task(
                     id = 1,
+                    groupId = 2,
                     name = "Task 1",
                     description = null,
                     date = LocalDate.now(),
@@ -426,6 +427,7 @@ private fun GroupsCardsPrev() {
                 ),
                 Task(
                     id = 2,
+                    groupId = 2,
                     name = "Task 2",
                     description = null,
                     date = LocalDate.now(),
@@ -455,6 +457,7 @@ private fun Prevv() {
         tasksInfo = listOf(
             Task(
                 id = 1,
+                groupId = 1,
                 name = "Task 1",
                 description = null,
                 date = LocalDate.now(),
@@ -465,6 +468,7 @@ private fun Prevv() {
             ),
             Task(
                 id = 2,
+                groupId = 2,
                 name = "Task 2",
                 description = null,
                 date = LocalDate.now(),

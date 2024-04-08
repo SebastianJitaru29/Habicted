@@ -21,6 +21,7 @@ class LocalGroupRepository : GroupRepository {
             tasksList = listOf(
                 Task(
                     id = 1,
+                    groupId = 1,
                     name = "Task 1",
                     description = null,
                     date = LocalDate.now(),
@@ -31,6 +32,7 @@ class LocalGroupRepository : GroupRepository {
                 ),
                 Task(
                     id = 2,
+                    groupId = 2,
                     name = "Task 2",
                     description = null,
                     date = LocalDate.now(),
