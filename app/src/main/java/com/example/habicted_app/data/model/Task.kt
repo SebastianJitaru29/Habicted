@@ -4,6 +4,7 @@ import java.time.LocalDate
 
 data class Task(
     val id: Int,
+    val groupId: Int,
     val name: String,
     val description: String?,
     val date: LocalDate,

@@ -21,8 +21,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.getString
+import com.example.habicted_app.screen.taskscreen.TaskUIState
 import com.example.habicted_app.screen.taskscreen.data.ListDataSource
 import com.example.habicted_app.screen.taskscreen.data.TaskListElement
 import com.example.habicted_app.sensor.BiometricPromptManager
@@ -30,14 +33,14 @@ import com.example.habicted_app.ui.theme.HabictedAppTheme
 
 
 @Composable
-fun TaskListApp() {
+fun TaskListApp(tasksList: List<TaskUIState>) {
     TasksListRecylcerView(
-        tasksList = ListDataSource().initialLoadList(),
+        tasksList = tasksList,
     )
 }
 
 @Composable
-fun TasksListRecylcerView(tasksList: List<TaskListElement>, modifier: Modifier = Modifier) {
+fun TasksListRecylcerView(tasksList: List<TaskUIState>, modifier: Modifier = Modifier) {
     LazyColumn(modifier = modifier) {
         items(tasksList) { task ->
             TaskCard(
@@ -49,10 +52,10 @@ fun TasksListRecylcerView(tasksList: List<TaskListElement>, modifier: Modifier =
 }
 
 @Composable
-fun TaskCard(task: TaskListElement, modifier: Modifier = Modifier) {
-    val isChecked = rememberSaveable { mutableStateOf(task.isChecked) }
+fun TaskCard(task: TaskUIState, modifier: Modifier = Modifier) {
     val context = LocalContext.current
-    val biometricPromptManager = remember { BiometricPromptManager(activity = context as AppCompatActivity) }
+    val biometricPromptManager =
+        remember { BiometricPromptManager(activity = context as AppCompatActivity) }
 
     Card(
         modifier = modifier.border(
@@ -62,13 +65,15 @@ fun TaskCard(task: TaskListElement, modifier: Modifier = Modifier) {
         )
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-
             Text(
-                text = LocalContext.current.getString(task.stringResourceId),
+                text = task.name,
                 modifier = Modifier.padding(16.dp),
                 style = MaterialTheme.typography.headlineSmall
             )
-            CheckboxWithBiometric(biometricPromptManager = biometricPromptManager, isChecked = isChecked)
+            CheckboxWithBiometric(
+                biometricPromptManager = biometricPromptManager,
+                isChecked = task.isChecked
+            )
         }
     }
 }
@@ -76,20 +81,22 @@ fun TaskCard(task: TaskListElement, modifier: Modifier = Modifier) {
 @Composable
 fun CheckboxWithBiometric(
     biometricPromptManager: BiometricPromptManager,
-    isChecked: MutableState<Boolean>
+    isChecked: Boolean,
+    biometricResutl: (Boolean) -> Unit = {}
 ) {
-    val authenticationSucceeded = remember { mutableStateOf(false) }
+    val authenticationSucceeded = rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         biometricPromptManager.promptResult.collect { result ->
             when (result) {
                 is BiometricPromptManager.BiometricResult.AuthenticationSuccess -> {
                     authenticationSucceeded.value = true
-                    isChecked.value = true
+                    isChecked = true
                 }
+
                 else -> {
                     authenticationSucceeded.value = false
-                    isChecked.value = false
+                    isChecked= false
                 }
             }
         }
@@ -117,7 +124,6 @@ fun CheckboxWithBiometric(
         modifier = Modifier.padding(16.dp)
     )
 }
-
 
 
 @Preview(name = "Welcome dark theme", uiMode = Configuration.UI_MODE_NIGHT_YES)

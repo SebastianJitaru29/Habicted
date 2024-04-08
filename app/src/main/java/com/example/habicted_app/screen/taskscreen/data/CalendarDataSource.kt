@@ -11,13 +11,16 @@ import java.util.stream.Stream
 class CalendarDataSource {
     val today: LocalDate
         @RequiresApi(Build.VERSION_CODES.O)
-        get() {return LocalDate.now()}
+        get() {
+            return LocalDate.now()
+        }
+
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getData(startDate: LocalDate = today, lastSelectedDate:LocalDate): CalendarData {
+    fun getData(startDate: LocalDate = today, lastSelectedDate: LocalDate): CalendarData {
         val firstDayOfWeek = startDate.with(DayOfWeek.MONDAY)
         val endDayOfWeek = firstDayOfWeek.plusDays(7)
-        val visibleDates = getDatesBetween(firstDayOfWeek,endDayOfWeek)
-        return toUiModel(visibleDates,lastSelectedDate)
+        val visibleDates = getDatesBetween(firstDayOfWeek, endDayOfWeek)
+        return toUiModel(visibleDates, lastSelectedDate)
     }
 
 

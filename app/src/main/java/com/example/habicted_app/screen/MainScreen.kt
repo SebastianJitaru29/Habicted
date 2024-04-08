@@ -56,7 +56,7 @@ fun MainScreen(navController: NavHostController, modifier: Modifier = Modifier) 
         }
     ) { innerPadding ->
         Box(modifier = modifier.padding(innerPadding)) {
-            allItemsNav.get(currentIndex).screen(navController)
+            allItemsNav[currentIndex].screen(navController)
         }
     }
 
