@@ -7,7 +7,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,18 +20,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import com.example.habicted_app.R
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.habicted_app.R
 import com.example.habicted_app.screen.taskscreen.components.CalendarApp
-import com.example.habicted_app.sensor.BiometricPromptManager
 import com.example.habicted_app.ui.theme.HabictedAppTheme
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -40,6 +37,8 @@ import com.example.habicted_app.ui.theme.HabictedAppTheme
 fun TaskScreen(
     navController: NavHostController,
     modifier: Modifier = Modifier,
+    username: String,
+    profilePicture: Int,
     /*onProfilePic: () -> Unit*/
 ) {
     Column(
@@ -47,20 +46,20 @@ fun TaskScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        TopRow(navController = navController)
+        TopRow(navController = navController, username = username, profilePicture = profilePicture)
         Spacer(modifier = Modifier.height(16.dp))
         CalendarApp()
     }
 }
 
 @Composable
-fun TopRow(navController: NavHostController) {
+fun TopRow(navController: NavHostController, username: String, profilePicture: Int) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth()
     ) {
         ProfilePicture(
-            painter = painterResource(id = R.drawable.outline_groups_24),
+            painter = painterResource(id = profilePicture),
             contentDescription = "Profile Picture",
             onClick = { navController.navigate("profile") }
         )
@@ -73,7 +72,7 @@ fun TopRow(navController: NavHostController) {
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "Username",
+                text = username,
                 textAlign = TextAlign.Start,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -113,6 +112,10 @@ fun ProfilePicture(
 fun Preview() {
     val navController = rememberNavController()
     HabictedAppTheme {
-        TaskScreen(navController = navController)
+        TaskScreen(
+            navController = navController,
+            username = "User",
+            profilePicture = R.drawable.outline_groups_24
+        )
     }
 }

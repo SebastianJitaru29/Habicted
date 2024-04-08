@@ -9,9 +9,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavHostController
 import com.example.habicted_app.R
 import com.example.habicted_app.data.repository.local.LocalGroupRepository
+import com.example.habicted_app.data.repository.local.LocalUserRepository
 import com.example.habicted_app.screen.groups.GroupScreen
 import com.example.habicted_app.screen.groups.GroupsViewModel
 import com.example.habicted_app.screen.taskscreen.TaskScreen
+import com.example.habicted_app.screen.taskscreen.UserViewModel
 
 interface HomeDestination {
     val icon: @Composable () -> Unit
@@ -32,7 +34,10 @@ object Overview : HomeDestination {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override val screen = @Composable { navController: NavHostController ->
-        TaskScreen(navController = navController)
+        val viewModel = UserViewModel(LocalUserRepository())
+        val username = viewModel.userName.value ?: "User"
+        val profileId = viewModel.profilePicture.value ?: R.drawable.outline_groups_24
+        TaskScreen(navController = navController, username = username, profilePicture = profileId)
     }
 }
 
