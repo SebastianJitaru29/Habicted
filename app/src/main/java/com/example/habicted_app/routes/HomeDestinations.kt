@@ -7,9 +7,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavHostController
-import com.example.habicted_app.Greeting
 import com.example.habicted_app.R
-import com.example.habicted_app.screen.GroupScreen
+import com.example.habicted_app.data.repository.local.LocalGroupRepository
+import com.example.habicted_app.screen.groups.GroupScreen
+import com.example.habicted_app.screen.groups.GroupsViewModel
 import com.example.habicted_app.screen.taskscreen.TaskScreen
 
 interface HomeDestination {
@@ -28,6 +29,7 @@ object Overview : HomeDestination {
             )
         }
     override val route = "home"
+
     @RequiresApi(Build.VERSION_CODES.O)
     override val screen = @Composable { navController: NavHostController ->
         TaskScreen(navController = navController)
@@ -42,10 +44,15 @@ object Groups : HomeDestination {
                 contentDescription = "Groups"
             )
         }
-    override val route = "groups"
+    override val route = "home"
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override val screen = @Composable { navController: NavHostController ->
-        // Replace GroupScreen with your actual implementation
-        GroupScreen()
+        val viewModel = GroupsViewModel(LocalGroupRepository())
+        GroupScreen(
+            groupList = viewModel.groups.value ?: emptyList(),
+
+            )
     }
 }
 

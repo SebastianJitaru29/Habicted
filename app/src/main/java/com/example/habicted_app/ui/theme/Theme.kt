@@ -285,7 +285,7 @@ fun HabictedAppTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        content = content
-//        typography = Typography,
+        content = content,
+        typography = Typography,
     )
 }
