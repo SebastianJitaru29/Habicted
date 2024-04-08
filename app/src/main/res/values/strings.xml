@@ -12,5 +12,7 @@
     <string name="tasca1">Task number 1</string>
     <string name="tasca2">Task number 2</string>
     <string name="tasca3">Task number 3</string>
+    <string name="create_task">Create a new task\n</string>
+    <string name="choose_task_options">Select task options\n</string>
 
 </resources>

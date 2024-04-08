@@ -6,15 +6,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxColors
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,13 +31,13 @@ import com.example.habicted_app.ui.theme.HabictedAppTheme
 
 @Composable
 fun TaskListApp() {
-    TasksList(
+    TasksListRecylcerView(
         tasksList = ListDataSource().initialLoadList(),
     )
 }
 
 @Composable
-fun TasksList(tasksList: List<TaskListElement>, modifier: Modifier = Modifier) {
+fun TasksListRecylcerView(tasksList: List<TaskListElement>, modifier: Modifier = Modifier) {
     LazyColumn(modifier = modifier) {
         items(tasksList) { task ->
             TaskCard(
@@ -49,7 +50,7 @@ fun TasksList(tasksList: List<TaskListElement>, modifier: Modifier = Modifier) {
 
 @Composable
 fun TaskCard(task: TaskListElement, modifier: Modifier = Modifier) {
-    var isChecked by remember { mutableStateOf(task.isChecked) }
+    val isChecked = rememberSaveable { mutableStateOf(task.isChecked) }
     val context = LocalContext.current
     val biometricPromptManager = remember { BiometricPromptManager(activity = context as AppCompatActivity) }
 
@@ -67,16 +68,16 @@ fun TaskCard(task: TaskListElement, modifier: Modifier = Modifier) {
                 modifier = Modifier.padding(16.dp),
                 style = MaterialTheme.typography.headlineSmall
             )
-            CheckboxWithBiometric(biometricPromptManager = biometricPromptManager)
+            CheckboxWithBiometric(biometricPromptManager = biometricPromptManager, isChecked = isChecked)
         }
     }
 }
 
 @Composable
 fun CheckboxWithBiometric(
-    biometricPromptManager: BiometricPromptManager
+    biometricPromptManager: BiometricPromptManager,
+    isChecked: MutableState<Boolean>
 ) {
-    val (isChecked, setChecked) = remember { mutableStateOf(false) }
     val authenticationSucceeded = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -84,18 +85,18 @@ fun CheckboxWithBiometric(
             when (result) {
                 is BiometricPromptManager.BiometricResult.AuthenticationSuccess -> {
                     authenticationSucceeded.value = true
-                    setChecked(true)
+                    isChecked.value = true
                 }
                 else -> {
                     authenticationSucceeded.value = false
-                    setChecked(false)
+                    isChecked.value = false
                 }
             }
         }
     }
 
     Checkbox(
-        checked = isChecked,
+        checked = isChecked.value,
         onCheckedChange = { newChecked ->
             if (newChecked) {
                 biometricPromptManager.showBiometricPrompt(
@@ -103,11 +104,11 @@ fun CheckboxWithBiometric(
                     description = "Authenticate to enable this task."
                 )
             } else {
-                setChecked(false)
+                isChecked.value = false
             }
         },
         colors = CheckboxDefaults.colors(
-            checkedColor = if (authenticationSucceeded.value) Color.Green else Color.White,
+            checkedColor = Color.White,
             uncheckedColor = Color.White,
             disabledCheckedColor = Color.LightGray,
             disabledUncheckedColor = Color.LightGray,
@@ -116,6 +117,7 @@ fun CheckboxWithBiometric(
         modifier = Modifier.padding(16.dp)
     )
 }
+
 
 
 @Preview(name = "Welcome dark theme", uiMode = Configuration.UI_MODE_NIGHT_YES)

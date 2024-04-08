@@ -1,5 +1,6 @@
 package com.example.habicted_app
 
+import MainScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -16,7 +17,7 @@ import com.example.habicted_app.Destinations.WELCOME_ROUTE
 import com.example.habicted_app.routes.ForgotPasswordRoute
 import com.example.habicted_app.routes.RegisterRoute
 import com.example.habicted_app.routes.WelcomeRoute
-import com.example.habicted_app.screen.MainScreen
+
 import com.example.habicted_app.screen.ProfileScreen
 
 object Destinations {
