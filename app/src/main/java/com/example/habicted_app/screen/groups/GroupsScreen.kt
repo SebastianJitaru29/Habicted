@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.filled.Today
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
@@ -67,7 +68,11 @@ import kotlin.random.Random
 fun GroupScreen(
     modifier: Modifier = Modifier,
     groupList: List<GroupUIState>,
+    addGroup: () -> Unit = {}
 ) {
+    Button(onClick = addGroup) {
+        Text(text = "Add Group")
+    }
     Column {
         // TODO: Move to topbar in scaffold ?
         Row(

@@ -1,6 +1,5 @@
 package com.example.habicted_app
 
-import MainScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -14,9 +13,9 @@ import com.example.habicted_app.Destinations.MAIN_ROUTE
 import com.example.habicted_app.Destinations.PROFILE_SCREEN_ROUTE
 import com.example.habicted_app.Destinations.REGISTER_ROUTE
 import com.example.habicted_app.Destinations.WELCOME_ROUTE
-import com.example.habicted_app.routes.ForgotPasswordRoute
-import com.example.habicted_app.routes.RegisterRoute
-import com.example.habicted_app.routes.WelcomeRoute
+import com.example.habicted_app.navigation.routes.access.ForgotPasswordRoute
+import com.example.habicted_app.navigation.routes.access.RegisterRoute
+import com.example.habicted_app.navigation.routes.access.WelcomeRoute
 
 import com.example.habicted_app.screen.ProfileScreen
 
@@ -67,7 +66,7 @@ fun HabiictedNavHost(
 
         navigation(startDestination = HOME_ROUTE, route = MAIN_ROUTE) {
             composable(route = HOME_ROUTE) {
-                MainScreen(navController = navController)
+//                HomeScreen(navController = navController)
             }
         }
     }

@@ -15,21 +15,19 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.habicted_app.R
-import com.example.habicted_app.routes.allItemsNav
+import com.example.habicted_app.navigation.routes.allItemsNav
 import com.example.habicted_app.ui.theme.HabictedAppTheme
 
 @Composable
-fun MainScreen(navController: NavHostController, modifier: Modifier = Modifier) {
+fun MainScreen(navController: NavHostController = rememberNavController()) {
     var currentIndex by rememberSaveable { mutableStateOf(0) }
     var isDialogOpen by remember { mutableStateOf(false) } // State to track if the dialog is open
-    val context = LocalContext.current
     val navBackStackEntry = navController.currentBackStackEntryAsState().value
     val currentDestination = navBackStackEntry?.destination?.route
 
@@ -55,7 +53,7 @@ fun MainScreen(navController: NavHostController, modifier: Modifier = Modifier) 
             }
         }
     ) { innerPadding ->
-        Box(modifier = modifier.padding(innerPadding)) {
+        Box(modifier = Modifier.padding(innerPadding)) {
             allItemsNav[currentIndex].screen(navController)
         }
     }
@@ -74,7 +72,7 @@ fun CreateTaskDialog(onDismiss: () -> Unit) {
             Text(stringResource(R.string.create_task))
         },
         text = {
-             Text(stringResource(R.string.choose_task_options))
+            Text(stringResource(R.string.choose_task_options))
         },
         confirmButton = {
             Button(onClick = onDismiss) {
@@ -84,9 +82,11 @@ fun CreateTaskDialog(onDismiss: () -> Unit) {
             }
         },
         dismissButton = {
-            Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(
-                contentColor = Color.Red
-            )) {
+            Button(
+                onClick = onDismiss, colors = ButtonDefaults.buttonColors(
+                    contentColor = Color.Red
+                )
+            ) {
                 // You can customize the button text as needed
                 // Text(stringResource(R.string.cancel))
                 Text("Cancel")

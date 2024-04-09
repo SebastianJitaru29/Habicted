@@ -1,4 +1,4 @@
-package com.example.habicted_app.routes
+package com.example.habicted_app.navigation.routes
 
 import SettingsScreen
 import android.os.Build
@@ -58,11 +58,11 @@ object Groups : HomeDestination {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override val screen = @Composable { navController: NavHostController ->
-        val viewModel = GroupsViewModel(LocalGroupRepository())
-        GroupScreen(
-            groupList = viewModel.groups.value ?: emptyList(),
+//        val viewModel = GroupsViewModel(LocalGroupRepository())
+//        GroupScreen(
+//            groupList = viewModel.groups.value ?: emptyList(),
 
-            )
+//            )
     }
 }
 

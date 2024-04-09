@@ -1,4 +1,4 @@
-package com.example.habicted_app.routes
+package com.example.habicted_app.navigation.routes.access
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
