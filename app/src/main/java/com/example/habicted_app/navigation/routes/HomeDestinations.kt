@@ -2,6 +2,7 @@ package com.example.habicted_app.navigation.routes
 
 import SettingsScreen
 import android.os.Build
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -12,6 +13,7 @@ import com.example.habicted_app.data.repository.local.LocalGroupRepository
 import com.example.habicted_app.data.repository.local.LocalUserRepository
 import com.example.habicted_app.screen.groups.GroupScreen
 import com.example.habicted_app.screen.groups.GroupsViewModel
+import com.example.habicted_app.screen.preferences.MainViewModel
 import com.example.habicted_app.screen.taskscreen.TaskScreen
 import com.example.habicted_app.screen.taskscreen.UserViewModel
 
@@ -67,6 +69,7 @@ object Groups : HomeDestination {
 }
 
 object Settings : HomeDestination {
+
     override val icon =
         @Composable {
             Icon(
@@ -77,7 +80,7 @@ object Settings : HomeDestination {
     override val route = "settings"
     override val screen = @Composable { navController: NavHostController ->
         // Replace Greeting with your actual settings screen implementation
-        SettingsScreen()
+        //SettingsScreen(mainViewModel =)
     }
 }
 

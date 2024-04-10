@@ -15,10 +15,15 @@ import androidx.navigation.compose.composable
 import com.example.habicted_app.navigation.routes.GroupsRoute
 import com.example.habicted_app.navigation.routes.SettingsRoute
 import com.example.habicted_app.navigation.routes.TasksRoute
+import com.example.habicted_app.screen.preferences.MainViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun HomeNavGraph(navController: NavHostController, modifier: Modifier = Modifier) {
+fun HomeNavGraph(
+    navController: NavHostController,
+    modifier: Modifier = Modifier,
+    mainViewModel: MainViewModel
+) {
     NavHost(
         navController = navController,
         route = Graphs.HOME,
@@ -32,7 +37,7 @@ fun HomeNavGraph(navController: NavHostController, modifier: Modifier = Modifier
             GroupsRoute()
         }
         composable(route = NavBar.Settings.route) {
-            SettingsRoute()
+            SettingsRoute(mainViewModel)
         }
     }
 }

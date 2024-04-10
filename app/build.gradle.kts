@@ -1,6 +1,9 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+
+    id ("kotlin-kapt")
+    id ("com.google.dagger.hilt.android")
 }
 
 android {
@@ -67,6 +70,12 @@ dependencies {
     implementation("androidx.biometric:biometric:1.1.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
 
+    // DataStore
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    // Hilt
+    implementation ("com.google.dagger:hilt-android:2.48.1")
+    kapt ("com.google.dagger:hilt-compiler:2.48.1")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

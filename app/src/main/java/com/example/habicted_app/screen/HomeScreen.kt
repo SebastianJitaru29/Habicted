@@ -5,9 +5,6 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Checklist
-import androidx.compose.material.icons.filled.Groups
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
@@ -17,7 +14,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -25,10 +21,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.habicted_app.navigation.graphs.HomeNavGraph
 import com.example.habicted_app.navigation.graphs.NavBar
+import com.example.habicted_app.screen.preferences.MainViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun HomeScreen(navController: NavHostController = rememberNavController()) {
+fun HomeScreen(navController: NavHostController = rememberNavController(), mainViewModel: MainViewModel) {
     var screen = listOf(NavBar.Tasks, NavBar.Groups, NavBar.Settings)
     Scaffold(
         bottomBar = { NavBottomBar(navController = navController) },
@@ -36,7 +33,7 @@ fun HomeScreen(navController: NavHostController = rememberNavController()) {
 
 
     ) {
-        HomeNavGraph(navController = navController, Modifier.padding(it))
+        HomeNavGraph(navController = navController, Modifier.padding(it),mainViewModel)
     }
 }
 
@@ -80,5 +77,5 @@ fun NavFloatingActionButton(navController: NavHostController) {
 @Preview
 @Composable
 private fun NavBar() {
-    HomeScreen()
+    //HomeScreen()
 }
