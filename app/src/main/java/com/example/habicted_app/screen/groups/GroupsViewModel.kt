@@ -13,10 +13,13 @@ import com.example.habicted_app.HabictedApp
 import com.example.habicted_app.data.model.Task
 import com.example.habicted_app.data.repository.GroupRepository
 import com.example.habicted_app.data.repository.local.LocalGroupRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
-class GroupsViewModel(private val groupRepository: GroupRepository) : ViewModel() {
+@HiltViewModel
+class GroupsViewModel @Inject constructor(private val groupRepository: GroupRepository) : ViewModel() {
 
     private val _groupList = MutableStateFlow<List<GroupUIState>>(emptyList())
     val groupList: MutableStateFlow<List<GroupUIState>> = _groupList
@@ -65,15 +68,15 @@ class GroupsViewModel(private val groupRepository: GroupRepository) : ViewModel(
         }
     }
 
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = (this[APPLICATION_KEY] as HabictedApp)
-                val groupRepository = application.container.groupRepository
-                GroupsViewModel(groupRepository = groupRepository)
-            }
-        }
-    }
+//    companion object {
+//        val Factory: ViewModelProvider.Factory = viewModelFactory {
+//            initializer {
+//                val application = (this[APPLICATION_KEY] as HabictedApp)
+//                val groupRepository = application.container.groupRepository
+//                GroupsViewModel(groupRepository = groupRepository)
+//            }
+//        }
+//    }
 
 
 }
