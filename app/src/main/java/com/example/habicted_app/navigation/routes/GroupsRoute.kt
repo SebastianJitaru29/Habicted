@@ -11,7 +11,8 @@ import com.example.habicted_app.screen.groups.GroupsViewModel
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun GroupsRoute() {
-    val viewModel: GroupsViewModel = viewModel()
+    val viewModel: GroupsViewModel = viewModel(factory = GroupsViewModel.Factory)
     val groupList by viewModel.groupList.collectAsState()
+
     GroupScreen(groupList = groupList, addGroup = viewModel::addGroup)
 }
