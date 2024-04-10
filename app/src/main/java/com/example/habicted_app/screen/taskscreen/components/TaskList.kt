@@ -3,7 +3,8 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
@@ -14,11 +15,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,20 +25,24 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat.getString
+import com.example.habicted_app.R
 import com.example.habicted_app.data.repository.local.LocalTaskRepository
 import com.example.habicted_app.screen.taskscreen.TaskUIState
-import com.example.habicted_app.screen.taskscreen.data.ListDataSource
-import com.example.habicted_app.screen.taskscreen.data.TaskListElement
 import com.example.habicted_app.sensor.BiometricPromptManager
 import com.example.habicted_app.ui.theme.HabictedAppTheme
 
 
+
 @Composable
 fun TaskListApp(tasksList: List<TaskUIState>) {
-    TasksListRecylcerView(
-        tasksList = tasksList,
-    )
+    if (tasksList.isEmpty()) {
+        Text(text = stringResource(id = R.string.no_tasks))
+    } else {
+        TasksListRecylcerView(
+            tasksList = tasksList,
+        )
+    }
+
 }
 
 @Composable
@@ -86,7 +89,7 @@ fun TaskCard(task: TaskUIState, modifier: Modifier = Modifier) {
 fun CheckboxWithBiometric(
     biometricPromptManager: BiometricPromptManager,
     isChecked: MutableState<Boolean>,
-    biometricResutl: (Boolean) -> Unit = {}
+    biometricResutl: (Boolean) -> Unit = {},
 ) {
     val authenticationSucceeded = rememberSaveable { mutableStateOf(false) }
 

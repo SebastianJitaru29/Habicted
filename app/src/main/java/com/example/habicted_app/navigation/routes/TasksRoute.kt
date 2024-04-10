@@ -8,7 +8,6 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.habicted_app.R
-import com.example.habicted_app.data.repository.local.LocalUserRepository
 import com.example.habicted_app.screen.taskscreen.TaskScreen
 import com.example.habicted_app.screen.taskscreen.TasksViewModel
 import com.example.habicted_app.screen.taskscreen.UserViewModel
@@ -29,6 +28,7 @@ fun TasksRoute() {
         username = username,
         profilePicture = profileId,
         tasksList = tasksList,
+        onDayClick = tasksViewModel::displayTasksByDate
     )
 
 }

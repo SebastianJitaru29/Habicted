@@ -5,7 +5,6 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,24 +25,29 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.habicted_app.screen.taskscreen.TaskUIState
-import com.example.habicted_app.screen.taskscreen.data.CalendarDataSource
 import com.example.habicted_app.screen.taskscreen.data.CalendarData
+import com.example.habicted_app.screen.taskscreen.data.CalendarDataSource
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CalendarApp(modifier: Modifier = Modifier, taskList: List<TaskUIState>) {
+fun CalendarApp(
+    modifier: Modifier = Modifier,
+    taskList: List<TaskUIState>,
+    onDateClick: (LocalDate) -> Unit = { },
+) {
     val dataSource = CalendarDataSource()
     // we use `mutableStateOf` and `remember` inside composable function to schedules recomposition
-    var calendarUiModel by remember { mutableStateOf(dataSource.getData(lastSelectedDate = dataSource.today)) }
+    var calendarUiModel by rememberSaveable { mutableStateOf(dataSource.getData(lastSelectedDate = dataSource.today)) }
 
     Column(modifier = modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         CalendarHeader(
@@ -78,6 +82,8 @@ fun CalendarApp(modifier: Modifier = Modifier, taskList: List<TaskUIState>) {
                     )
                 }
             )
+            // Update TaskList
+            onDateClick(date.date)
         })
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -167,5 +173,16 @@ fun CalendarItem(date: CalendarData.Date, onClickListener: (CalendarData.Date) -
                 style = MaterialTheme.typography.bodyMedium,
             )
         }
+    }
+}
+
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview
+@Composable
+private fun DayCardPrev() {
+    Row {
+        CalendarItem(date = CalendarData.Date(LocalDate.now(), true, false), { })
+        CalendarItem(date = CalendarData.Date(LocalDate.now().plusDays(1), false, false), { })
     }
 }

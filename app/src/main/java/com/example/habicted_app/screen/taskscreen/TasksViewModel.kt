@@ -1,8 +1,7 @@
 package com.example.habicted_app.screen.taskscreen
 
-import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -14,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.time.LocalDate
 
+@RequiresApi(Build.VERSION_CODES.O)
 class TasksViewModel(private val taskRepository: TaskRepository) : ViewModel() {
     private val _displayTasks = MutableStateFlow<List<TaskUIState>>(emptyList())
     val displayTasks: StateFlow<List<TaskUIState>> = _displayTasks
@@ -22,8 +22,9 @@ class TasksViewModel(private val taskRepository: TaskRepository) : ViewModel() {
         loadTasks()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun loadTasks() {
-        val tasks = taskRepository.getTasks()
+        val tasks = taskRepository.getTaskByDate(LocalDate.now())
         _displayTasks.value = tasks.map {
             TaskUIState(
                 name = it.name,

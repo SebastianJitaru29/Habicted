@@ -28,9 +28,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.habicted_app.R
 import com.example.habicted_app.screen.taskscreen.components.CalendarApp
 import com.example.habicted_app.ui.theme.HabictedAppTheme
+import java.time.LocalDate
+import kotlin.reflect.KFunction1
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -39,7 +40,8 @@ fun TaskScreen(
     modifier: Modifier = Modifier,
     username: String,
     profilePicture: Int,
-    tasksList: List<TaskUIState>
+    tasksList: List<TaskUIState>,
+    onDayClick: KFunction1<LocalDate, Unit>,
     /*onProfilePic: () -> Unit*/
 ) {
     Column(
@@ -49,7 +51,7 @@ fun TaskScreen(
     ) {
         TopRow(navController = navController, username = username, profilePicture = profilePicture)
         Spacer(modifier = Modifier.height(16.dp))
-        CalendarApp(taskList = tasksList)
+        CalendarApp(taskList = tasksList, onDateClick = onDayClick)
     }
 }
 
@@ -86,7 +88,7 @@ fun ProfilePicture(
     painter: Painter,
     contentDescription: String,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Box(
         modifier = modifier
@@ -107,17 +109,26 @@ fun ProfilePicture(
 //Modifier change the size, layout, behaivour and appearance of a Composable
 
 @RequiresApi(Build.VERSION_CODES.O)
-@Preview(name = "Welcome dark theme", uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Preview(name = "Welcome light theme", uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview(
+    name = "Welcome dark theme",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Preview(
+    name = "Welcome light theme",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
 @Composable
 fun Preview() {
     val navController = rememberNavController()
     HabictedAppTheme {
-        TaskScreen(
-            navController = navController,
-            username = "User",
-            profilePicture = R.drawable.outline_groups_24,
-            tasksList = emptyList()
-        )
+//        TaskScreen(
+//            navController = navController,
+//            username = "User",
+//            profilePicture = R.drawable.outline_groups_24,
+//            tasksList = emptyList(),
+//            onDayClick = {  }
+//        )
     }
 }
