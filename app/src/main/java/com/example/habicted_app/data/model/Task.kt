@@ -1,5 +1,7 @@
 package com.example.habicted_app.data.model
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import java.time.LocalDate
 
 data class Task(
@@ -11,5 +13,18 @@ data class Task(
     val isDone: Boolean,
     val streakDays: Int,
     val done: Int,
-    val total: Int
-)
+    val total: Int,
+) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    constructor() : this(
+        0,
+        0,
+        "",
+        "",
+        LocalDate.now(),
+        false,
+        0,
+        0,
+        0
+    )
+}
