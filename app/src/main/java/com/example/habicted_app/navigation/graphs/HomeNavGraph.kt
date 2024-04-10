@@ -17,7 +17,6 @@ import androidx.navigation.compose.composable
 import com.example.habicted_app.navigation.routes.GroupsRoute
 import com.example.habicted_app.navigation.routes.SettingsRoute
 import com.example.habicted_app.navigation.routes.TasksRoute
-import com.example.habicted_app.screen.groups.GroupsViewModel
 import com.example.habicted_app.screen.preferences.MainViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -25,7 +24,6 @@ import com.example.habicted_app.screen.preferences.MainViewModel
 fun HomeNavGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    mainViewModel: MainViewModel
 ) {
     NavHost(
         navController = navController,
@@ -42,7 +40,11 @@ fun HomeNavGraph(
             }
             GroupsRoute(parentEntry)
         }
-        composable(route = NavBar.Settings.route) {
+        composable(route = NavBar.Settings.route) { backStackEntry ->
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(Graphs.HOME)
+            }
+            val mainViewModel = hiltViewModel<MainViewModel>(parentEntry)
             SettingsRoute(mainViewModel)
         }
     }
@@ -52,7 +54,7 @@ fun HomeNavGraph(
 sealed class NavBar(
     val route: String,
     val title: String,
-    val icon: ImageVector
+    val icon: ImageVector,
 ) {
     data object Tasks : NavBar(
         route = "tasks",

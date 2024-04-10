@@ -21,11 +21,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.habicted_app.navigation.graphs.HomeNavGraph
 import com.example.habicted_app.navigation.graphs.NavBar
-import com.example.habicted_app.screen.preferences.MainViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun HomeScreen(navController: NavHostController = rememberNavController(), mainViewModel: MainViewModel) {
+fun HomeScreen(navController: NavHostController = rememberNavController()) {
     var screen = listOf(NavBar.Tasks, NavBar.Groups, NavBar.Settings)
     Scaffold(
         bottomBar = { NavBottomBar(navController = navController) },
@@ -33,7 +32,7 @@ fun HomeScreen(navController: NavHostController = rememberNavController(), mainV
 
 
     ) {
-        HomeNavGraph(navController = navController, Modifier.padding(it),mainViewModel)
+        HomeNavGraph(navController = navController, Modifier.padding(it))
     }
 }
 
