@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,7 +32,7 @@ import com.example.habicted_app.screen.preferences.Priority
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(mainViewModel: MainViewModel,modifier: Modifier = Modifier) {
+fun SettingsScreen(mainViewModel: MainViewModel, modifier: Modifier = Modifier) {
     val selectedIsCompleted by mainViewModel.isCompleted.collectAsState(initial = false)
 
     val isCompletedStatus = if (selectedIsCompleted) "Yes" else "No"
@@ -43,6 +45,7 @@ fun SettingsScreen(mainViewModel: MainViewModel,modifier: Modifier = Modifier) {
         Priority.Medium -> "Medium"
         Priority.Low -> "Low"
     }
+    val scrollState = rememberScrollState()
 
     Scaffold(
         topBar = {
@@ -54,7 +57,8 @@ fun SettingsScreen(mainViewModel: MainViewModel,modifier: Modifier = Modifier) {
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .padding(innerPadding),
+                .padding(innerPadding)
+                .verticalScroll(state = scrollState),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -77,12 +81,12 @@ fun SettingsScreen(mainViewModel: MainViewModel,modifier: Modifier = Modifier) {
                 Text(text = "Save Settings")
             }
             Spacer(modifier = Modifier.size(16.dp))
-            Text(text = "Task Status",)
+            Text(text = "Task Status")
             Spacer(modifier = Modifier.size(16.dp))
             Text(text = "Completed: $isCompletedStatus")
             Switch(
                 checked = selectedIsCompleted,
-                onCheckedChange = {mainViewModel.updateIsCompleted(it)}
+                onCheckedChange = { mainViewModel.updateIsCompleted(it) }
             )
             Divider(
                 modifier = Modifier
@@ -90,7 +94,7 @@ fun SettingsScreen(mainViewModel: MainViewModel,modifier: Modifier = Modifier) {
                     .padding(vertical = 8.dp)
             )
             Text(text = "Priority: $priorityStatus")
-            PriorityRow(mainViewModel = mainViewModel, selectedPriority =selectedPriority )
+            PriorityRow(mainViewModel = mainViewModel, selectedPriority = selectedPriority)
         }
     }
 }
@@ -99,15 +103,15 @@ fun SettingsScreen(mainViewModel: MainViewModel,modifier: Modifier = Modifier) {
 @Composable
 fun PriorityRow(
     mainViewModel: MainViewModel,
-    selectedPriority: Priority
-){
+    selectedPriority: Priority,
+) {
 
     Row(
         modifier = Modifier
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
-    ){
+    ) {
         Priority.entries.forEach { priority ->
             Text(
                 text = priority.name,
@@ -116,7 +120,7 @@ fun PriorityRow(
             )
             RadioButton(
                 selected = priority == selectedPriority,
-                onClick = {mainViewModel.updatePriority(priority)},
+                onClick = { mainViewModel.updatePriority(priority) },
                 colors = RadioButtonDefaults.colors(selectedPriority.color)
 
             )
