@@ -2,7 +2,6 @@ package com.example.habicted_app.data.repository
 
 import com.example.habicted_app.data.model.Group
 import com.example.habicted_app.data.model.Task
-import kotlinx.coroutines.flow.Flow
 
 interface GroupRepository {
     fun getAllGroups(): List<Group>

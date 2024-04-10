@@ -2,7 +2,6 @@ package com.example.habicted_app.screen.groups
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -26,14 +25,10 @@ import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.filled.Today
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -49,30 +44,22 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.habicted_app.R
 import com.example.habicted_app.data.model.Task
 import com.example.habicted_app.screen.taskscreen.data.CalendarData
 import com.example.habicted_app.screen.taskscreen.data.CalendarDataSource
 import java.time.LocalDate
-import kotlin.random.Random
 
-@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun GroupScreen(
     modifier: Modifier = Modifier,
     groupList: List<GroupUIState>,
-    addGroup: () -> Unit = {}
 ) {
-    Button(onClick = addGroup) {
-        Text(text = "Add Group")
-    }
     Column {
         // TODO: Move to topbar in scaffold ?
         Row(
@@ -108,7 +95,7 @@ fun GroupCard(
     modifier: Modifier = Modifier,
     groupUIState: GroupUIState,
     todayDate: LocalDate,
-    expandedInitialValue: Boolean = false
+    expandedInitialValue: Boolean = false,
 ) {
     var expanded by rememberSaveable { mutableStateOf(expandedInitialValue) }
 
@@ -178,7 +165,7 @@ fun GroupCard(
 fun GroupCalendarContent(
     data: CalendarData,
     onDateClickListener: (CalendarData.Date) -> Unit,
-    tasksInfo: List<Task>
+    tasksInfo: List<Task>,
 ) {
     LazyRow {
         items(items = data.visibleDates) { date ->
@@ -196,7 +183,7 @@ fun GroupCalendarContent(
 fun GroupCalendarItem(
     date: CalendarData.Date,
     onClickListener: (CalendarData.Date) -> Unit,
-    tasksInfo: List<Task>
+    tasksInfo: List<Task>,
 ) {
 
     Card(
@@ -272,84 +259,6 @@ fun GroupCalendarItem(
             )
 
 
-        }
-    }
-}
-
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Composable
-fun DetailsCard() {
-    OutlinedCard(
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth(),
-        border = BorderStroke(1.dp, Color.Black)
-    ) {
-        var rowSize by remember { mutableStateOf(0.dp) }
-        val density = LocalDensity.current
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .onGloballyPositioned {
-                    rowSize = with(density) {
-                        it.size.width.toDp()
-                    }
-                }) {
-            val circleSize = (rowSize / 7)
-            // get week tasks
-            (1..7).forEach { _ ->
-                DayTasksInfo(
-                    listOf(
-                        TaskInfo(
-                            "Task 1",
-                            Color.Red,
-                            CalendarData.Date(LocalDate.now(), false, false),
-                            Random.nextInt(0, 10),
-                            10
-                        ),
-                        TaskInfo(
-                            "Task 2",
-                            Color.Blue,
-                            CalendarData.Date(LocalDate.now(), false, false),
-                            Random.nextInt(0, 10),
-                            10
-                        ),
-                        TaskInfo(
-                            "Task 3",
-                            Color.Green,
-                            CalendarData.Date(LocalDate.now(), false, false),
-                            Random.nextInt(0, 10),
-                            10
-                        )
-                    ),
-                    circleSize
-                )
-            }
-        }
-    }
-}
-
-
-@Composable
-fun DayTasksInfo(tasksInfo: List<TaskInfo>, circleSize: Dp) {
-    val proportions = List(tasksInfo.size) { 1f / tasksInfo.size }
-
-    Column(
-        modifier = Modifier
-            .size(circleSize)
-    ) {
-        TasksCircle(
-            Modifier
-                .padding(10.dp)
-                .size(circleSize),
-            proportions,
-            tasksInfo.map { it.color }
-        )
-        tasksInfo.forEach {
-            Text(text = it.name)
         }
     }
 }

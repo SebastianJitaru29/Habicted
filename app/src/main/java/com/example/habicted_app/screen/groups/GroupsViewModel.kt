@@ -2,24 +2,17 @@ package com.example.habicted_app.screen.groups
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.habicted_app.HabictedApp
 import com.example.habicted_app.data.model.Task
 import com.example.habicted_app.data.repository.GroupRepository
-import com.example.habicted_app.data.repository.local.LocalGroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
 @HiltViewModel
-class GroupsViewModel @Inject constructor(private val groupRepository: GroupRepository) : ViewModel() {
+class GroupsViewModel @Inject constructor(private val groupRepository: GroupRepository) :
+    ViewModel() {
 
     private val _groupList = MutableStateFlow<List<GroupUIState>>(emptyList())
     val groupList: MutableStateFlow<List<GroupUIState>> = _groupList
