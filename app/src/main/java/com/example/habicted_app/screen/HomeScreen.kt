@@ -4,7 +4,8 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddTask
+import androidx.compose.material.icons.filled.GroupAdd
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
@@ -65,8 +66,19 @@ fun NavFloatingActionButton(navController: NavHostController) {
                 modifier = Modifier.padding(16.dp),
                 elevation = FloatingActionButtonDefaults.elevation()
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Add")
+                Icon(Icons.Default.AddTask, contentDescription = "Add task")
             }
+        }
+
+        NavBar.Groups.route -> {
+            FloatingActionButton(
+                onClick = { /*TODO*/ },
+                modifier = Modifier.padding(16.dp),
+                elevation = FloatingActionButtonDefaults.elevation()
+            ) {
+                Icon(Icons.Default.GroupAdd, contentDescription = "Add group")
+            }
+
         }
     }
 }
@@ -76,5 +88,5 @@ fun NavFloatingActionButton(navController: NavHostController) {
 @Preview
 @Composable
 private fun NavBar() {
-    //HomeScreen()
+    HomeScreen()
 }
