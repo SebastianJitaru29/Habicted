@@ -29,7 +29,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -139,4 +141,10 @@ fun TaskDatePicker(onConfirm: (LocalDate) -> Unit = {}) {
             DatePicker(state = datePickerState)
         }
     }
+}
+
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun longToLocalDate(value: Long): LocalDate {
+    return Instant.ofEpochMilli(value).atZone(ZoneId.systemDefault()).toLocalDate()
 }

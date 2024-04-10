@@ -27,9 +27,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.habicted_app.data.model.Task
 import com.example.habicted_app.navigation.graphs.HomeNavGraph
 import com.example.habicted_app.navigation.graphs.NavBar
-import java.time.Instant
-import java.time.LocalDate
-import java.time.ZoneId
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -66,7 +63,7 @@ fun NavBottomBar(navController: NavHostController) {
 @Composable
 fun NavFloatingActionButton(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val addButton = rememberSaveable { mutableStateOf(AddButton.none) }
+    val addButton = rememberSaveable { mutableStateOf(AddButton.None) }
     when (navBackStackEntry?.destination?.route) {
         NavBar.Tasks.route -> {
             FloatingActionButton(
@@ -95,7 +92,7 @@ fun NavFloatingActionButton(navController: NavHostController) {
             var newTask by remember { mutableStateOf(Task()) }
             TaskDialog(
                 showDialog = true,
-                onDismiss = { addButton.value = AddButton.none },
+                onDismiss = { addButton.value = AddButton.None },
                 onConfirm = { title, description, location, date ->
                     newTask = Task(
                         id = 0,
@@ -108,14 +105,14 @@ fun NavFloatingActionButton(navController: NavHostController) {
                         done = 0,
                         total = 0
                     )
-                    addButton.value = AddButton.none
+                    addButton.value = AddButton.None
                 }
             )
 
         }
 
         AddButton.Group -> {
-            addButton.value = AddButton.none
+            addButton.value = AddButton.None
         }
 
         else -> {
@@ -125,17 +122,9 @@ fun NavFloatingActionButton(navController: NavHostController) {
 }
 
 private enum class AddButton {
-    Task, Group, none
+    Task, Group, None
 }
 
-
-
-
-
-@RequiresApi(Build.VERSION_CODES.O)
-fun longToLocalDate(value: Long): LocalDate {
-    return Instant.ofEpochMilli(value).atZone(ZoneId.systemDefault()).toLocalDate()
-}
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview
