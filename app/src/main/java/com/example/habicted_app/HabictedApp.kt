@@ -7,7 +7,9 @@ import com.example.habicted_app.data.repository.UserRepository
 import com.example.habicted_app.data.repository.local.LocalGroupRepository
 import com.example.habicted_app.data.repository.local.LocalTaskRepository
 import com.example.habicted_app.data.repository.local.LocalUserRepository
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class HabictedApp : Application() {
     lateinit var container: HabictedAppContainer
 

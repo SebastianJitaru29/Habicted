@@ -6,8 +6,15 @@ import com.example.habicted_app.data.model.Group
 import com.example.habicted_app.data.model.Task
 import com.example.habicted_app.data.model.User
 import com.example.habicted_app.data.repository.GroupRepository
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import java.time.LocalDate
+import javax.inject.Singleton
 
+@Module
+@InstallIn(SingletonComponent::class)
 class LocalGroupRepository : GroupRepository {
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -52,6 +59,17 @@ class LocalGroupRepository : GroupRepository {
             tasksList = emptyList(),
         )
     )
+
+    @Module
+    @InstallIn(SingletonComponent::class)
+    object RepositoryModule {
+
+        @Singleton
+        @Provides
+        fun provideGroupRepository(): GroupRepository {
+            return LocalGroupRepository()
+        }
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun getAllGroups(): List<Group> {
