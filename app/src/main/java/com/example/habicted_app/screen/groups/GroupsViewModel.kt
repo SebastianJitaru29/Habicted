@@ -5,14 +5,18 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.habicted_app.HabictedApp
 import com.example.habicted_app.data.model.Task
 import com.example.habicted_app.data.repository.GroupRepository
 import com.example.habicted_app.data.repository.local.LocalGroupRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @RequiresApi(Build.VERSION_CODES.O)
-class GroupsViewModel : ViewModel() {
-    private val repository = LocalGroupRepository()
+class GroupsViewModel(private val groupRepository: GroupRepository) : ViewModel() {
 
     private val _groupList = MutableStateFlow<List<GroupUIState>>(emptyList())
     val groupList: MutableStateFlow<List<GroupUIState>> = _groupList
@@ -24,7 +28,7 @@ class GroupsViewModel : ViewModel() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getAllGroups(): List<GroupUIState> {
-        return repository.getAllGroups().map { group ->
+        return groupRepository.getAllGroups().map { group ->
             GroupUIState(
                 name = group.name,
                 members = group.members,
@@ -58,6 +62,16 @@ class GroupsViewModel : ViewModel() {
             0
         } else {
             tasks.sumOf { it.streakDays }
+        }
+    }
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[APPLICATION_KEY] as HabictedApp)
+                val groupRepository = application.container.groupRepository
+                GroupsViewModel(groupRepository = groupRepository)
+            }
         }
     }
 
