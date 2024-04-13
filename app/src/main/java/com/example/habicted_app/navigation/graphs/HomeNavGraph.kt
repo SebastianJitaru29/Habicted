@@ -17,6 +17,7 @@ import androidx.navigation.compose.composable
 import com.example.habicted_app.navigation.routes.GroupsRoute
 import com.example.habicted_app.navigation.routes.SettingsRoute
 import com.example.habicted_app.navigation.routes.TasksRoute
+import com.example.habicted_app.screen.ProfileScreen
 import com.example.habicted_app.screen.home.HomeUIState
 import com.example.habicted_app.screen.home.HomeUiEvents
 import com.example.habicted_app.screen.preferences.MainViewModel
@@ -36,7 +37,11 @@ fun HomeNavGraph(
         modifier = modifier
     ) {
         composable(route = NavBar.Tasks.route) {
-            TasksRoute(tasksList = homeUIState.tasks, onEvent = onEvent)
+            TasksRoute(
+                tasksList = homeUIState.tasks,
+                onEvent = onEvent,
+                onProfileClick = { navController.navigate(Route.PROFILE.route) }
+            )
         }
         composable(route = NavBar.Groups.route) {
             GroupsRoute(groupList = homeUIState.groups)
@@ -48,9 +53,20 @@ fun HomeNavGraph(
             val mainViewModel = hiltViewModel<MainViewModel>(parentEntry)
             SettingsRoute(mainViewModel)
         }
+        composable(route = Route.PROFILE.route) {
+            ProfileScreen()
+        }
     }
 }
 
+data class Route(val route: String) {
+    companion object {
+        val TASKS = Route("tasks")
+        val GROUPS = Route("groups")
+        val SETTINGS = Route("settings")
+        val PROFILE = Route("profile")
+    }
+}
 
 sealed class NavBar(
     val route: String,
@@ -58,19 +74,19 @@ sealed class NavBar(
     val icon: ImageVector,
 ) {
     data object Tasks : NavBar(
-        route = "tasks",
+        route = Route.TASKS.route,
         title = "Tasks",
         icon = Icons.Default.Checklist
     )
 
     data object Groups : NavBar(
-        route = "groups",
+        route = Route.GROUPS.route,
         title = "Groups",
         icon = Icons.Default.Groups
     )
 
     data object Settings : NavBar(
-        route = "settings",
+        route = Route.SETTINGS.route,
         title = "Settings",
         icon = Icons.Default.Settings
     )

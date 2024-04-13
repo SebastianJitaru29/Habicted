@@ -15,7 +15,11 @@ import com.example.habicted_app.screen.taskscreen.UserViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun TasksRoute(tasksList: List<TaskUIState>, onEvent: (HomeUiEvents) -> Unit) {
+fun TasksRoute(
+    tasksList: List<TaskUIState>,
+    onEvent: (HomeUiEvents) -> Unit,
+    onProfileClick: () -> Unit,
+) {
 
     val navController = rememberNavController()
 
@@ -24,9 +28,9 @@ fun TasksRoute(tasksList: List<TaskUIState>, onEvent: (HomeUiEvents) -> Unit) {
     val profileId = viewModel.profilePicture.value ?: R.drawable.outline_groups_24
 
     TaskScreen(
-        navController = navController,
         username = username,
         profilePicture = profileId,
+        onProfilePic = onProfileClick,
         tasksList = tasksList,
         onEvent = onEvent,
     )

@@ -26,7 +26,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.habicted_app.screen.home.HomeUiEvents
 import com.example.habicted_app.screen.taskscreen.components.CalendarApp
@@ -35,27 +34,26 @@ import com.example.habicted_app.ui.theme.HabictedAppTheme
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TaskScreen(
-    navController: NavHostController,
     modifier: Modifier = Modifier,
     username: String,
     profilePicture: Int,
+    onProfilePic: () -> Unit,
     tasksList: List<TaskUIState>,
     onEvent: (HomeUiEvents) -> Unit,
-    /*onProfilePic: () -> Unit*/
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        TopRow(navController = navController, username = username, profilePicture = profilePicture)
+        TopRow(onProfilePic = onProfilePic, username = username, profilePicture = profilePicture)
         Spacer(modifier = Modifier.height(16.dp))
         CalendarApp(taskList = tasksList, onEvent = onEvent)
     }
 }
 
 @Composable
-fun TopRow(navController: NavHostController, username: String, profilePicture: Int) {
+fun TopRow(onProfilePic: () -> Unit, username: String, profilePicture: Int) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth()
@@ -63,7 +61,7 @@ fun TopRow(navController: NavHostController, username: String, profilePicture: I
         ProfilePicture(
             painter = painterResource(id = profilePicture),
             contentDescription = "Profile Picture",
-            onClick = { navController.navigate("profile") }
+            onClick = onProfilePic
         )
         Spacer(modifier = Modifier.width(16.dp))
         Column {
