@@ -28,10 +28,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.habicted_app.screen.home.HomeUiEvents
 import com.example.habicted_app.screen.taskscreen.components.CalendarApp
 import com.example.habicted_app.ui.theme.HabictedAppTheme
-import java.time.LocalDate
-import kotlin.reflect.KFunction1
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -41,7 +40,7 @@ fun TaskScreen(
     username: String,
     profilePicture: Int,
     tasksList: List<TaskUIState>,
-    onDayClick: KFunction1<LocalDate, Unit>,
+    onEvent: (HomeUiEvents) -> Unit,
     /*onProfilePic: () -> Unit*/
 ) {
     Column(
@@ -51,7 +50,7 @@ fun TaskScreen(
     ) {
         TopRow(navController = navController, username = username, profilePicture = profilePicture)
         Spacer(modifier = Modifier.height(16.dp))
-        CalendarApp(taskList = tasksList, onDateClick = onDayClick)
+        CalendarApp(taskList = tasksList, onEvent = onEvent)
     }
 }
 

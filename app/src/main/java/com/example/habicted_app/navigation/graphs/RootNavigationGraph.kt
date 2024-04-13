@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.habicted_app.screen.HomeScreen
+import com.example.habicted_app.screen.home.HomeScreen
 
 
 @RequiresApi(Build.VERSION_CODES.O)

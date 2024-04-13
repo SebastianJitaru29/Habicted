@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -31,9 +31,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.habicted_app.screen.home.HomeUiEvents
 import com.example.habicted_app.screen.taskscreen.TaskUIState
-import com.example.habicted_app.screen.taskscreen.data.CalendarData
-import com.example.habicted_app.screen.taskscreen.data.CalendarDataSource
+import com.example.habicted_app.screen.taskscreen.calendar.CalendarData
+import com.example.habicted_app.screen.taskscreen.calendar.CalendarDataSource
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -43,7 +44,7 @@ import java.time.format.FormatStyle
 fun CalendarApp(
     modifier: Modifier = Modifier,
     taskList: List<TaskUIState>,
-    onDateClick: (LocalDate) -> Unit = { },
+    onEvent: (HomeUiEvents) -> Unit,
 ) {
     val dataSource = CalendarDataSource()
     // we use `mutableStateOf` and `remember` inside composable function to schedules recomposition
@@ -71,20 +72,23 @@ fun CalendarApp(
                 )
             }
         )
-        CalendarContent(data = calendarUiModel, onDateClickListener = { date ->
-            // refresh the CalendarUiModel with new data
-            // by changing only the `selectedDate` with the date selected by User
-            calendarUiModel = calendarUiModel.copy(
-                selectedDate = date,
-                visibleDates = calendarUiModel.visibleDates.map {
-                    it.copy(
-                        isSelected = it.date.isEqual(date.date)
-                    )
-                }
-            )
-            // Update TaskList
-            onDateClick(date.date)
-        })
+        CalendarContent(
+            data = calendarUiModel,
+            onDateClickListener = { date ->
+                // refresh the CalendarUiModel with new data
+                // by changing only the `selectedDate` with the date selected by User
+                calendarUiModel = calendarUiModel.copy(
+                    selectedDate = date,
+                    visibleDates = calendarUiModel.visibleDates.map {
+                        it.copy(
+                            isSelected = it.date.isEqual(date.date)
+                        )
+                    }
+                )
+                // Update TaskList
+                onEvent(HomeUiEvents.FilterTasksByDate(date.date))
+            },
+        )
         Spacer(modifier = Modifier.height(16.dp))
 
         Column(modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -96,10 +100,10 @@ fun CalendarApp(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CalendarHeader(
-    data: CalendarData, onPrevClickListener: (LocalDate) -> Unit,
+    data: CalendarData,
+    onPrevClickListener: (LocalDate) -> Unit,
     onNextClickListener: (LocalDate) -> Unit,
 ) {
-
     Row {
         Text(
             text = data.selectedDate.date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)),
@@ -110,7 +114,7 @@ fun CalendarHeader(
         IconButton(onClick = { onPrevClickListener(data.startDate.date) }) {
             Icon(
 
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                imageVector = Icons.Filled.ChevronLeft,
                 contentDescription = "Previous"
             )
         }
@@ -133,7 +137,7 @@ fun CalendarContent(
         items(items = data.visibleDates) { date ->
             CalendarItem(
                 date = date,
-                onDateClickListener
+                onClickListener = onDateClickListener
             )
         }
     }

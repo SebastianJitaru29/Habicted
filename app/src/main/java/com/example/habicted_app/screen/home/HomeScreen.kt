@@ -1,4 +1,4 @@
-package com.example.habicted_app.screen
+package com.example.habicted_app.screen.home
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -16,9 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,29 +24,32 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.habicted_app.data.model.Group
 import com.example.habicted_app.data.model.Task
 import com.example.habicted_app.navigation.graphs.HomeNavGraph
 import com.example.habicted_app.navigation.graphs.NavBar
-import com.example.habicted_app.screen.groups.GroupsViewModel
+import com.example.habicted_app.screen.groups.GroupAddDialog
+import com.example.habicted_app.screen.taskscreen.TaskDialog
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeScreen(navController: NavHostController = rememberNavController()) {
     var screen = listOf(NavBar.Tasks, NavBar.Groups, NavBar.Settings)
-    val groupsViewModel: GroupsViewModel = hiltViewModel()
+    val homeViewModel: HomeViewModel = hiltViewModel()
     Scaffold(
         bottomBar = { NavBottomBar(navController = navController) },
         floatingActionButton = {
             NavFloatingActionButton(
                 navController = navController,
-                addGroup = groupsViewModel::addGroup
+                onEvent = homeViewModel::onEvent
             )
         }
     ) {
         HomeNavGraph(
             navController = navController,
-            Modifier.padding(it),
-            groupsList = groupsViewModel.groupList.collectAsState().value
+            modifier = Modifier.padding(it),
+            homeUIState = homeViewModel.homeUiState.collectAsState().value,
+            onEvent = homeViewModel::onEvent
         )
     }
 }
@@ -74,7 +75,10 @@ fun NavBottomBar(navController: NavHostController) {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun NavFloatingActionButton(navController: NavHostController, addGroup: () -> Unit) {
+fun NavFloatingActionButton(
+    navController: NavHostController,
+    onEvent: (HomeUiEvents) -> Unit = { },
+) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val addButton = rememberSaveable { mutableStateOf(AddButton.None) }
     when (navBackStackEntry?.destination?.route) {
@@ -102,21 +106,23 @@ fun NavFloatingActionButton(navController: NavHostController, addGroup: () -> Un
 
     when (addButton.value) {
         AddButton.Task -> {
-            var newTask by remember { mutableStateOf(Task()) }
             TaskDialog(
-                showDialog = true,
                 onDismiss = { addButton.value = AddButton.None },
-                onConfirm = { title, description, location, date ->
-                    newTask = Task(
-                        id = 0,
-                        groupId = 0,
-                        name = title,
-                        description = description,
-                        date = date,
-                        isDone = false,
-                        streakDays = 0,
-                        done = 0,
-                        total = 0
+                onConfirm = { title, description, group, date ->
+                    onEvent(
+                        HomeUiEvents.SaveTask(
+                            Task(
+                                id = 0,
+                                groupId = group,
+                                name = title,
+                                description = description,
+                                date = date,
+                                isDone = false,
+                                streakDays = 0,
+                                done = 0,
+                                total = 0
+                            )
+                        )
                     )
                     addButton.value = AddButton.None
                 }
@@ -125,8 +131,22 @@ fun NavFloatingActionButton(navController: NavHostController, addGroup: () -> Un
         }
 
         AddButton.Group -> {
-            addGroup()
-            addButton.value = AddButton.None
+            GroupAddDialog(
+                onDismiss = { addButton.value = AddButton.None },
+                onConfirm = { name, color, members ->
+                    onEvent(
+                        HomeUiEvents.SaveGroup(
+                            Group(
+                                id = 0,
+                                name = name,
+                                color = color,
+                                members = members,
+                                tasksList = emptyList()
+                            )
+                        )
+                    )
+                    addButton.value = AddButton.None
+                })
         }
 
         else -> {

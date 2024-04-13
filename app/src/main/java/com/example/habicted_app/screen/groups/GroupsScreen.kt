@@ -50,8 +50,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.habicted_app.R
 import com.example.habicted_app.data.model.Task
-import com.example.habicted_app.screen.taskscreen.data.CalendarData
-import com.example.habicted_app.screen.taskscreen.data.CalendarDataSource
+import com.example.habicted_app.screen.taskscreen.calendar.CalendarData
+import com.example.habicted_app.screen.taskscreen.calendar.CalendarDataSource
 import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)

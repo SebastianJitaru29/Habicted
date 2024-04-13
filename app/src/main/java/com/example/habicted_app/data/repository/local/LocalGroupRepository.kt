@@ -25,6 +25,7 @@ class LocalGroupRepository : GroupRepository {
             members = listOf(
                 User(1, "", "", "", emptyList()),
             ),
+            color = "",
             tasksList = listOf(
                 Task(
                     id = 1,
@@ -56,6 +57,7 @@ class LocalGroupRepository : GroupRepository {
             members = listOf(
                 User(1, "User1", "", "", emptyList()),
             ),
+            color = "",
             tasksList = emptyList(),
         )
     )

@@ -7,5 +7,5 @@ interface TaskRepository {
     fun getTasks(): List<Task>
     fun getTaskByDate(date: LocalDate): List<Task>
     fun getTaskByGroup(groupId: Int): List<Task>
-    fun addTask(task: Task)
+    fun insertTask(task: Task)
 }

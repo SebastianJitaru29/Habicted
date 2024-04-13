@@ -8,27 +8,27 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.habicted_app.R
+import com.example.habicted_app.screen.home.HomeUiEvents
 import com.example.habicted_app.screen.taskscreen.TaskScreen
-import com.example.habicted_app.screen.taskscreen.TasksViewModel
+import com.example.habicted_app.screen.taskscreen.TaskUIState
 import com.example.habicted_app.screen.taskscreen.UserViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun TasksRoute() {
+fun TasksRoute(tasksList: List<TaskUIState>, onEvent: (HomeUiEvents) -> Unit) {
+
     val navController = rememberNavController()
 
     val viewModel: UserViewModel = viewModel(factory = UserViewModel.Factory)
     val username by viewModel.userName.collectAsState()
     val profileId = viewModel.profilePicture.value ?: R.drawable.outline_groups_24
 
-    val tasksViewModel: TasksViewModel = viewModel(factory = TasksViewModel.Factory)
-    val tasksList by tasksViewModel.displayTasks.collectAsState()
     TaskScreen(
         navController = navController,
         username = username,
         profilePicture = profileId,
         tasksList = tasksList,
-        onDayClick = tasksViewModel::displayTasksByDate
+        onEvent = onEvent,
     )
 
 }
