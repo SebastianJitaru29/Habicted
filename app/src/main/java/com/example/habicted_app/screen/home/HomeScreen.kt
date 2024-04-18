@@ -1,6 +1,7 @@
 package com.example.habicted_app.screen.home
 
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -13,11 +14,13 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -36,6 +39,28 @@ import com.example.habicted_app.screen.taskscreen.TaskDialog
 fun HomeScreen(navController: NavHostController = rememberNavController()) {
     var screen = listOf(NavBar.Tasks, NavBar.Groups, NavBar.Settings)
     val homeViewModel: HomeViewModel = hiltViewModel()
+
+    val context = LocalContext.current
+    val networkStatus = homeViewModel.networkStatus.collectAsState().value
+    LaunchedEffect(homeViewModel.networkStatus) {
+        when (networkStatus) {
+            NetworkStatus.None -> {
+                Toast.makeText(context, "No internet connection", Toast.LENGTH_SHORT)
+                    .show()
+            }
+
+            NetworkStatus.Wifi -> {
+                Toast.makeText(context, "Connected to wifi", Toast.LENGTH_SHORT).show()
+            }
+
+            NetworkStatus.Mobile -> {
+                Toast.makeText(context, "Connected to cellular", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+    }
+
+
     Scaffold(
         bottomBar = { NavBottomBar(navController = navController) },
         floatingActionButton = {
@@ -149,8 +174,7 @@ fun NavFloatingActionButton(
                 })
         }
 
-        else -> {
-        }
+        else -> {}
     }
 
 }

@@ -1,5 +1,8 @@
 package com.example.habicted_app.screen.home
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.lifecycle.ViewModel
 import com.example.habicted_app.data.model.Group
 import com.example.habicted_app.data.model.Task
@@ -22,6 +25,9 @@ class HomeViewModel @Inject constructor(
 
     private val _homeUiState = MutableStateFlow(HomeUIState())
     val homeUiState = _homeUiState.asStateFlow()
+
+    private val _networkStatus = MutableStateFlow(NetworkStatus.None)
+    val networkStatus = _networkStatus.asStateFlow()
 
     init {
         loadTasks()
@@ -53,6 +59,7 @@ class HomeViewModel @Inject constructor(
             is HomeUiEvents.SaveTask -> addTask(event.task)
             is HomeUiEvents.SaveGroup -> addGroup(event.group)
             is HomeUiEvents.FilterTasksByDate -> filterTasksByDate(event.date)
+            is HomeUiEvents.NetworkCurrentStatus -> _networkStatus.value = event.status
         }
     }
 
@@ -82,4 +89,31 @@ class HomeViewModel @Inject constructor(
             )
         }
     }
+
+
+    fun checkNetworkStatus(context: Context) {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        val network = connectivityManager.activeNetwork
+        val capabilities = connectivityManager.getNetworkCapabilities(network)
+
+        when {
+            capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true -> {
+                _networkStatus.value = NetworkStatus.Wifi
+            }
+
+            capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) == true -> {
+                _networkStatus.value = NetworkStatus.Mobile
+            }
+
+            else -> {
+                _networkStatus.value = NetworkStatus.None
+            }
+        }
+    }
+}
+
+enum class NetworkStatus {
+    Wifi, Mobile, None
 }
