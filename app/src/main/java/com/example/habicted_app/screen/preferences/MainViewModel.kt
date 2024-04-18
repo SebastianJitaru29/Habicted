@@ -12,10 +12,10 @@ class MainViewModel @Inject constructor(
     private val myPreferencesDataStore: MyPreferencesDataStore
 ): ViewModel(){
     val isCompleted = myPreferencesDataStore.taskStatusFlow.map {
-        it.isCompleted
+        it.isLight
     }
     val priority = myPreferencesDataStore.taskStatusFlow.map {
-        it.priority
+        it.netpreference
     }
 
     fun updateIsCompleted(isCompleted:Boolean){
@@ -24,9 +24,9 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun updatePriority(priority: Priority){
+    fun updateNetworkPreference(priority: NetworkPreference){
         viewModelScope.launch {
-            myPreferencesDataStore.updatePriority(priority)
+            myPreferencesDataStore.updateNetworkPreference(priority)
         }
     }
 }
