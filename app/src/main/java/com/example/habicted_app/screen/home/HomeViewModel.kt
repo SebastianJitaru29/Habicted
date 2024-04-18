@@ -59,7 +59,7 @@ class HomeViewModel @Inject constructor(
             is HomeUiEvents.SaveTask -> addTask(event.task)
             is HomeUiEvents.SaveGroup -> addGroup(event.group)
             is HomeUiEvents.FilterTasksByDate -> filterTasksByDate(event.date)
-            is HomeUiEvents.NetworkCurrentStatus -> _networkStatus.value = event.status
+            is HomeUiEvents.UpdateNetworkCurrentStatus -> checkNetworkStatus(event.context)
         }
     }
 
@@ -91,7 +91,7 @@ class HomeViewModel @Inject constructor(
     }
 
 
-    fun checkNetworkStatus(context: Context) {
+    private fun checkNetworkStatus(context: Context) {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 

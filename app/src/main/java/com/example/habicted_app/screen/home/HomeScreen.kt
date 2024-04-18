@@ -33,6 +33,7 @@ import com.example.habicted_app.navigation.graphs.HomeNavGraph
 import com.example.habicted_app.navigation.graphs.NavBar
 import com.example.habicted_app.screen.groups.GroupAddDialog
 import com.example.habicted_app.screen.taskscreen.TaskDialog
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -41,22 +42,9 @@ fun HomeScreen(navController: NavHostController = rememberNavController()) {
     val homeViewModel: HomeViewModel = hiltViewModel()
 
     val context = LocalContext.current
-    val networkStatus = homeViewModel.networkStatus.collectAsState().value
-    LaunchedEffect(homeViewModel.networkStatus) {
-        when (networkStatus) {
-            NetworkStatus.None -> {
-                Toast.makeText(context, "No internet connection", Toast.LENGTH_SHORT)
-                    .show()
-            }
-
-            NetworkStatus.Wifi -> {
-                Toast.makeText(context, "Connected to wifi", Toast.LENGTH_SHORT).show()
-            }
-
-            NetworkStatus.Mobile -> {
-                Toast.makeText(context, "Connected to cellular", Toast.LENGTH_SHORT)
-                    .show()
-            }
+    LaunchedEffect(key1 = homeViewModel.networkStatus) {
+        homeViewModel.networkStatus.collect {
+            Toast.makeText(context, "Status: $it", Toast.LENGTH_LONG).show()
         }
     }
 
