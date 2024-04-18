@@ -3,17 +3,23 @@ package com.example.habicted_app.screen.home
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.habicted_app.data.model.Group
 import com.example.habicted_app.data.model.Task
 import com.example.habicted_app.data.repository.GroupRepository
 import com.example.habicted_app.data.repository.TaskRepository
 import com.example.habicted_app.screen.groups.GroupUIState
+import com.example.habicted_app.screen.preferences.MyPreferencesDataStore
+import com.example.habicted_app.screen.preferences.NetworkPreference
 import com.example.habicted_app.screen.taskscreen.TaskUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -21,13 +27,12 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val tasksRepository: TaskRepository,
     private val groupRepository: GroupRepository,
+    private val myPreferencesDataStore: MyPreferencesDataStore,
 ) : ViewModel() {
 
     private val _homeUiState = MutableStateFlow(HomeUIState())
     val homeUiState = _homeUiState.asStateFlow()
 
-    private val _networkStatus = MutableStateFlow(NetworkStatus.None)
-    val networkStatus = _networkStatus.asStateFlow()
 
     init {
         loadTasks()
@@ -98,17 +103,26 @@ class HomeViewModel @Inject constructor(
         val network = connectivityManager.activeNetwork
         val capabilities = connectivityManager.getNetworkCapabilities(network)
 
+        var priority: NetworkPreference? = null
+        viewModelScope.launch {
+            priority = myPreferencesDataStore.taskStatusFlow.first().netpreference
+        }
+
         when {
             capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true -> {
-                _networkStatus.value = NetworkStatus.Wifi
+                Toast.makeText(context, "Connected to wifi", Toast.LENGTH_SHORT).show()
             }
 
             capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) == true -> {
-                _networkStatus.value = NetworkStatus.Mobile
+                if (priority == NetworkPreference.WIFI)
+                    Toast.makeText(context, "Please connect to a wifi network", Toast.LENGTH_SHORT)
+                        .show()
+                else
+                    Toast.makeText(context, "Connected to mobile data", Toast.LENGTH_SHORT).show()
             }
 
             else -> {
-                _networkStatus.value = NetworkStatus.None
+                Toast.makeText(context, "No internet connection", Toast.LENGTH_SHORT).show()
             }
         }
     }
