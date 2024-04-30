@@ -1,51 +1,20 @@
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
-import androidx.compose.material3.RadioButtonDefaults
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Switch
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.habicted_app.screen.preferences.MainViewModel
-import com.example.habicted_app.screen.preferences.Priority
-
+import com.example.habicted_app.screen.preferences.NetworkPreference
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(mainViewModel: MainViewModel, modifier: Modifier = Modifier) {
     val selectedIsCompleted by mainViewModel.isCompleted.collectAsState(initial = false)
-
-    val isCompletedStatus = if (selectedIsCompleted) "Yes" else "No"
-
-    val selectedPriority by
-    mainViewModel.priority.collectAsState(initial = Priority.Low)
-
-    val priorityStatus = when (selectedPriority) {
-        Priority.High -> "High"
-        Priority.Medium -> "Medium"
-        Priority.Low -> "Low"
-    }
-    val scrollState = rememberScrollState()
+    val selectedNetworkPreference by mainViewModel.priority.collectAsState(initial = NetworkPreference.WIFI)
 
     Scaffold(
         topBar = {
@@ -57,83 +26,78 @@ fun SettingsScreen(mainViewModel: MainViewModel, modifier: Modifier = Modifier) 
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .padding(innerPadding)
-                .verticalScroll(state = scrollState),
+                .padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "Settings",
-                style = MaterialTheme.typography.bodySmall
-            )
-
-            // Example settings options
-            SettingsOption(text = "Notifications")
-            SettingsOption(text = "Privacy")
-            SettingsOption(text = "Language")
-
-            // Save button
-            Button(
-                onClick = { /* TODO: Implement save settings */ },
-                modifier = Modifier.padding(16.dp),
-                shape = RoundedCornerShape(49.dp)
-            ) {
-                Text(text = "Save Settings")
-            }
-            Spacer(modifier = Modifier.size(16.dp))
-            Text(text = "Task Status")
-            Spacer(modifier = Modifier.size(16.dp))
-            Text(text = "Completed: $isCompletedStatus")
-            Switch(
-                checked = selectedIsCompleted,
-                onCheckedChange = { mainViewModel.updateIsCompleted(it) }
-            )
-            Divider(
+            Surface(
+                shape = RoundedCornerShape(8.dp),
+                color = MaterialTheme.colorScheme.inversePrimary,
                 modifier = Modifier
-                    .fillMaxWidth(.7f)
-                    .padding(vertical = 8.dp)
-            )
-            Text(text = "Priority: $priorityStatus")
-            PriorityRow(mainViewModel = mainViewModel, selectedPriority = selectedPriority)
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = "Light Mode", style = MaterialTheme.typography.bodyLarge)
+                        Spacer(modifier = Modifier.size(8.dp))
+                        Switch(
+                            checked = selectedIsCompleted,
+                            onCheckedChange = { mainViewModel.updateIsCompleted(it) }
+                        )
+                    }
+                }
+            }
+
+            // Box for Priority
+            Surface(
+                shape = RoundedCornerShape(8.dp),
+                color = MaterialTheme.colorScheme.inversePrimary,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    Text(text = "Network", style = MaterialTheme.typography.bodyLarge)
+                    Spacer(modifier = Modifier.size(16.dp))
+                    NetworkPreferences(
+                        mainViewModel = mainViewModel,
+                        selectedNetworkPreference = selectedNetworkPreference
+                    )
+                }
+            }
         }
     }
 }
 
-
 @Composable
-fun PriorityRow(
+fun NetworkPreferences(
     mainViewModel: MainViewModel,
-    selectedPriority: Priority,
+    selectedNetworkPreference: NetworkPreference,
 ) {
-
     Row(
         modifier = Modifier
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Priority.entries.forEach { priority ->
+        NetworkPreference.entries.forEach { networkPreference ->
             Text(
-                text = priority.name,
+                text = networkPreference.name,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                modifier = Modifier.weight(1f),
+                style = MaterialTheme.typography.bodyLarge
             )
             RadioButton(
-                selected = priority == selectedPriority,
-                onClick = { mainViewModel.updatePriority(priority) },
-                colors = RadioButtonDefaults.colors(selectedPriority.color)
-
+                selected = networkPreference == selectedNetworkPreference,
+                onClick = { mainViewModel.updateNetworkPreference(networkPreference) },
             )
         }
-    }
-}
-
-@Composable
-fun SettingsOption(text: String) {
-    Button(
-        onClick = { /* TODO: Handle settings option click */ },
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Text(text = text)
     }
 }

@@ -36,6 +36,8 @@ import com.example.habicted_app.screen.taskscreen.TaskDialog
 fun HomeScreen(navController: NavHostController = rememberNavController()) {
     var screen = listOf(NavBar.Tasks, NavBar.Groups, NavBar.Settings)
     val homeViewModel: HomeViewModel = hiltViewModel()
+
+
     Scaffold(
         bottomBar = { NavBottomBar(navController = navController) },
         floatingActionButton = {
@@ -149,8 +151,7 @@ fun NavFloatingActionButton(
                 })
         }
 
-        else -> {
-        }
+        else -> {}
     }
 
 }

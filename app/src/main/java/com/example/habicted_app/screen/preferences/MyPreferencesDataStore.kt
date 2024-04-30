@@ -1,7 +1,6 @@
 package com.example.habicted_app.screen.preferences
 
 import android.content.Context
-import androidx.compose.ui.graphics.Color
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -18,17 +17,16 @@ import javax.inject.Singleton
 
 val Context.myPreferencesDataStore: DataStore<Preferences> by preferencesDataStore("settings")
 
-enum class Priority(val color: Color){
-    High(color = Color.Red),
-    Medium(color = Color.Yellow),
-    Low(color = Color.Blue)
-
+enum class NetworkPreference {
+    WIFI,
+    ANY
 }
 
 data class TaskStatus(
-    val isCompleted: Boolean,
-    val priority: Priority
+    val isLight: Boolean,
+    val netpreference: NetworkPreference
 )
+
 @Singleton
 class MyPreferencesDataStore @Inject constructor(
     @ApplicationContext context: Context
@@ -49,10 +47,10 @@ class MyPreferencesDataStore @Inject constructor(
             }
         }.map { preferences ->
             val isCompleted = preferences[PreferencesKeys.IS_COMPLETED_KEY] ?: false
-            val priority = Priority.valueOf(
-                preferences[PreferencesKeys.PRIORITY_KEY]?:Priority.Low.name
+            val priority = NetworkPreference.valueOf(
+                preferences[PreferencesKeys.PRIORITY_KEY] ?: NetworkPreference.WIFI.name
             )
-            TaskStatus(isCompleted,priority)
+            TaskStatus(isCompleted, priority)
         }
 
     suspend fun updateIsCompleted(isCompleted: Boolean){
@@ -61,10 +59,9 @@ class MyPreferencesDataStore @Inject constructor(
         }
     }
 
-    suspend fun updatePriority(priority: Priority){
+    suspend fun updateNetworkPreference(priority: NetworkPreference){
         myPreferencesDataStore.edit { preferences ->
             preferences[PreferencesKeys.PRIORITY_KEY] = priority.name
         }
     }
-
 }

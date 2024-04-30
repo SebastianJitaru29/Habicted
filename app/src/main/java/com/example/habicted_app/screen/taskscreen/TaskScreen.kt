@@ -16,17 +16,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Update
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
+import com.example.habicted_app.R
 import com.example.habicted_app.screen.home.HomeUiEvents
 import com.example.habicted_app.screen.taskscreen.components.CalendarApp
 import com.example.habicted_app.ui.theme.HabictedAppTheme
@@ -46,14 +51,25 @@ fun TaskScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        TopRow(onProfilePic = onProfilePic, username = username, profilePicture = profilePicture)
+        TopRow(
+            onProfilePic = onProfilePic,
+            username = username,
+            profilePicture = profilePicture,
+            onEvent = onEvent
+        )
         Spacer(modifier = Modifier.height(16.dp))
         CalendarApp(taskList = tasksList, onEvent = onEvent)
     }
 }
 
 @Composable
-fun TopRow(onProfilePic: () -> Unit, username: String, profilePicture: Int) {
+fun TopRow(
+    onProfilePic: () -> Unit,
+    username: String,
+    profilePicture: Int,
+    onEvent: (HomeUiEvents) -> Unit,
+) {
+    val context = LocalContext.current
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth()
@@ -68,14 +84,18 @@ fun TopRow(onProfilePic: () -> Unit, username: String, profilePicture: Int) {
             Text(
                 text = "Welcome!",
                 textAlign = TextAlign.Start,
-                modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = username,
                 textAlign = TextAlign.Start,
-                modifier = Modifier.fillMaxWidth()
             )
+        }
+        Spacer(modifier = Modifier.weight(1f))
+        IconButton(
+            onClick = { onEvent(HomeUiEvents.UpdateNetworkCurrentStatus(context = context)) },
+        ) {
+            Icon(imageVector = Icons.Filled.Update, contentDescription = "update")
         }
     }
 }
@@ -118,14 +138,13 @@ fun ProfilePicture(
 )
 @Composable
 fun Preview() {
-    val navController = rememberNavController()
     HabictedAppTheme {
-//        TaskScreen(
-//            navController = navController,
-//            username = "User",
-//            profilePicture = R.drawable.outline_groups_24,
-//            tasksList = emptyList(),
-//            onDayClick = {  }
-//        )
+        TaskScreen(
+            username = "User",
+            profilePicture = R.drawable.outline_groups_24,
+            tasksList = emptyList(),
+            onProfilePic = {},
+            onEvent = {},
+        )
     }
 }
