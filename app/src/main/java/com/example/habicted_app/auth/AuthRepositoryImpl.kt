@@ -18,7 +18,7 @@ class AuthRepositoryImpl @Inject constructor(
             val result = firebaseAuth.signInWithEmailAndPassword(email,password).await()
             emit(Resource.Success(result))
         }.catch {
-            emit(Resource.Error(it.message.toString()))
+            emit(Resource.Error(it.message.toString()+"hello"))
         }
     }
 
@@ -28,6 +28,6 @@ class AuthRepositoryImpl @Inject constructor(
             val result = firebaseAuth.createUserWithEmailAndPassword(email,password).await()
             emit(Resource.Success(result))
         }.catch {
-            emit(Resource.Error(it.message.toString()))
+            emit(Resource.Error(it.message.toString()+ "bye"))
         }    }
 }

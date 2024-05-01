@@ -131,7 +131,7 @@ fun RegisterScreen(
             Spacer(modifier = Modifier.height(40.dp))
             Button(
                 onClick = { scope.launch {
-                    viewModel.signUpUser(email,password)
+                    viewModel.registerUser(email,password)
                 }},
                 shape = RoundedCornerShape(49.dp),
                 modifier = Modifier
