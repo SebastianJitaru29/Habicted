@@ -27,3 +27,6 @@ captures/
 
 # Logs
 *.log
+
+# Firebase
+google-services.json
