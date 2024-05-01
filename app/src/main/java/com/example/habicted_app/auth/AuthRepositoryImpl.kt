@@ -29,5 +29,16 @@ class AuthRepositoryImpl @Inject constructor(
             emit(Resource.Success(result))
         }.catch {
             emit(Resource.Error(it.message.toString()))
-        }    }
+        }
+    }
+
+    override fun recoverPass(email: String): Flow<Resource<Unit>> {
+        return flow {
+            emit(Resource.Loading())
+            firebaseAuth.sendPasswordResetEmail(email).await()
+            emit(Resource.Success(Unit))
+        }.catch {
+            emit(Resource.Error(it.message.toString()))
+        }
+    }
 }

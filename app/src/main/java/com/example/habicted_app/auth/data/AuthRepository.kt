@@ -7,4 +7,5 @@ import com.google.firebase.auth.AuthResult
 interface AuthRepository {
     fun loginUser(email:String, password:String): Flow<Resource<AuthResult>>
     fun registerUser(email: String,password: String): Flow<Resource<AuthResult>>
+    fun recoverPass(email:String):Flow<Resource<Unit>>
 }
