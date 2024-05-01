@@ -75,14 +75,25 @@ fun WelcomeScreen(
         Spacer(modifier = Modifier.height(40.dp))
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
 
-            EmailInputField()
-            PasswordInputField {
+            EmailInputField(
+                modifier = Modifier.fillMaxWidth(),
+                email = email,
+                onEmailChange = { email = it }
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Replace TextField with PasswordInputField
+            PasswordInputField(
+                modifier = Modifier.fillMaxWidth(),
+                password = password,
+                onPasswordChange = { password = it }
+            ){
                 Text(
                     text = stringResource(id = R.string.password),
                     style = MaterialTheme.typography.bodyMedium,
                 )
             }
-
         }
 
         Spacer(modifier = Modifier.height(10.dp))

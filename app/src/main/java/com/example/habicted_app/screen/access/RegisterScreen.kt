@@ -91,43 +91,27 @@ fun RegisterScreen(
         ) {
             Spacer(modifier = Modifier.height(40.dp))
 
-            TextField(
+            // Replace TextField with EmailInputField
+            EmailInputField(
                 modifier = Modifier.fillMaxWidth(),
-                value = email,
-                colors = TextFieldDefaults.textFieldColors(
-                    cursorColor = Color.Black,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                ),
-                onValueChange = {
-                    email = it
-
-                },
-                shape = RoundedCornerShape(8.dp),
-                singleLine = true,
-                placeholder = {
-                    Text(text = "Email")
-                }
+                email = email,
+                onEmailChange = { email = it }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
-            TextField(
+
+            // Replace TextField with PasswordInputField
+            PasswordInputField(
                 modifier = Modifier.fillMaxWidth(),
-                value = password,
-                colors = TextFieldDefaults.textFieldColors(
-                    cursorColor = Color.Black,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                ),
-                onValueChange = {
-                    password = it
-                },
-                shape = RoundedCornerShape(8.dp),
-                singleLine = true,
-                placeholder = {
-                    Text(text = "Password")
-                }
-            )
+                password = password,
+                onPasswordChange = { password = it }
+            ){
+                Text(
+                    text = stringResource(id = R.string.password),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
+
             Spacer(modifier = Modifier.height(40.dp))
             Button(
                 onClick = { scope.launch {

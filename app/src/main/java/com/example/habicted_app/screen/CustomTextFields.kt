@@ -21,9 +21,11 @@ import com.example.habicted_app.utils.ValidateEmail
 
 
 @Composable
-fun EmailInputField(modifier: Modifier = Modifier) {
-    //TODO: use viewModel if needed
-    var emailInput by rememberSaveable { mutableStateOf("") }
+fun EmailInputField(
+    modifier: Modifier = Modifier,
+    email: String,
+    onEmailChange: (String) -> Unit
+) {
     var isFocused by remember { mutableStateOf(false) }
     var hasBeenTouched by rememberSaveable { mutableStateOf(false) }
 
@@ -40,23 +42,20 @@ fun EmailInputField(modifier: Modifier = Modifier) {
                     hasBeenTouched = true
                 }
             },
-        value = emailInput,
-        onValueChange = {
-            emailInput = it
-        },
+        value = email,
+        onValueChange = { onEmailChange(it) },
         label = {
             Text(
                 text = stringResource(id = R.string.email),
                 style = MaterialTheme.typography.bodyMedium,
             )
         },
-
         textStyle = MaterialTheme.typography.bodyMedium,
         singleLine = true,
-        isError = !isEmailValid(emailInput) && hasBeenTouched && !isFocused,
+        isError = !isEmailValid(email) && hasBeenTouched && !isFocused,
         supportingText = {
-            if (!isEmailValid(emailInput) && hasBeenTouched && !isFocused) {
-                ValidateEmail().validate(emailInput).errorMessage?.let {
+            if (!isEmailValid(email) && hasBeenTouched && !isFocused) {
+                ValidateEmail().validate(email).errorMessage?.let {
                     Text(
                         text = it,
                         style = MaterialTheme.typography.bodyMedium,
@@ -69,18 +68,17 @@ fun EmailInputField(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun PasswordInputField(label: @Composable () -> Unit = {}) {
-    //TODO: Implement viewModel
-    var password by rememberSaveable { mutableStateOf("") }
-
+fun PasswordInputField(
+    modifier: Modifier = Modifier,
+    password: String,
+    onPasswordChange: (String) -> Unit,
+    label: @Composable () -> Unit = {}
+) {
     OutlinedTextField(
         value = password,
-        onValueChange = {
-            password = it
-        },
+        onValueChange = { onPasswordChange(it) },
         label = label,
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         textStyle = MaterialTheme.typography.bodyMedium,
         visualTransformation = PasswordVisualTransformation(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),

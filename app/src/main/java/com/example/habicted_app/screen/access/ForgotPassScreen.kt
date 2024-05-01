@@ -22,6 +22,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -41,6 +45,7 @@ fun ForgotPasswordScreen(
     modifier: Modifier= Modifier,
     onBack: () -> Unit
 ){
+    var email by rememberSaveable { mutableStateOf("") }
     Scaffold (
         topBar = {
             TopAppBar(
@@ -70,7 +75,11 @@ fun ForgotPasswordScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(40.dp))
-            EmailInputField()
+            EmailInputField(
+                modifier = Modifier.fillMaxWidth(),
+                email = email,
+                onEmailChange = { email = it }
+            )
 
             Button(
                 onClick = { /*TODO*/ },
