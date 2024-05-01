@@ -1,9 +1,8 @@
 package com.example.habicted_app.screen.access
 
 import android.content.res.Configuration
-import androidx.compose.foundation.background
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,6 +19,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,11 +36,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.habicted_app.R
+import com.example.habicted_app.auth.model.signin.SignInViewModel
 import com.example.habicted_app.auth.model.signup.SignUpViewModel
 import com.example.habicted_app.screen.EmailInputField
 import com.example.habicted_app.screen.PasswordInputField
 import com.example.habicted_app.ui.theme.HabictedAppTheme
 import com.example.habicted_app.ui.theme.righteousFamily
+import kotlinx.coroutines.launch
 
 @Composable
 fun WelcomeScreen(
@@ -48,13 +50,10 @@ fun WelcomeScreen(
     onLogIn: () -> Unit,
     onSignUp: () -> Unit,
     onForgotedPassword: () -> Unit,
-    viewModel: SignUpViewModel = hiltViewModel()
+    viewModel: SignInViewModel = hiltViewModel()
 ) {
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
-    val scope = rememberCoroutineScope()
-    val context = LocalContext.current
-    val state = viewModel.signUpState.collectAsState(initial = null)
     Column(
         modifier = modifier
             .padding(20.dp)
@@ -97,13 +96,22 @@ fun WelcomeScreen(
         }
 
         Spacer(modifier = Modifier.height(10.dp))
-        ActionButtons(onLogIn = onLogIn, onSignUp = onSignUp, onForgotedPassword = onForgotedPassword)
+        ActionButtons(onLogIn = onLogIn, onSignUp = onSignUp, onForgotedPassword = onForgotedPassword, email,password,viewModel)
     }
 }
 
 @Composable
-fun ActionButtons(onLogIn: () -> Unit, onSignUp: () -> Unit, onForgotedPassword: () ->Unit) {
-
+fun ActionButtons(
+    onLogIn: () -> Unit,
+    onSignUp: () -> Unit,
+    onForgotedPassword: () -> Unit,
+    email: String,
+    password: String,
+    viewModel: SignInViewModel
+) {
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val state = viewModel.signInState.collectAsState(initial = null)
 
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -122,7 +130,11 @@ fun ActionButtons(onLogIn: () -> Unit, onSignUp: () -> Unit, onForgotedPassword:
         }
 
         Button(
-            onClick = onLogIn, //TODO: check no errors in text fields then check if credentials ok
+            onClick = {
+                      scope.launch {
+                          viewModel.loginUser(email,password)
+                      }
+            },
             shape = RoundedCornerShape(49.dp),
             modifier = Modifier
                 .fillMaxWidth()
@@ -146,6 +158,25 @@ fun ActionButtons(onLogIn: () -> Unit, onSignUp: () -> Unit, onForgotedPassword:
             Text(text = stringResource(id = R.string.signup))
         }
     }
+    LaunchedEffect(key1 = state.value?.isSuccess) {
+        scope.launch {
+            if (state.value?.isSuccess?.isNotEmpty() == true) {
+                val success = state.value?.isSuccess
+                Toast.makeText(context, "${success}", Toast.LENGTH_LONG).show()
+                onLogIn()
+            }
+        }
+    }
+
+    LaunchedEffect(key1 = state.value?.isError) {
+        scope.launch {
+            if (state.value?.isError?.isNotEmpty() == true) {
+                val error = state.value?.isError
+                Toast.makeText(context, "${error}", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
 }
 
 @Preview(name = "Welcome light theme", uiMode = Configuration.UI_MODE_NIGHT_NO)
