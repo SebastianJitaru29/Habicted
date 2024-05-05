@@ -6,6 +6,8 @@ import com.example.habicted_app.data.model.Group
 import com.example.habicted_app.data.model.Task
 import com.example.habicted_app.data.model.User
 import com.example.habicted_app.data.repository.GroupRepository
+import com.example.habicted_app.ui.theme.Amber500
+import com.example.habicted_app.ui.theme.Red500
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,7 +27,7 @@ class LocalGroupRepository : GroupRepository {
             members = listOf(
                 User(1, "", "", "", emptyList()),
             ),
-            color = "",
+            color = Red500.value,
             tasksList = listOf(
                 Task(
                     id = 1,
@@ -57,7 +59,7 @@ class LocalGroupRepository : GroupRepository {
             members = listOf(
                 User(1, "User1", "", "", emptyList()),
             ),
-            color = "",
+            color = Amber500.value,
             tasksList = emptyList(),
         )
     )

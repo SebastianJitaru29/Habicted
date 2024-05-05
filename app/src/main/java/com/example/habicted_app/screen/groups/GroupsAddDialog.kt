@@ -11,15 +11,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import com.example.habicted_app.data.model.User
 
 @Composable
 fun GroupAddDialog(
     onDismiss: () -> Unit,
-    onConfirm: (String, String, List<User>) -> Unit,
+    onConfirm: (String, Color, List<User>) -> Unit,
 ) {
     var name by remember { mutableStateOf("") }
-    val color by remember { mutableStateOf("") }
+    val color by remember { mutableStateOf(Color.Transparent) }
     val members by remember { mutableStateOf(listOf<User>()) }
 
     AlertDialog(

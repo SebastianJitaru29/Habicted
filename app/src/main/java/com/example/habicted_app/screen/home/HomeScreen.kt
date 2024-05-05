@@ -141,7 +141,7 @@ fun NavFloatingActionButton(
                             Group(
                                 id = 0,
                                 name = name,
-                                color = color,
+                                color = color.value,
                                 members = members,
                                 tasksList = emptyList()
                             )

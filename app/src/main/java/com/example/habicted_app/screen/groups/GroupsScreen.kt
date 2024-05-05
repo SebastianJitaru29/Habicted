@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.filled.Today
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -52,6 +53,9 @@ import com.example.habicted_app.R
 import com.example.habicted_app.data.model.Task
 import com.example.habicted_app.screen.taskscreen.calendar.CalendarData
 import com.example.habicted_app.screen.taskscreen.calendar.CalendarDataSource
+import com.example.habicted_app.ui.styling.ColorPalette
+import com.example.habicted_app.ui.theme.Red500
+import com.example.habicted_app.ui.theme.onPrimaryLight
 import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -98,31 +102,22 @@ fun GroupCard(
     expandedInitialValue: Boolean = false,
 ) {
     var expanded by rememberSaveable { mutableStateOf(expandedInitialValue) }
-
+    val palette = ColorPalette.colorToPalette(groupUIState.color)
     Card(
         modifier = modifier
             .wrapContentHeight()
             .fillMaxWidth(),
-        colors = CardDefaults.cardColors(),
+        colors = CardColors(
+            containerColor = palette.container,
+            contentColor = palette.onPrimary,
+            disabledContentColor = MaterialTheme.colorScheme.onSurface,
+            disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+        ),
         onClick = { expanded = !expanded }
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             Row(modifier = Modifier.padding(18.dp)) {
-                Image(
-                    painter = painterResource(id = R.drawable.outline_groups_24),
-                    contentDescription = "Group image",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(50.dp)
-                        .clip(RoundedCornerShape(10.dp))
-                        .border(
-                            width = 1.dp,
-                            color = Color.Black,
-                            shape = RoundedCornerShape(10.dp)
-                        )
-                        .background(MaterialTheme.colorScheme.onPrimary)
-                        .padding(10.dp)
-                )
+                GroupImage(Modifier.size(50.dp))
                 Spacer(modifier = Modifier.size(10.dp))
                 Column(
                     modifier = Modifier.padding(5.dp),
@@ -146,7 +141,12 @@ fun GroupCard(
                 val dataSource = CalendarDataSource()
                 // we use `mutableStateOf` and `remember` inside composable function to schedules recomposition
                 val calendarUiModel by remember { mutableStateOf(dataSource.getData(lastSelectedDate = dataSource.today)) }
-                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(18.dp),
+                    contentAlignment = Alignment.Center
+                ) {
                     GroupCalendarContent(
                         data = calendarUiModel,
                         onDateClickListener = { },
@@ -160,6 +160,25 @@ fun GroupCard(
 
 }
 
+
+@Composable
+fun GroupImage(modifier: Modifier = Modifier) {
+    Image(
+        painter = painterResource(id = R.drawable.outline_groups_24),
+        contentDescription = "Group image",
+        contentScale = ContentScale.Crop,
+        modifier = modifier
+            .clip(RoundedCornerShape(10.dp))
+            .border(
+                width = 1.dp,
+                color = Color.Black,
+                shape = RoundedCornerShape(10.dp)
+            )
+            .background(onPrimaryLight)
+            .padding(10.dp)
+    )
+}
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun GroupCalendarContent(
@@ -167,7 +186,13 @@ fun GroupCalendarContent(
     onDateClickListener: (CalendarData.Date) -> Unit,
     tasksInfo: List<Task>,
 ) {
-    LazyRow {
+    LazyRow(
+        modifier = Modifier
+            .background(Color.White, shape = RoundedCornerShape(10.dp))
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
         items(items = data.visibleDates) { date ->
             GroupCalendarItem(
                 date = date,
@@ -185,11 +210,21 @@ fun GroupCalendarItem(
     onClickListener: (CalendarData.Date) -> Unit,
     tasksInfo: List<Task>,
 ) {
-
     Card(
         modifier = Modifier
-            .padding(vertical = 4.dp, horizontal = 4.dp)
+            .run {
+                if (date.isToday) {
+                    this.border(
+                        width = 1.dp,
+                        color = Color.Black,
+                        shape = RoundedCornerShape(10.dp)
+                    )
+                } else this
+            }
             .clickable { onClickListener(date) },
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        ),
     ) {
 
         Column(
@@ -257,8 +292,6 @@ fun GroupCalendarItem(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 style = MaterialTheme.typography.bodySmall
             )
-
-
         }
     }
 }
@@ -303,6 +336,7 @@ fun GroupScreenPreview() {
         GroupUIState(
             "Group 1",
             emptyList(),
+            Color.Blue,
             emptyList(),
             false,
             1,
@@ -310,6 +344,7 @@ fun GroupScreenPreview() {
         GroupUIState(
             "Group 2",
             emptyList(),
+            Color.Red,
             emptyList(),
             true,
             1,
@@ -327,6 +362,7 @@ private fun GroupsCardsPrev() {
         groupUIState = GroupUIState(
             "Group 1",
             emptyList(),
+            Red500,
             listOf(
                 Task(
                     id = 1,
