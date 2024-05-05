@@ -240,3 +240,23 @@ val Grey500 = Color(0xFF616161)
 val BlueGrey500 = Color(0xFF455A64)
 
 
+val allColors = listOf(
+    Red500,
+    Pink500,
+    Purple500,
+    DeepPurple500,
+    Indigo500,
+    Blue500,
+    LightBlue500,
+    Cyan500,
+    Teal500,
+    Green500,
+    LightGreen500,
+    Lime500,
+    Yellow500,
+    Amber500,
+    Orange500,
+    DeepOrange500,
+)
+
+
