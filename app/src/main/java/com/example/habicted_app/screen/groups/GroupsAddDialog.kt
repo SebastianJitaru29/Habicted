@@ -38,6 +38,7 @@ fun GroupAddDialog(
     var name by remember { mutableStateOf("") }
     var color by remember { mutableStateOf(Color.Transparent) }
     val members by remember { mutableStateOf(listOf<User>()) }
+    var isExpanded by remember { mutableStateOf(false) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -61,7 +62,10 @@ fun GroupAddDialog(
                 GroupColorPicker(
                     allGroupColors = allColors,
                     currentColor = color,
-                    onColorSelected = { color = it })
+                    onColorSelected = { color = it },
+                    isExpanded = isExpanded,
+                    setIsExpanded = { isExpanded = it }
+                )
             }
         },
         confirmButton = {
@@ -88,8 +92,9 @@ fun GroupColorPicker(
     allGroupColors: List<Color>,
     currentColor: Color,
     onColorSelected: (Color) -> Unit,
+    isExpanded: Boolean,
+    setIsExpanded: (Boolean) -> Unit,
 ) {
-    val (isExpanded, setIsExpanded) = remember { mutableStateOf(false) }
 
     val text = buildAnnotatedString {
         withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.onBackground)) {
