@@ -6,12 +6,12 @@ import com.example.habicted_app.data.model.Task
 import com.example.habicted_app.data.model.User
 
 data class GroupUIState(
-    val name: String,
-    val members: List<User>,
+    val name: String = "",
+    val members: List<User> = emptyList(),
     val color: Color = Color.Transparent,
-    val tasks: List<Task>,
-    val isInStreak: Boolean,
-    val streakDays: Int,
+    val tasks: List<Task> = emptyList(),
+    val isInStreak: Boolean = false,
+    val streakDays: Int = 0,
 ) {
     constructor(group: Group) : this(
         name = group.name,

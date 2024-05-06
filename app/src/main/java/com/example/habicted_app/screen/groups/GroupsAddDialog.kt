@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.PersonAdd
@@ -19,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,37 +37,44 @@ fun GroupAddDialog(
     onDismiss: () -> Unit,
     onConfirm: (String, Color, List<User>) -> Unit,
 ) {
-    var name by remember { mutableStateOf("") }
+    // Do state hoisting ?
+    var name by rememberSaveable { mutableStateOf("") }
+    val members by rememberSaveable { mutableStateOf(listOf<User>()) }
     var color by remember { mutableStateOf(Color.Transparent) }
-    val members by remember { mutableStateOf(listOf<User>()) }
     var isExpanded by remember { mutableStateOf(false) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Create new group") },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                OutlinedTextField(
-                    value = name,
-                    onValueChange = { name = it },
-                    label = { Text("Name") }
-                )
-
-                // User add list
-                Text(
-                    text = "Add members to the group:",
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Icon(imageVector = Icons.Filled.PersonAdd, contentDescription = "icon")
-
-                // Color pick boxes
-                GroupColorPicker(
-                    allGroupColors = allColors,
-                    currentColor = color,
-                    onColorSelected = { color = it },
-                    isExpanded = isExpanded,
-                    setIsExpanded = { isExpanded = it }
-                )
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                item {
+                    OutlinedTextField(
+                        value = name,
+                        onValueChange = { name = it },
+                        label = { Text("Name") }
+                    )
+                }
+                item {
+                    // User add list
+                    Text(
+                        text = "Add members to the group:",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Icon(imageVector = Icons.Filled.PersonAdd, contentDescription = "icon")
+                }
+                item {
+                    // Color pick boxes
+                    GroupColorPicker(
+                        allGroupColors = allColors,
+                        currentColor = color,
+                        onColorSelected = { color = it },
+                        isExpanded = isExpanded,
+                        setIsExpanded = { isExpanded = it }
+                    )
+                }
             }
         },
         confirmButton = {
