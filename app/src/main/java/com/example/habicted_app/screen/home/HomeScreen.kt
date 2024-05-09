@@ -34,7 +34,6 @@ import com.example.habicted_app.screen.taskscreen.TaskDialog
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeScreen(navController: NavHostController = rememberNavController()) {
-    var screen = listOf(NavBar.Tasks, NavBar.Groups, NavBar.Settings)
     val homeViewModel: HomeViewModel = hiltViewModel()
 
 
@@ -43,7 +42,8 @@ fun HomeScreen(navController: NavHostController = rememberNavController()) {
         floatingActionButton = {
             NavFloatingActionButton(
                 navController = navController,
-                onEvent = homeViewModel::onEvent
+                onEvent = homeViewModel::onEvent,
+                userGroups = homeViewModel.groupsList.collectAsState().value,
             )
         }
     ) {
@@ -51,6 +51,8 @@ fun HomeScreen(navController: NavHostController = rememberNavController()) {
             navController = navController,
             modifier = Modifier.padding(it),
             homeUIState = homeViewModel.homeUiState.collectAsState().value,
+            taskList = homeViewModel.tasksList.collectAsState(),
+            groupsList = homeViewModel.groupsList.collectAsState(),
             onEvent = homeViewModel::onEvent
         )
     }
@@ -80,6 +82,7 @@ fun NavBottomBar(navController: NavHostController) {
 fun NavFloatingActionButton(
     navController: NavHostController,
     onEvent: (HomeUiEvents) -> Unit = { },
+    userGroups: List<Group>,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val addButton = rememberSaveable { mutableStateOf(AddButton.None) }
@@ -109,12 +112,13 @@ fun NavFloatingActionButton(
     when (addButton.value) {
         AddButton.Task -> {
             TaskDialog(
+                userGroups = userGroups,
                 onDismiss = { addButton.value = AddButton.None },
                 onConfirm = { title, description, group, date ->
                     onEvent(
                         HomeUiEvents.SaveTask(
                             Task(
-                                id = 0,
+                                id = 0, //TODO
                                 groupId = group,
                                 name = title,
                                 description = description,
@@ -139,10 +143,10 @@ fun NavFloatingActionButton(
                     onEvent(
                         HomeUiEvents.SaveGroup(
                             Group(
-                                id = 0,
+                                id = userGroups.size + 1, // TODO
                                 name = name,
                                 color = color.value,
-                                members = members,
+                                members = members, // TODO
                                 tasksList = emptyList()
                             )
                         )

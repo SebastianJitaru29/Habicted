@@ -3,6 +3,7 @@ package com.example.habicted_app.screen.home
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,7 +11,6 @@ import com.example.habicted_app.data.model.Group
 import com.example.habicted_app.data.model.Task
 import com.example.habicted_app.data.repository.GroupRepository
 import com.example.habicted_app.data.repository.TaskRepository
-import com.example.habicted_app.screen.groups.GroupUIState
 import com.example.habicted_app.screen.preferences.MyPreferencesDataStore
 import com.example.habicted_app.screen.preferences.NetworkPreference
 import com.example.habicted_app.screen.taskscreen.TaskUIState
@@ -33,6 +33,11 @@ class HomeViewModel @Inject constructor(
     private val _homeUiState = MutableStateFlow(HomeUIState())
     val homeUiState = _homeUiState.asStateFlow()
 
+    private val _groupsList = MutableStateFlow<List<Group>>(emptyList())
+    val groupsList = _groupsList.asStateFlow()
+
+    private val _tasksList = MutableStateFlow<List<Task>>(emptyList())
+    val tasksList = _tasksList.asStateFlow()
 
     init {
         loadTasks()
@@ -40,13 +45,10 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun loadGroups() {
-        groupRepository.getAllGroups().let { groups ->
-            _homeUiState.update { state ->
-                state.copy(
-                    groups = groups.map { GroupUIState(it) }
-                )
-            }
-        }
+//        groupRepository.getAllGroups().let { groups ->
+//            _groupsList.update { groups }
+//        }
+        _groupsList.update { groupRepository.getAllGroups() }
     }
 
     private fun loadTasks() {
@@ -79,11 +81,14 @@ class HomeViewModel @Inject constructor(
 
     private fun addGroup(group: Group) {
         groupRepository.insertGroup(group)
-        _homeUiState.update {
-            it.copy(
-                groups = it.groups + GroupUIState(group)
-            )
-        }
+        //TODO: wait for confirmation and then update the UI
+        _groupsList.update { groupRepository.getAllGroups() }
+        Log.d("HomeViewModel", "New groups: ${_groupsList.value.map { it.name }}")
+
+//        _groupsList.compareAndSet(groupRepository.getAllGroups(), _groupsList.value + group)
+//        _groupsList.update { groups ->
+//            groups + group
+//        }
     }
 
     private fun filterTasksByDate(date: LocalDate) {

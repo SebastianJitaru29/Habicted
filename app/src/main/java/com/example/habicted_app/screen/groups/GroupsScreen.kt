@@ -50,6 +50,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.habicted_app.R
+import com.example.habicted_app.data.model.Group
 import com.example.habicted_app.data.model.Task
 import com.example.habicted_app.screen.taskscreen.calendar.CalendarData
 import com.example.habicted_app.screen.taskscreen.calendar.CalendarDataSource
@@ -62,7 +63,7 @@ import java.time.LocalDate
 @Composable
 fun GroupScreen(
     modifier: Modifier = Modifier,
-    groupList: List<GroupUIState>,
+    groupList: List<Group>,
 ) {
     Column {
         // TODO: Move to topbar in scaffold ?
@@ -80,10 +81,13 @@ fun GroupScreen(
             Spacer(modifier = Modifier.size(16.dp))
         }
         LazyColumn {
-            items(groupList.size) { index ->
+            items(
+                items = groupList,
+                key = { group -> group.id },
+            ) { group ->
                 GroupCard(
                     modifier = modifier.padding(8.dp),
-                    groupUIState = groupList[index],
+                    groupUIState = GroupUIState(group),
                     todayDate = LocalDate.now(),
                     expandedInitialValue = false
                 )
@@ -332,25 +336,69 @@ fun TasksCircle(modifier: Modifier = Modifier, proportions: List<Float>, colors:
 @Composable
 fun GroupScreenPreview() {
 
-    val groupList2 = listOf<GroupUIState>(
-        GroupUIState(
-            "Group 1",
-            emptyList(),
-            Color.Blue,
-            emptyList(),
-            false,
-            1,
+    val groupList: List<Group> = listOf(
+        Group(
+            id = 1,
+            name = "Group 1",
+            color = Red500.value,
+            tasksList = listOf(
+                Task(
+                    id = 1,
+                    groupId = 1,
+                    name = "Task 1",
+                    description = null,
+                    date = LocalDate.now(),
+                    isDone = false,
+                    streakDays = 1,
+                    done = 1,
+                    total = 2,
+                ),
+                Task(
+                    id = 2,
+                    groupId = 1,
+                    name = "Task 2",
+                    description = null,
+                    date = LocalDate.now(),
+                    isDone = false,
+                    streakDays = 1,
+                    done = 1,
+                    total = 2,
+                ),
+            ),
+            members = emptyList()
         ),
-        GroupUIState(
-            "Group 2",
-            emptyList(),
-            Color.Red,
-            emptyList(),
-            true,
-            1,
-        )
+        Group(
+            id = 2,
+            name = "Group 2",
+            color = Red500.value,
+            tasksList = listOf(
+                Task(
+                    id = 1,
+                    groupId = 2,
+                    name = "Task 1",
+                    description = null,
+                    date = LocalDate.now(),
+                    isDone = false,
+                    streakDays = 1,
+                    done = 1,
+                    total = 2,
+                ),
+                Task(
+                    id = 2,
+                    groupId = 2,
+                    name = "Task 2",
+                    description = null,
+                    date = LocalDate.now(),
+                    isDone = false,
+                    streakDays = 1,
+                    done = 1,
+                    total = 2,
+                ),
+            ),
+            members = emptyList()
+        ),
     )
-    GroupScreen(groupList = groupList2)
+    GroupScreen(groupList = groupList)
 }
 
 

@@ -77,7 +77,7 @@ class LocalGroupRepository : GroupRepository {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun getAllGroups(): List<Group> {
-        return allGroups
+        return allGroups.toList()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
