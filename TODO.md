@@ -4,13 +4,14 @@ List of possible ideas that could be implemented into this project:
 
 # Global
 - [ ] Fix animations of navbar navigation. Currently is random (?)
-- [ ] 🔸 Add push notifications with Firebase Cloud Messaging and Firebase Cloud Functions.
+- [ ] 🔸 🔥 Add push notifications with Firebase Cloud Messaging and Firebase Cloud Functions.
   - [ ] Notification for task
   - [ ] ❓ Notification for group invite  
 
 ---
 # Access screens
-- [ ] 🔸 Add Firebase Auth
+- [ ] 🔸 🔥 Add Firebase Auth
+  - [ ] keep user logged in. 
 - [ ] Validate inputs of email/passwords
 - [ ] Add show password button
 ## Register screen
@@ -32,18 +33,18 @@ List of possible ideas that could be implemented into this project:
 
 ---
 # Groups Screen
-- [ ] 🔸 Load and save groups to Firebase
+- [ ] 🔸 🔥 Load and save groups to Firebase
 ## Create group
 - [ ] Add option to invite users
 - [ ] Add color pick
 - [ ] Add image field
 ## Groups list
-- [ ] Option to invite users to a group
+- [ ] 🔥 Option to invite users to a group using Firebase 
 - [ ] Option to show more group details (users, habits for that group, etc.)
 
 ---
 # Settings Screen
-- [ ] 🔸 Load and save preferences to Firebase
+- [ ] 🔸 🔥 Load and save preferences to Firebase
 - [ ] 🔸 Add app releated preference
 - [ ] 🔸 Sync user network preference with app conections.
 
