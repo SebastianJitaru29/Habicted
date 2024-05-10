@@ -21,19 +21,20 @@ import com.example.habicted_app.navigation.routes.GroupsRoute
 import com.example.habicted_app.navigation.routes.SettingsRoute
 import com.example.habicted_app.navigation.routes.TasksRoute
 import com.example.habicted_app.screen.ProfileScreen
-import com.example.habicted_app.screen.home.HomeUIState
 import com.example.habicted_app.screen.home.HomeUiEvents
 import com.example.habicted_app.screen.preferences.MainViewModel
+import com.example.habicted_app.screen.taskscreen.TaskUIEvents
+import com.example.habicted_app.screen.taskscreen.TaskUIState
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeNavGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    homeUIState: HomeUIState,
     taskList: State<List<Task>>,
     groupsList: State<List<Group>>,
     onEvent: (HomeUiEvents) -> Unit,
+    onTaskUIEvents: (TaskUIEvents) -> TaskUIState?,
 ) {
     NavHost(
         navController = navController,
@@ -43,8 +44,9 @@ fun HomeNavGraph(
     ) {
         composable(route = NavBar.Tasks.route) {
             TasksRoute(
-                tasksList = homeUIState.tasks,
+                tasksList = taskList.value,
                 onEvent = onEvent,
+                onTaskUIEvents = onTaskUIEvents,
                 onProfileClick = { navController.navigate(Route.PROFILE.route) }
             )
         }

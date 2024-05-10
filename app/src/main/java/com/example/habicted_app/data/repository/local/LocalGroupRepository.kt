@@ -37,7 +37,7 @@ class LocalGroupRepository : GroupRepository {
                     date = LocalDate.now(),
                     isDone = false,
                     streakDays = 1,
-                    done = 1,
+                    doneBy = 1,
                     total = 2,
                 ),
                 Task(
@@ -48,7 +48,7 @@ class LocalGroupRepository : GroupRepository {
                     date = LocalDate.now(),
                     isDone = false,
                     streakDays = 1,
-                    done = 1,
+                    doneBy = 1,
                     total = 2,
                 ),
             )

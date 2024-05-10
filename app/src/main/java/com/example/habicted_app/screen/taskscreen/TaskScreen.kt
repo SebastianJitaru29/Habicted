@@ -32,6 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.habicted_app.R
+import com.example.habicted_app.data.model.Task
 import com.example.habicted_app.screen.home.HomeUiEvents
 import com.example.habicted_app.screen.taskscreen.components.CalendarApp
 import com.example.habicted_app.ui.theme.HabictedAppTheme
@@ -43,8 +44,9 @@ fun TaskScreen(
     username: String,
     profilePicture: Int,
     onProfilePic: () -> Unit,
-    tasksList: List<TaskUIState>,
+    tasksList: List<Task>,
     onEvent: (HomeUiEvents) -> Unit,
+    onTaskUIEvents: (TaskUIEvents) -> TaskUIState?,
 ) {
     Column(
         modifier = Modifier
@@ -58,7 +60,7 @@ fun TaskScreen(
             onEvent = onEvent
         )
         Spacer(modifier = Modifier.height(16.dp))
-        CalendarApp(taskList = tasksList, onEvent = onEvent)
+        CalendarApp(taskList = tasksList, onEvent = onEvent, onTaskUIEvents = onTaskUIEvents)
     }
 }
 
@@ -145,6 +147,12 @@ fun Preview() {
             tasksList = emptyList(),
             onProfilePic = {},
             onEvent = {},
+            onTaskUIEvents = { event ->
+                when(event) {
+                    is TaskUIEvents.ConvertTaskToTaskUIState -> TODO()
+                    is TaskUIEvents.UpdateIsDone -> TODO()
+                }
+            }
         )
     }
 }

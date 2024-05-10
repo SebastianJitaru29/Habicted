@@ -50,10 +50,10 @@ fun HomeScreen(navController: NavHostController = rememberNavController()) {
         HomeNavGraph(
             navController = navController,
             modifier = Modifier.padding(it),
-            homeUIState = homeViewModel.homeUiState.collectAsState().value,
             taskList = homeViewModel.tasksList.collectAsState(),
             groupsList = homeViewModel.groupsList.collectAsState(),
-            onEvent = homeViewModel::onEvent
+            onEvent = homeViewModel::onEvent,
+            onTaskUIEvents = homeViewModel::onTaskEvent,
         )
     }
 }
@@ -125,7 +125,7 @@ fun NavFloatingActionButton(
                                 date = date,
                                 isDone = false,
                                 streakDays = 0,
-                                done = 0,
+                                doneBy = 0,
                                 total = 0
                             )
                         )

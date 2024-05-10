@@ -31,7 +31,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.habicted_app.data.model.Task
 import com.example.habicted_app.screen.home.HomeUiEvents
+import com.example.habicted_app.screen.taskscreen.TaskUIEvents
 import com.example.habicted_app.screen.taskscreen.TaskUIState
 import com.example.habicted_app.screen.taskscreen.calendar.CalendarData
 import com.example.habicted_app.screen.taskscreen.calendar.CalendarDataSource
@@ -43,8 +45,9 @@ import java.time.format.FormatStyle
 @Composable
 fun CalendarApp(
     modifier: Modifier = Modifier,
-    taskList: List<TaskUIState>,
+    taskList: List<Task>,
     onEvent: (HomeUiEvents) -> Unit,
+    onTaskUIEvents: (TaskUIEvents) -> TaskUIState?,
 ) {
     val dataSource = CalendarDataSource()
     // we use `mutableStateOf` and `remember` inside composable function to schedules recomposition
@@ -92,7 +95,7 @@ fun CalendarApp(
         Spacer(modifier = Modifier.height(16.dp))
 
         Column(modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-            TaskListApp(taskList)
+            TaskListApp(taskList, onTaskUIEvents)
         }
     }
 }

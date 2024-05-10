@@ -8,21 +8,21 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.habicted_app.R
+import com.example.habicted_app.data.model.Task
 import com.example.habicted_app.screen.home.HomeUiEvents
 import com.example.habicted_app.screen.taskscreen.TaskScreen
+import com.example.habicted_app.screen.taskscreen.TaskUIEvents
 import com.example.habicted_app.screen.taskscreen.TaskUIState
 import com.example.habicted_app.screen.taskscreen.UserViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TasksRoute(
-    tasksList: List<TaskUIState>,
+    tasksList: List<Task>,
     onEvent: (HomeUiEvents) -> Unit,
     onProfileClick: () -> Unit,
+    onTaskUIEvents: (TaskUIEvents) -> TaskUIState?,
 ) {
-
-    val navController = rememberNavController()
-
     val viewModel: UserViewModel = viewModel(factory = UserViewModel.Factory)
     val username by viewModel.userName.collectAsState()
     val profileId = viewModel.profilePicture.value ?: R.drawable.outline_groups_24
@@ -33,6 +33,7 @@ fun TasksRoute(
         onProfilePic = onProfileClick,
         tasksList = tasksList,
         onEvent = onEvent,
+        onTaskUIEvents = onTaskUIEvents
     )
 
 }

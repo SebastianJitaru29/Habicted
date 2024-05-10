@@ -37,8 +37,8 @@ class LocalTaskRepository : TaskRepository {
     )
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun getTasks(): List<Task> {
-        return tasks
+    override fun getAllTasks(): List<Task> {
+        return tasks.toList()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -54,5 +54,16 @@ class LocalTaskRepository : TaskRepository {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun insertTask(task: Task) {
         tasks.add(task)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun updateTask(newTask: Task): Boolean {
+        val index = tasks.indexOfFirst { it.id == newTask.id }
+
+        if (index != -1) {
+            tasks[index] = newTask
+            return true
+        }
+        return false
     }
 }
