@@ -64,7 +64,9 @@ class HomeViewModel @Inject constructor(
 
     private fun addTask(newTask: Task) {
         tasksRepository.insertTask(newTask)
-        _tasksList.update { tasksRepository.getAllTasks() }
+        if (newTask.date == LocalDate.now()) {
+            _tasksList.update { tasksRepository.getTaskByDate(LocalDate.now()) }
+        }
     }
 
     private fun addGroup(group: Group) {
