@@ -19,8 +19,12 @@ import javax.inject.Singleton
 class RemoteTaskRepository : TaskRepository {
     private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
-    private val taskCollection = db.collection("users").document(auth.currentUser?.uid ?: "")
-        .collection("tasks")
+    private val taskCollection = if (auth.currentUser?.uid != null) {
+        db.collection("users").document(auth.currentUser?.uid!!).collection("tasks")
+    } else {
+        // Handle the case where the user is not signed in
+        null
+    }
 
     @Module
     @InstallIn(SingletonComponent::class)
@@ -36,11 +40,13 @@ class RemoteTaskRepository : TaskRepository {
         val taskList = mutableListOf<Task>()
 
         // Retrieve all tasks associated with the current user
-        val querySnapshot = taskCollection.get().await()
-        for (document in querySnapshot.documents) {
-            val task = document.toObject(Task::class.java)
-            task?.let {
-                taskList.add(it)
+        val querySnapshot = taskCollection?.get()?.await()
+        if (querySnapshot != null) {
+            for (document in querySnapshot.documents) {
+                val task = document.toObject(Task::class.java)
+                task?.let {
+                    taskList.add(it)
+                }
             }
         }
 
@@ -53,23 +59,25 @@ class RemoteTaskRepository : TaskRepository {
         val taskList = mutableListOf<Task>()
 
         // Query tasks by date associated with the current user
-        val querySnapshot = taskCollection.whereEqualTo("date", date.toString()).get().await()
-        for (document in querySnapshot.documents) {
-//            val task = document.toObject(Task::class.java)
-            val ddate = LocalDate.parse(document.get("date") as String)
-            val task = Task(
-                id = document.get("id") as Long,
-                groupId = (document.get("groupId") as Long).toInt(),
-                name = (document.get("name") as String),
-                description = document.get("description") as String,
-                date = ddate,
-                isDone = document.get("isDone") as Boolean,
-                streakDays = (document.get("streakDays") as Long).toInt(),
-                doneBy = (document.get("doneBy") as Long).toInt(),
-                total = (document.get("total") as Long).toInt()
-            )
-            task.let {
-                taskList.add(it)
+        val querySnapshot = taskCollection?.whereEqualTo("date", date.toString())?.get()?.await()
+        if (querySnapshot != null) {
+            for (document in querySnapshot.documents) {
+                //            val task = document.toObject(Task::class.java)
+                val ddate = LocalDate.parse(document.get("date") as String)
+                val task = Task(
+                    id = document.get("id") as Long,
+                    groupId = (document.get("groupId") as Long).toInt(),
+                    name = (document.get("name") as String),
+                    description = document.get("description") as String,
+                    date = ddate,
+                    isDone = document.get("isDone") as Boolean,
+                    streakDays = (document.get("streakDays") as Long).toInt(),
+                    doneBy = (document.get("doneBy") as Long).toInt(),
+                    total = (document.get("total") as Long).toInt()
+                )
+                task.let {
+                    taskList.add(it)
+                }
             }
         }
 
@@ -80,11 +88,13 @@ class RemoteTaskRepository : TaskRepository {
         val taskList = mutableListOf<Task>()
 
         // Query tasks by groupId associated with the current user
-        val querySnapshot = taskCollection.whereEqualTo("groupId", groupId).get().await()
-        for (document in querySnapshot.documents) {
-            val task = document.toObject(Task::class.java)
-            task?.let {
-                taskList.add(it)
+        val querySnapshot = taskCollection?.whereEqualTo("groupId", groupId)?.get()?.await()
+        if (querySnapshot != null) {
+            for (document in querySnapshot.documents) {
+                val task = document.toObject(Task::class.java)
+                task?.let {
+                    taskList.add(it)
+                }
             }
         }
 
@@ -106,7 +116,7 @@ class RemoteTaskRepository : TaskRepository {
         )
 
         // Add the task document to Firestore associated with the current user
-        taskCollection.document(task.id.toString()).set(taskMap).await()
+        taskCollection?.document(task.id.toString())?.set(taskMap)?.await()
     }
 
     override suspend fun updateTask(newTask: Task): Boolean {

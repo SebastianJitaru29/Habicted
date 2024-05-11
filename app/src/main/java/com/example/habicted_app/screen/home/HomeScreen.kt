@@ -33,7 +33,10 @@ import com.example.habicted_app.screen.taskscreen.TaskDialog
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun HomeScreen(navController: NavHostController = rememberNavController()) {
+fun HomeScreen(
+    rootNavController: NavHostController,
+    navController: NavHostController = rememberNavController(),
+) {
     val homeViewModel: HomeViewModel = hiltViewModel()
 
 
@@ -48,6 +51,7 @@ fun HomeScreen(navController: NavHostController = rememberNavController()) {
         }
     ) {
         HomeNavGraph(
+            rootNavController = rootNavController,
             navController = navController,
             modifier = Modifier.padding(it),
             taskList = homeViewModel.tasksList.collectAsState(),
@@ -169,5 +173,5 @@ private enum class AddButton {
 @Preview
 @Composable
 private fun NavBar() {
-    HomeScreen()
+//    HomeScreen()
 }

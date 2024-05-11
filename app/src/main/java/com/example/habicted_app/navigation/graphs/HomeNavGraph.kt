@@ -25,6 +25,7 @@ import com.example.habicted_app.screen.home.HomeUiEvents
 import com.example.habicted_app.screen.preferences.MainViewModel
 import com.example.habicted_app.screen.taskscreen.TaskUIEvents
 import com.example.habicted_app.screen.taskscreen.TaskUIState
+import com.google.firebase.auth.FirebaseAuth
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -35,6 +36,7 @@ fun HomeNavGraph(
     groupsList: State<List<Group>>,
     onEvent: (HomeUiEvents) -> Unit,
     onTaskUIEvents: (TaskUIEvents) -> TaskUIState?,
+    rootNavController: NavHostController,
 ) {
     NavHost(
         navController = navController,
@@ -61,7 +63,17 @@ fun HomeNavGraph(
             SettingsRoute(mainViewModel)
         }
         composable(route = Route.PROFILE.route) {
-            ProfileScreen()
+            ProfileScreen(onLogout = {
+                FirebaseAuth.getInstance().signOut()
+                rootNavController.navigate(Graphs.AUTHENTICATION) {
+                    popUpTo(Graphs.AUTHENTICATION) {
+                        inclusive = true
+                    }
+                }
+
+//                navController.clearBackStack()
+//                navController.navigate(Graphs.AUTHENTICATION)
+            })
         }
     }
 }

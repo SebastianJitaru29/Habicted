@@ -1,6 +1,5 @@
 package com.example.habicted_app.screen
 
-import android.graphics.drawable.Icon
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,12 +22,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
 import com.example.habicted_app.ui.theme.HabictedAppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(modifier: Modifier = Modifier){
+fun ProfileScreen(modifier: Modifier = Modifier, onLogout: () -> Unit = {}) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -56,7 +54,7 @@ fun ProfileScreen(modifier: Modifier = Modifier){
 
             // Logout button
             Button(
-                onClick = { /* TODO: Implement logout */ },
+                onClick = onLogout,
                 modifier = Modifier.padding(16.dp),
                 shape = RoundedCornerShape(49.dp)
             ) {
@@ -111,7 +109,7 @@ fun UserActionsSection() {
 @Composable
 @Preview
 fun ProfilePrev() {
-   HabictedAppTheme {
+    HabictedAppTheme {
         ProfileScreen()
     }
 }
