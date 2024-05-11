@@ -3,6 +3,7 @@ package com.example.habicted_app
 import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import com.example.habicted_app.data.repository.GroupRepository
 import com.example.habicted_app.data.repository.TaskRepository
 import com.example.habicted_app.data.repository.UserRepository
@@ -38,22 +39,19 @@ class HabictedAppContainer(private val context: Context) {
     private val remoteUserRepository = RemoteUserRepository()
 
     val groupRepository: GroupRepository
-        get() = if (isNetworkAvailable(context)) remoteGroupRepository else localGroupRepository
+        get() = localGroupRepository //if (isNetworkAvailable(context)) remoteGroupRepository else localGroupRepository
 
     val taskRepository: TaskRepository
         get() = if (isNetworkAvailable(context)) remoteTaskRepository else localTaskRepository
 
     val userRepository: UserRepository
-        get() = if (isNetworkAvailable(context)) remoteUserRepository else localUserRepository
+        get() = localUserRepository//if (isNetworkAvailable(context)) remoteUserRepository else localUserRepository
 
     private fun isNetworkAvailable(context: Context): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val network = connectivityManager.activeNetwork ?: return false
         val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
-//        return activeNetwork.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-
-        // For now we are returning false because remote is not implemented
-        return false
+        return activeNetwork.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 }

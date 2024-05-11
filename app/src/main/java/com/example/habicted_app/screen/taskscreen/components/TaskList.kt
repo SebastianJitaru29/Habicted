@@ -27,13 +27,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.habicted_app.R
 import com.example.habicted_app.data.model.Task
-import com.example.habicted_app.data.repository.local.LocalGroupRepository
-import com.example.habicted_app.data.repository.local.LocalTaskRepository
 import com.example.habicted_app.screen.taskscreen.TaskUIEvents
 import com.example.habicted_app.screen.taskscreen.TaskUIState
 import com.example.habicted_app.sensor.BiometricPromptManager
 import com.example.habicted_app.ui.styling.ColorPalette
-import com.example.habicted_app.ui.theme.HabictedAppTheme
 
 
 @Composable
@@ -166,23 +163,23 @@ fun CheckboxWithBiometric(
 @Preview(name = "Welcome light theme", uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 fun Preview1() {
-    val taskRepository = LocalTaskRepository()
-    val groupRepository = LocalGroupRepository()
-    val tasks = taskRepository.getAllTasks()
-    HabictedAppTheme {
-        TaskListApp(tasksList = tasks, onTaskUIEvents = { event ->
-            when (event) {
-                is TaskUIEvents.ConvertTaskToTaskUIState -> {
-                    val group = groupRepository.getGroup(event.task.groupId)
-                    TaskUIState(
-                        event.task,
-                        Color(group?.color ?: Color.Transparent.value),
-                        groupName = group?.name ?: ""
-                    )
-                }
-
-                is TaskUIEvents.UpdateIsDone -> TODO()
-            }
-        })
-    }
+//    val taskRepository = LocalTaskRepository()
+//    val groupRepository = LocalGroupRepository()
+////    val tasks = taskRepository.getAllTasks()
+//    HabictedAppTheme {
+//        TaskListApp(tasksList = tasks, onTaskUIEvents = { event ->
+//            when (event) {
+//                is TaskUIEvents.ConvertTaskToTaskUIState -> {
+//                    val group = groupRepository.getGroup(event.task.groupId)
+//                    TaskUIState(
+//                        event.task,
+//                        Color(group?.color ?: Color.Transparent.value),
+//                        groupName = group?.name ?: ""
+//                    )
+//                }
+//
+//                is TaskUIEvents.UpdateIsDone -> TODO()
+//            }
+//        })
+//    }
 }

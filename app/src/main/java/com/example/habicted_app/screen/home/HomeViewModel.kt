@@ -48,8 +48,10 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun loadTasks() {
-        _tasksList.update {
-            tasksRepository.getTaskByDate(LocalDate.now())
+        viewModelScope.launch {
+            _tasksList.update {
+                tasksRepository.getTaskByDate(LocalDate.now())
+            }
         }
     }
 
@@ -63,9 +65,11 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun addTask(newTask: Task) {
-        tasksRepository.insertTask(newTask)
-        if (newTask.date == LocalDate.now()) {
-            _tasksList.update { tasksRepository.getTaskByDate(LocalDate.now()) }
+        viewModelScope.launch {
+            tasksRepository.insertTask(newTask)
+            if (newTask.date == LocalDate.now()) {
+                _tasksList.update { tasksRepository.getTaskByDate(LocalDate.now()) }
+            }
         }
     }
 
@@ -77,8 +81,10 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun filterTasksByDate(date: LocalDate) {
-        val tasks = tasksRepository.getTaskByDate(date)
-        _tasksList.update { tasks }
+        viewModelScope.launch {
+            val tasks = tasksRepository.getTaskByDate(date)
+            _tasksList.update { tasks }
+        }
     }
 
     fun onTaskEvent(event: TaskUIEvents): TaskUIState? {
@@ -105,13 +111,15 @@ class HomeViewModel @Inject constructor(
 
     private fun updateTaskStatus(status: Boolean, task: Task) {
         val newTask = task.copy(isDone = status)
-        tasksRepository.updateTask(newTask)
+        viewModelScope.launch {
+            tasksRepository.updateTask(newTask)
 
-        val index = _tasksList.value.indexOfFirst { it.id == task.id }
-        if (index != -1) {
-            val updatedTasks = _tasksList.value.toMutableList()
-            updatedTasks[index] = newTask
-            _tasksList.update { updatedTasks }
+            val index = _tasksList.value.indexOfFirst { it.id == task.id }
+            if (index != -1) {
+                val updatedTasks = _tasksList.value.toMutableList()
+                updatedTasks[index] = newTask
+                _tasksList.update { updatedTasks }
+            }
         }
     }
 

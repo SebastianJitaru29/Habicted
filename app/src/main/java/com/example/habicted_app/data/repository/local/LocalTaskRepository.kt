@@ -5,26 +5,24 @@ import androidx.annotation.RequiresApi
 import com.example.habicted_app.data.model.Task
 import com.example.habicted_app.data.repository.TaskRepository
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import java.time.LocalDate
-import javax.inject.Singleton
 
 
 @Module
 @InstallIn(SingletonComponent::class)
 class LocalTaskRepository : TaskRepository {
 
-    @Module
-    @InstallIn(SingletonComponent::class)
-    object RepositoryModule {
-        @Singleton
-        @Provides
-        fun provideTaskRepository(): TaskRepository {
-            return LocalTaskRepository()
-        }
-    }
+//    @Module
+//    @InstallIn(SingletonComponent::class)
+//    object RepositoryModule {
+//        @Singleton
+//        @Provides
+//        fun provideTaskRepository(): TaskRepository {
+//            return LocalTaskRepository()
+//        }
+//    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private val tasks = mutableListOf<Task>(
@@ -37,27 +35,27 @@ class LocalTaskRepository : TaskRepository {
     )
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun getAllTasks(): List<Task> {
+    override suspend fun getAllTasks(): List<Task> {
         return tasks.toList()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun getTaskByDate(date: LocalDate): List<Task> {
+    override suspend fun getTaskByDate(date: LocalDate): List<Task> {
         return tasks.filter { it.date == date }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun getTaskByGroup(groupId: Int): List<Task> {
+    override suspend fun getTaskByGroup(groupId: Int): List<Task> {
         return tasks.filter { it.groupId == groupId }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun insertTask(task: Task) {
+    override suspend fun insertTask(task: Task) {
         tasks.add(task)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun updateTask(newTask: Task): Boolean {
+    override suspend fun updateTask(newTask: Task): Boolean {
         val index = tasks.indexOfFirst { it.id == newTask.id }
 
         if (index != -1) {

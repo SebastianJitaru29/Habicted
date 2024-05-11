@@ -5,11 +5,11 @@ import androidx.annotation.RequiresApi
 import java.time.LocalDate
 
 data class Task(
-    val id: Int,
+    val id: Long,
     val groupId: Int,
     val name: String,
     val description: String?,
-    val date: LocalDate,
+    val date: LocalDate = LocalDate.now(),
     val isDone: Boolean,
     val streakDays: Int,
     val doneBy: Int,

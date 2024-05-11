@@ -4,9 +4,9 @@ import com.example.habicted_app.data.model.Task
 import java.time.LocalDate
 
 interface TaskRepository {
-    fun getAllTasks(): List<Task>
-    fun getTaskByDate(date: LocalDate): List<Task>
-    fun getTaskByGroup(groupId: Int): List<Task>
-    fun insertTask(task: Task)
-    fun updateTask(newTask: Task): Boolean
+    suspend fun getAllTasks(): List<Task>
+    suspend fun getTaskByDate(date: LocalDate): List<Task>
+    suspend fun getTaskByGroup(groupId: Int): List<Task>
+    suspend fun insertTask(task: Task)
+    suspend fun updateTask(newTask: Task): Boolean
 }
