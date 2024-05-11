@@ -39,7 +39,7 @@ class HabictedAppContainer(private val context: Context) {
     private val remoteUserRepository = RemoteUserRepository()
 
     val groupRepository: GroupRepository
-        get() = localGroupRepository //if (isNetworkAvailable(context)) remoteGroupRepository else localGroupRepository
+        get() = if (isNetworkAvailable(context)) remoteGroupRepository else localGroupRepository
 
     val taskRepository: TaskRepository
         get() = if (isNetworkAvailable(context)) remoteTaskRepository else localTaskRepository

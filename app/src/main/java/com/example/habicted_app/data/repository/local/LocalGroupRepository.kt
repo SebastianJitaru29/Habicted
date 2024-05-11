@@ -9,11 +9,9 @@ import com.example.habicted_app.data.repository.GroupRepository
 import com.example.habicted_app.ui.theme.Amber500
 import com.example.habicted_app.ui.theme.Red500
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import java.time.LocalDate
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -64,46 +62,46 @@ class LocalGroupRepository : GroupRepository {
         )
     )
 
-    @Module
-    @InstallIn(SingletonComponent::class)
-    object RepositoryModule {
-
-        @Singleton
-        @Provides
-        fun provideGroupRepository(): GroupRepository {
-            return LocalGroupRepository()
-        }
-    }
+//    @Module
+//    @InstallIn(SingletonComponent::class)
+//    object RepositoryModule {
+//
+//        @Singleton
+//        @Provides
+//        fun provideGroupRepository(): GroupRepository {
+//            return LocalGroupRepository()
+//        }
+//    }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun getAllGroups(): List<Group> {
+    override suspend fun getAllGroups(): List<Group> {
         return allGroups.toList()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun getTasksForGroup(groupId: Int): List<Task> {
+    override suspend fun getTasksForGroup(groupId: Int): List<Task> {
         return getGroup(groupId)?.tasksList ?: emptyList()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun getGroup(groupId: Int): Group? {
+    override suspend fun getGroup(groupId: Int): Group? {
         return getAllGroups().firstOrNull { it.id == groupId }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun insertGroup(group: Group): Long {
+    override suspend fun insertGroup(group: Group): Long {
         allGroups.add(group)
         return group.id.toLong()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun upsertGroup(group: Group) {
+    override suspend fun upsertGroup(group: Group) {
         allGroups.removeIf { it.id == group.id }
         allGroups.add(group)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun deleteGroup(groupId: Int) {
+    override suspend fun deleteGroup(groupId: Int) {
         allGroups.removeIf { it.id == groupId }
     }
 }

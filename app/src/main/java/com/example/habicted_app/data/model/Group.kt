@@ -6,4 +6,6 @@ data class Group(
     val color: ULong = 0xFF000000u,
     val members: List<User>,
     val tasksList: List<Task>,
-)
+) {
+    constructor() : this(0, "", 0xFF000000u, emptyList(), emptyList())
+}

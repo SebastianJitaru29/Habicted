@@ -4,10 +4,10 @@ import com.example.habicted_app.data.model.Group
 import com.example.habicted_app.data.model.Task
 
 interface GroupRepository {
-    fun getAllGroups(): List<Group>
-    fun getGroup(groupId: Int): Group?
-    fun getTasksForGroup(groupId: Int): List<Task>
-    fun insertGroup(group: Group): Long
-    fun upsertGroup(group: Group)
-    fun deleteGroup(groupId: Int)
+    suspend fun getAllGroups(): List<Group>
+    suspend fun getGroup(groupId: Int): Group?
+    suspend fun getTasksForGroup(groupId: Int): List<Task>
+    suspend fun insertGroup(group: Group): Long
+    suspend fun upsertGroup(group: Group)
+    suspend fun deleteGroup(groupId: Int)
 }

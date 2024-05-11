@@ -5,7 +5,6 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.habicted_app.data.model.Group
@@ -44,7 +43,9 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun loadGroups() {
-        _groupsList.update { groupRepository.getAllGroups() }
+        viewModelScope.launch {
+            _groupsList.update { groupRepository.getAllGroups() }
+        }
     }
 
     private fun loadTasks() {
@@ -74,10 +75,12 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun addGroup(group: Group) {
-        groupRepository.insertGroup(group)
-        //TODO: wait for confirmation and then update the UI
-        _groupsList.update { groupRepository.getAllGroups() }
-        Log.d("HomeViewModel", "New groups: ${_groupsList.value.map { it.name }}")
+        viewModelScope.launch {
+            groupRepository.insertGroup(group)
+            //TODO: wait for confirmation and then update the UI
+            _groupsList.update { groupRepository.getAllGroups() }
+            Log.d("HomeViewModel", "New groups: ${_groupsList.value.map { it.name }}")
+        }
     }
 
     private fun filterTasksByDate(date: LocalDate) {
@@ -99,14 +102,14 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getTaskUIStateWithGroupInfo(task: Task): TaskUIState {
-        val group: Group =
-            groupRepository.getGroup(task.groupId) ?: throw Exception("Group not found")
-
-        return TaskUIState(
-            task = task,
-            groupName = group.name,
-            color = Color(group.color),
-        )
+//        val group: Group =
+//            groupRepository.getGroup(task.groupId) ?: throw Exception("Group not found")
+//        return TaskUIState(
+//            task = task,
+//            groupName = group.name,
+//            color = Color(group.color),
+//        )
+        return TaskUIState(task)
     }
 
     private fun updateTaskStatus(status: Boolean, task: Task) {
