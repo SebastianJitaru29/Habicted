@@ -10,7 +10,7 @@ import java.time.LocalDate
 @Module
 @InstallIn(SingletonComponent::class)
 class RemoteTaskRepository : TaskRepository {
-    override fun getTasks(): List<Task> {
+    override fun getAllTasks(): List<Task> {
         TODO("Not yet implemented")
     }
 
@@ -23,6 +23,10 @@ class RemoteTaskRepository : TaskRepository {
     }
 
     override fun insertTask(task: Task) {
+        TODO("Not yet implemented")
+    }
+
+    override fun updateTask(newTask: Task): Boolean {
         TODO("Not yet implemented")
     }
 }

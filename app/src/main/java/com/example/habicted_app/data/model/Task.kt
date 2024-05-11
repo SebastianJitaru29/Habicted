@@ -12,7 +12,7 @@ data class Task(
     val date: LocalDate,
     val isDone: Boolean,
     val streakDays: Int,
-    val done: Int,
+    val doneBy: Int,
     val total: Int,
 ) {
     @RequiresApi(Build.VERSION_CODES.O)

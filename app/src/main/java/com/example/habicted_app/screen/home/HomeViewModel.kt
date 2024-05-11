@@ -3,16 +3,18 @@ package com.example.habicted_app.screen.home
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.util.Log
 import android.widget.Toast
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.habicted_app.data.model.Group
 import com.example.habicted_app.data.model.Task
 import com.example.habicted_app.data.repository.GroupRepository
 import com.example.habicted_app.data.repository.TaskRepository
-import com.example.habicted_app.screen.groups.GroupUIState
 import com.example.habicted_app.screen.preferences.MyPreferencesDataStore
 import com.example.habicted_app.screen.preferences.NetworkPreference
+import com.example.habicted_app.screen.taskscreen.TaskUIEvents
 import com.example.habicted_app.screen.taskscreen.TaskUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,9 +32,11 @@ class HomeViewModel @Inject constructor(
     private val myPreferencesDataStore: MyPreferencesDataStore,
 ) : ViewModel() {
 
-    private val _homeUiState = MutableStateFlow(HomeUIState())
-    val homeUiState = _homeUiState.asStateFlow()
+    private val _groupsList = MutableStateFlow<List<Group>>(emptyList())
+    val groupsList = _groupsList.asStateFlow()
 
+    private val _tasksList = MutableStateFlow<List<Task>>(emptyList())
+    val tasksList = _tasksList.asStateFlow()
 
     init {
         loadTasks()
@@ -40,22 +44,12 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun loadGroups() {
-        groupRepository.getAllGroups().let { groups ->
-            _homeUiState.update { state ->
-                state.copy(
-                    groups = groups.map { GroupUIState(it) }
-                )
-            }
-        }
+        _groupsList.update { groupRepository.getAllGroups() }
     }
 
     private fun loadTasks() {
-        tasksRepository.getTaskByDate(LocalDate.now()).let { tasks ->
-            _homeUiState.update { state ->
-                state.copy(
-                    tasks = tasks.map { TaskUIState(it) }
-                )
-            }
+        _tasksList.update {
+            tasksRepository.getTaskByDate(LocalDate.now())
         }
     }
 
@@ -70,31 +64,56 @@ class HomeViewModel @Inject constructor(
 
     private fun addTask(newTask: Task) {
         tasksRepository.insertTask(newTask)
-        _homeUiState.update {
-            it.copy(
-                tasks = it.tasks + TaskUIState(newTask)
-            )
+        if (newTask.date == LocalDate.now()) {
+            _tasksList.update { tasksRepository.getTaskByDate(LocalDate.now()) }
         }
     }
 
     private fun addGroup(group: Group) {
         groupRepository.insertGroup(group)
-        _homeUiState.update {
-            it.copy(
-                groups = it.groups + GroupUIState(group)
-            )
-        }
+        //TODO: wait for confirmation and then update the UI
+        _groupsList.update { groupRepository.getAllGroups() }
+        Log.d("HomeViewModel", "New groups: ${_groupsList.value.map { it.name }}")
     }
 
     private fun filterTasksByDate(date: LocalDate) {
         val tasks = tasksRepository.getTaskByDate(date)
-        _homeUiState.update { state ->
-            state.copy(
-                tasks = tasks.map { TaskUIState(it) }
-            )
-        }
+        _tasksList.update { tasks }
     }
 
+    fun onTaskEvent(event: TaskUIEvents): TaskUIState? {
+        when (event) {
+            is TaskUIEvents.ConvertTaskToTaskUIState -> {
+                return getTaskUIStateWithGroupInfo(event.task)
+            }
+
+            is TaskUIEvents.UpdateIsDone -> updateTaskStatus(event.isDone, event.task)
+        }
+        return null
+    }
+
+    private fun getTaskUIStateWithGroupInfo(task: Task): TaskUIState {
+        val group: Group =
+            groupRepository.getGroup(task.groupId) ?: throw Exception("Group not found")
+
+        return TaskUIState(
+            task = task,
+            groupName = group.name,
+            color = Color(group.color),
+        )
+    }
+
+    private fun updateTaskStatus(status: Boolean, task: Task) {
+        val newTask = task.copy(isDone = status)
+        tasksRepository.updateTask(newTask)
+
+        val index = _tasksList.value.indexOfFirst { it.id == task.id }
+        if (index != -1) {
+            val updatedTasks = _tasksList.value.toMutableList()
+            updatedTasks[index] = newTask
+            _tasksList.update { updatedTasks }
+        }
+    }
 
     private fun checkNetworkStatus(context: Context) {
         val connectivityManager =

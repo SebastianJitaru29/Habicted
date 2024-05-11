@@ -218,3 +218,45 @@ val inversePrimaryDarkHighContrast = Color(0xFF400072)
 //val surfaceContainerHighDarkHighContrast = Color(0xFF2D2830)
 //val surfaceContainerHighestDarkHighContrast = Color(0xFF38333B)
 
+
+val Red500 = Color(0xFFE53935)
+val Pink500 = Color(0xFFD81B60)
+val Purple500 = Color(0xFF8E24AA)
+val DeepPurple500 = Color(0xFF5E35B1)
+val Indigo500 = Color(0xFF3949AB)
+val Blue500 = Color(0xFF1E88E5)
+val LightBlue500 = Color(0xFF039BE5)
+val Cyan500 = Color(0xFF00ACC1)
+val Teal500 = Color(0xFF00897B)
+val Green500 = Color(0xFF43A047)
+val LightGreen500 = Color(0xFF7CB342)
+val Lime500 = Color(0xFFC0CA33)
+val Yellow500 = Color(0xFFFDD835)
+val Amber500 = Color(0xFFFFB300)
+val Orange500 = Color(0xFFFF6F00)
+val DeepOrange500 = Color(0xFFE64A19)
+val Brown500 = Color(0xFF5D4037)
+val Grey500 = Color(0xFF616161)
+val BlueGrey500 = Color(0xFF455A64)
+
+
+val allColors = listOf(
+    Red500,
+    Pink500,
+    Purple500,
+    DeepPurple500,
+    Indigo500,
+    Blue500,
+    LightBlue500,
+    Cyan500,
+    Teal500,
+    Green500,
+    LightGreen500,
+    Lime500,
+    Yellow500,
+    Amber500,
+    Orange500,
+    DeepOrange500,
+)
+
+

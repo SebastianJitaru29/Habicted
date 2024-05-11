@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -14,21 +15,26 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.habicted_app.data.model.Group
+import com.example.habicted_app.data.model.Task
 import com.example.habicted_app.navigation.routes.GroupsRoute
 import com.example.habicted_app.navigation.routes.SettingsRoute
 import com.example.habicted_app.navigation.routes.TasksRoute
 import com.example.habicted_app.screen.ProfileScreen
-import com.example.habicted_app.screen.home.HomeUIState
 import com.example.habicted_app.screen.home.HomeUiEvents
 import com.example.habicted_app.screen.preferences.MainViewModel
+import com.example.habicted_app.screen.taskscreen.TaskUIEvents
+import com.example.habicted_app.screen.taskscreen.TaskUIState
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeNavGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    homeUIState: HomeUIState,
+    taskList: State<List<Task>>,
+    groupsList: State<List<Group>>,
     onEvent: (HomeUiEvents) -> Unit,
+    onTaskUIEvents: (TaskUIEvents) -> TaskUIState?,
 ) {
     NavHost(
         navController = navController,
@@ -38,13 +44,14 @@ fun HomeNavGraph(
     ) {
         composable(route = NavBar.Tasks.route) {
             TasksRoute(
-                tasksList = homeUIState.tasks,
+                tasksList = taskList.value,
                 onEvent = onEvent,
+                onTaskUIEvents = onTaskUIEvents,
                 onProfileClick = { navController.navigate(Route.PROFILE.route) }
             )
         }
         composable(route = NavBar.Groups.route) {
-            GroupsRoute(groupList = homeUIState.groups)
+            GroupsRoute(groupList = groupsList.value)
         }
         composable(route = NavBar.Settings.route) { backStackEntry ->
             val parentEntry = remember(backStackEntry) {
