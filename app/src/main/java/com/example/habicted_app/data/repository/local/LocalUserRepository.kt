@@ -1,6 +1,7 @@
 package com.example.habicted_app.data.repository.local
 
 import com.example.habicted_app.R
+import com.example.habicted_app.data.model.Group
 import com.example.habicted_app.data.repository.UserRepository
 
 class LocalUserRepository : UserRepository {
@@ -21,5 +22,9 @@ class LocalUserRepository : UserRepository {
 
     override fun setProfilePicture(profilePicture: Int) {
         this.profilePicture = profilePicture
+    }
+
+    override suspend fun getUserGroups(): List<Group> {
+        TODO("Not yet implemented")
     }
 }

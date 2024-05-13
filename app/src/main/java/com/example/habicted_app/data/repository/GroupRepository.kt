@@ -10,4 +10,9 @@ interface GroupRepository {
     suspend fun insertGroup(group: Group): Long
     suspend fun upsertGroup(group: Group)
     suspend fun deleteGroup(groupId: Int)
+
+    suspend fun getGroupTasks(groupId: Int): List<Task>
+    suspend fun addTaskToGroup(task: Task, groupId: Int)
+
+    suspend fun getUserGroups(): List<Group>
 }

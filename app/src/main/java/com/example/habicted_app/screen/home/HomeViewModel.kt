@@ -38,8 +38,16 @@ class HomeViewModel @Inject constructor(
     val tasksList = _tasksList.asStateFlow()
 
     init {
-        loadTasks()
-        loadGroups()
+        viewModelScope.launch {
+            _groupsList.update { groupRepository.getUserGroups() }
+
+            _groupsList.value.forEach { group ->
+                Log.d("HomeViewModel", "Loading tasks for group: ${group.id}")
+                val tasks = groupRepository.getGroupTasks(group.id)
+                _tasksList.update { it + tasks }
+            }
+        }
+
     }
 
     private fun loadGroups() {
@@ -50,11 +58,15 @@ class HomeViewModel @Inject constructor(
 
     private fun loadTasks() {
         viewModelScope.launch {
-            _tasksList.update {
-                tasksRepository.getTaskByDate(LocalDate.now())
+            _groupsList.value.forEach { group ->
+                Log.d("HomeViewModel", "Loading tasks for group: ${group.id}")
+                val tasks = groupRepository.getTasksForGroup(group.id)
+                _tasksList.update { it + tasks }
             }
         }
+        Log.d("HomeViewModel", "Tasks: ${_tasksList.value.map { it.name }}")
     }
+
 
     fun onEvent(event: HomeUiEvents) {
         when (event) {
@@ -67,10 +79,11 @@ class HomeViewModel @Inject constructor(
 
     private fun addTask(newTask: Task) {
         viewModelScope.launch {
-            tasksRepository.insertTask(newTask)
-            if (newTask.date == LocalDate.now()) {
-                _tasksList.update { tasksRepository.getTaskByDate(LocalDate.now()) }
-            }
+            groupRepository.addTaskToGroup(newTask, newTask.groupId)
+//            tasksRepository.insertTask(newTask)
+//            if (newTask.date == LocalDate.now()) {
+//                _tasksList.update { tasksRepository.getTaskByDate(LocalDate.now()) }
+//            }
         }
     }
 
@@ -85,8 +98,7 @@ class HomeViewModel @Inject constructor(
 
     private fun filterTasksByDate(date: LocalDate) {
         viewModelScope.launch {
-            val tasks = tasksRepository.getTaskByDate(date)
-            _tasksList.update { tasks }
+
         }
     }
 

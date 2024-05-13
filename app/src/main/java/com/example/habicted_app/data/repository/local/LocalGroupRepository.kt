@@ -104,4 +104,16 @@ class LocalGroupRepository : GroupRepository {
     override suspend fun deleteGroup(groupId: Int) {
         allGroups.removeIf { it.id == groupId }
     }
+
+    override suspend fun getGroupTasks(groupId: Int): List<Task> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun addTaskToGroup(task: Task, groupId: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getUserGroups(): List<Group> {
+        TODO("Not yet implemented")
+    }
 }
