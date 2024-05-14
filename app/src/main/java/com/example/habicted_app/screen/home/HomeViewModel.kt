@@ -40,7 +40,7 @@ class HomeViewModel @Inject constructor(
     private val _selectedDate = MutableStateFlow(LocalDate.now())
     val selectedDate = _selectedDate.asStateFlow()
 
-    private var allTasks = emptyList<Task>()
+    private var allTasks: Set<Task> = emptySet()
 
     init {
         viewModelScope.launch {
@@ -52,7 +52,7 @@ class HomeViewModel @Inject constructor(
         _groupsList.update { groupRepository.getUserGroups() }
 
         _groupsList.value.forEach { group ->
-            allTasks += groupRepository.getGroupTasks(group.id)
+            allTasks = allTasks.plus(groupRepository.getGroupTasks(group.id))
         }
 
         fetchTasksByDate(_selectedDate.value)
