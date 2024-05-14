@@ -26,12 +26,14 @@ import com.example.habicted_app.screen.preferences.MainViewModel
 import com.example.habicted_app.screen.taskscreen.TaskUIEvents
 import com.example.habicted_app.screen.taskscreen.TaskUIState
 import com.google.firebase.auth.FirebaseAuth
+import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeNavGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier,
+    selectedDate: LocalDate,
     taskList: State<List<Task>>,
     groupsList: State<List<Group>>,
     onEvent: (HomeUiEvents) -> Unit,
@@ -46,6 +48,7 @@ fun HomeNavGraph(
     ) {
         composable(route = NavBar.Tasks.route) {
             TasksRoute(
+                selectedDate = selectedDate,
                 tasksList = taskList.value,
                 onEvent = onEvent,
                 onTaskUIEvents = onTaskUIEvents,

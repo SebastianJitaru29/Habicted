@@ -37,34 +37,25 @@ class HomeViewModel @Inject constructor(
     private val _tasksList = MutableStateFlow<List<Task>>(emptyList())
     val tasksList = _tasksList.asStateFlow()
 
+    private val _selectedDate = MutableStateFlow(LocalDate.now())
+    val selectedDate = _selectedDate.asStateFlow()
+
+    private var allTasks = emptyList<Task>()
+
     init {
         viewModelScope.launch {
-            _groupsList.update { groupRepository.getUserGroups() }
-
-            _groupsList.value.forEach { group ->
-                Log.d("HomeViewModel", "Loading tasks for group: ${group.id}")
-                val tasks = groupRepository.getGroupTasks(group.id)
-                _tasksList.update { it + tasks }
-            }
-        }
-
-    }
-
-    private fun loadGroups() {
-        viewModelScope.launch {
-            _groupsList.update { groupRepository.getAllGroups() }
+            fetchData()
         }
     }
 
-    private fun loadTasks() {
-        viewModelScope.launch {
-            _groupsList.value.forEach { group ->
-                Log.d("HomeViewModel", "Loading tasks for group: ${group.id}")
-                val tasks = groupRepository.getTasksForGroup(group.id)
-                _tasksList.update { it + tasks }
-            }
+    private suspend fun fetchData() {
+        _groupsList.update { groupRepository.getUserGroups() }
+
+        _groupsList.value.forEach { group ->
+            allTasks += groupRepository.getGroupTasks(group.id)
         }
-        Log.d("HomeViewModel", "Tasks: ${_tasksList.value.map { it.name }}")
+
+        fetchTasksByDate(_selectedDate.value)
     }
 
 
@@ -72,18 +63,21 @@ class HomeViewModel @Inject constructor(
         when (event) {
             is HomeUiEvents.SaveTask -> addTask(event.task)
             is HomeUiEvents.SaveGroup -> addGroup(event.group)
-            is HomeUiEvents.FilterTasksByDate -> filterTasksByDate(event.date)
+            is HomeUiEvents.SelectDate -> setDate(event.date)
+            is HomeUiEvents.FilterTasksByDate -> fetchTasksByDate(event.date)
             is HomeUiEvents.UpdateNetworkCurrentStatus -> checkNetworkStatus(event.context)
         }
+    }
+
+    private fun setDate(date: LocalDate) {
+        _selectedDate.update { date }
+        Log.d("HomeViewModel", "Selected date: $date")
     }
 
     private fun addTask(newTask: Task) {
         viewModelScope.launch {
             groupRepository.addTaskToGroup(newTask, newTask.groupId)
-//            tasksRepository.insertTask(newTask)
-//            if (newTask.date == LocalDate.now()) {
-//                _tasksList.update { tasksRepository.getTaskByDate(LocalDate.now()) }
-//            }
+            fetchData()
         }
     }
 
@@ -96,10 +90,11 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun filterTasksByDate(date: LocalDate) {
-        viewModelScope.launch {
-
-        }
+    private fun fetchTasksByDate(date: LocalDate) {
+        val filteredTasks = allTasks.filter { it.date == date }
+        Log.d("HomeViewModel", "Filtered tasks: ${filteredTasks.map { it.name }}")
+        _tasksList.update { filteredTasks }
+        _selectedDate.update { date }
     }
 
     fun onTaskEvent(event: TaskUIEvents): TaskUIState? {

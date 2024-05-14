@@ -1,5 +1,6 @@
 package com.example.habicted_app.screen.taskscreen
 
+import TaskListApp
 import android.content.res.Configuration
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -34,8 +35,9 @@ import androidx.compose.ui.unit.dp
 import com.example.habicted_app.R
 import com.example.habicted_app.data.model.Task
 import com.example.habicted_app.screen.home.HomeUiEvents
-import com.example.habicted_app.screen.taskscreen.components.CalendarApp
+import com.example.habicted_app.screen.taskscreen.components.CalendarRow
 import com.example.habicted_app.ui.theme.HabictedAppTheme
+import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -44,6 +46,7 @@ fun TaskScreen(
     username: String,
     profilePicture: Int,
     onProfilePic: () -> Unit,
+    selectedDate: LocalDate,
     tasksList: List<Task>,
     onEvent: (HomeUiEvents) -> Unit,
     onTaskUIEvents: (TaskUIEvents) -> TaskUIState?,
@@ -60,7 +63,17 @@ fun TaskScreen(
             onEvent = onEvent
         )
         Spacer(modifier = Modifier.height(16.dp))
-        CalendarApp(taskList = tasksList, onEvent = onEvent, onTaskUIEvents = onTaskUIEvents)
+
+        Column(
+            modifier = modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CalendarRow(selectedDate = selectedDate, onEvent = onEvent)
+            Spacer(modifier = Modifier.height(16.dp))
+            Column(modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+                TaskListApp(tasksList, onTaskUIEvents)
+            }
+        }
     }
 }
 
@@ -144,11 +157,12 @@ fun Preview() {
         TaskScreen(
             username = "User",
             profilePicture = R.drawable.outline_groups_24,
+            selectedDate = LocalDate.now(),
             tasksList = emptyList(),
             onProfilePic = {},
             onEvent = {},
             onTaskUIEvents = { event ->
-                when(event) {
+                when (event) {
                     is TaskUIEvents.ConvertTaskToTaskUIState -> TODO()
                     is TaskUIEvents.UpdateIsDone -> TODO()
                 }

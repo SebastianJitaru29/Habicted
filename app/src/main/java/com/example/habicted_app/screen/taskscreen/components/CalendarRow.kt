@@ -1,13 +1,10 @@
 package com.example.habicted_app.screen.taskscreen.components
 
-import TaskListApp
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -31,10 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.habicted_app.data.model.Task
 import com.example.habicted_app.screen.home.HomeUiEvents
-import com.example.habicted_app.screen.taskscreen.TaskUIEvents
-import com.example.habicted_app.screen.taskscreen.TaskUIState
 import com.example.habicted_app.screen.taskscreen.calendar.CalendarData
 import com.example.habicted_app.screen.taskscreen.calendar.CalendarDataSource
 import java.time.LocalDate
@@ -43,61 +37,54 @@ import java.time.format.FormatStyle
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CalendarApp(
+fun CalendarRow(
     modifier: Modifier = Modifier,
-    taskList: List<Task>,
+    selectedDate: LocalDate,
     onEvent: (HomeUiEvents) -> Unit,
-    onTaskUIEvents: (TaskUIEvents) -> TaskUIState?,
 ) {
     val dataSource = CalendarDataSource()
     // we use `mutableStateOf` and `remember` inside composable function to schedules recomposition
-    var calendarUiModel by remember { mutableStateOf(dataSource.getData(lastSelectedDate = dataSource.today)) }
+    var calendarUiModel by remember { mutableStateOf(dataSource.getData(lastSelectedDate = selectedDate)) }
 
-    Column(modifier = modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-        CalendarHeader(
-            data = calendarUiModel,
-            onPrevClickListener = { startDate ->
-                // refresh the CalendarUiModel with new data
-                // by get data with new Start Date (which is the startDate-1 from the visibleDates)
-                val finalStartDate = startDate.minusDays(1)
-                calendarUiModel = dataSource.getData(
-                    startDate = finalStartDate,
-                    lastSelectedDate = calendarUiModel.selectedDate.date
-                )
-            },
-            onNextClickListener = { endDate ->
-                // refresh the CalendarUiModel with new data
-                // by get data with new Start Date (which is the endDate+2 from the visibleDates)
-                val finalStartDate = endDate.plusDays(2)
-                calendarUiModel = dataSource.getData(
-                    startDate = finalStartDate,
-                    lastSelectedDate = calendarUiModel.selectedDate.date
-                )
-            }
-        )
-        CalendarContent(
-            data = calendarUiModel,
-            onDateClickListener = { date ->
-                // refresh the CalendarUiModel with new data
-                // by changing only the `selectedDate` with the date selected by User
-                calendarUiModel = calendarUiModel.copy(
-                    selectedDate = date,
-                    visibleDates = calendarUiModel.visibleDates.map {
-                        it.copy(
-                            isSelected = it.date.isEqual(date.date)
-                        )
-                    }
-                )
-                // Update TaskList
-                onEvent(HomeUiEvents.FilterTasksByDate(date.date))
-            },
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Column(modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-            TaskListApp(taskList, onTaskUIEvents)
+    CalendarHeader(
+        data = calendarUiModel,
+        onPrevClickListener = { startDate ->
+            // refresh the CalendarUiModel with new data
+            // by get data with new Start Date (which is the startDate-1 from the visibleDates)
+            val finalStartDate = startDate.minusDays(1)
+            calendarUiModel = dataSource.getData(
+                startDate = finalStartDate,
+                lastSelectedDate = calendarUiModel.selectedDate.date
+            )
+        },
+        onNextClickListener = { endDate ->
+            // refresh the CalendarUiModel with new data
+            // by get data with new Start Date (which is the endDate+2 from the visibleDates)
+            val finalStartDate = endDate.plusDays(2)
+            calendarUiModel = dataSource.getData(
+                startDate = finalStartDate,
+                lastSelectedDate = calendarUiModel.selectedDate.date
+            )
         }
-    }
+    )
+    CalendarContent(
+        data = calendarUiModel,
+        onDateClickListener = { date ->
+            // refresh the CalendarUiModel with new data
+            // by changing only the `selectedDate` with the date selected by User
+            calendarUiModel = calendarUiModel.copy(
+                selectedDate = date,
+                visibleDates = calendarUiModel.visibleDates.map {
+                    it.copy(
+                        isSelected = it.date.isEqual(date.date)
+                    )
+                }
+            )
+            // Update TaskList and selected date
+            onEvent(HomeUiEvents.SelectDate(date.date))
+            onEvent(HomeUiEvents.FilterTasksByDate(date.date))
+        },
+    )
 }
 
 @RequiresApi(Build.VERSION_CODES.O)

@@ -54,6 +54,7 @@ fun HomeScreen(
             rootNavController = rootNavController,
             navController = navController,
             modifier = Modifier.padding(it),
+            selectedDate = homeViewModel.selectedDate.collectAsState().value,
             taskList = homeViewModel.tasksList.collectAsState(),
             groupsList = homeViewModel.groupsList.collectAsState(),
             onEvent = homeViewModel::onEvent,
