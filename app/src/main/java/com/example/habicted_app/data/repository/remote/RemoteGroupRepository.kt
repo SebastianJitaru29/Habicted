@@ -7,6 +7,7 @@ import com.example.habicted_app.data.repository.GroupRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -79,7 +80,9 @@ class RemoteGroupRepository : GroupRepository {
         groupCollection?.document(group.id.toString())?.set(groupMap)?.await()
 
         db.collection("users").document(auth.currentUser?.uid!!)
-            .update("groupsIDs", FieldValue.arrayUnion(group.id))
+            .set(
+                mapOf("groupsIDs" to FieldValue.arrayUnion(group.id)),
+            )
             .await()
 
         return group.id.toLong()
@@ -97,11 +100,9 @@ class RemoteGroupRepository : GroupRepository {
 
     override suspend fun addTaskToGroup(task: Task, groupId: Int) {
         // Reference to the group's taskList subcollection
-        val groupTaskListRef = db.collection("users")
-            .document(auth.currentUser?.uid!!)
-            .collection("groups")
-            .document(groupId.toString())
-            .collection("taskList")
+        val groupTaskListRef = groupCollection
+            ?.document(groupId.toString())
+            ?.collection("taskList")
 
         // Convert the Task object into a map
         val taskMap = hashMapOf(
@@ -117,47 +118,56 @@ class RemoteGroupRepository : GroupRepository {
         )
 
         // Add the task document to the group's taskList subcollection
-        groupTaskListRef.add(taskMap).await()
+        groupTaskListRef?.add(taskMap)?.await()
     }
 
     override suspend fun getGroupTasks(groupId: Int): List<Task> {
         val taskList = mutableListOf<Task>()
 
         // Reference to the group's taskList subcollection
-        val groupTaskListRef = db.collection("users")
-            .document(auth.currentUser?.uid!!)
-            .collection("groups")
-            .document(groupId.toString())
-            .collection("taskList")
+        val groupTaskListRef = groupCollection
+            ?.document(groupId.toString())
+            ?.collection("taskList")
 
         // Retrieve all tasks in the group's taskList subcollection
-        val querySnapshot = groupTaskListRef.get().await()
+        val querySnapshot = groupTaskListRef?.get()?.await()
 
         // Convert documents to Task objects
-        for (document in querySnapshot.documents) {
-            val task = Task(
-                id = document.get("id") as Long,
-                groupId = (document.get("groupId") as Long).toInt(),
-                name = document.get("name") as String,
-                description = document.get("description") as String,
-                date = LocalDate.parse(document.get("date") as String),
-                isDone = document.get("isDone") as Boolean,
-                streakDays = (document.get("streakDays") as Long).toInt(),
-                doneBy = (document.get("doneBy") as Long).toInt(),
-                total = (document.get("total") as Long).toInt()
-            )
-            taskList.add(task)
+        if (querySnapshot != null) {
+            for (document in querySnapshot.documents) {
+                try {
+                    val task = Task(
+                        id = document.get("id") as Long,
+                        groupId = (document.get("groupId") as Long).toInt(),
+                        name = document.get("name") as String,
+                        description = document.get("description") as String,
+                        date = LocalDate.parse(document.get("date") as String),
+                        isDone = document.get("isDone") as Boolean,
+                        streakDays = (document.get("streakDays") as Long).toInt(),
+                        doneBy = (document.get("doneBy") as Long).toInt(),
+                        total = (document.get("total") as Long).toInt()
+                    )
+                    taskList.add(task)
+                } catch (e: Exception) {
+                    Log.d("Remote Group", "Error while getting tasks: ${e}")
+                }
+            }
         }
 
         return taskList.toList()
     }
 
     override suspend fun getUserGroups(): List<Group> {
+        if (auth.currentUser == null) {
+            return emptyList()
+        }
         val groupList = mutableListOf<Group>()
 
         // Retrieve the groupsIDs array from the user document
         val groupsIDs = db.collection("users").document(auth.currentUser?.uid!!)
-            .get().await().get("groupsIDs") as List<*>
+            .get().await().get("groupsIDs") as? List<*>
+        if (groupsIDs == null) return emptyList()
+
 
         // For each groupId in the groupsIDs array, retrieve the corresponding group document
         for (groupId in groupsIDs) {
