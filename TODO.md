@@ -4,14 +4,15 @@ List of possible ideas that could be implemented into this project:
 
 # Global
 - [ ] Fix animations of navbar navigation. Currently is random (?)
+- [ ] 🔸 🔥 Add media upload and download
 - [ ] 🔸 🔥 Add push notifications with Firebase Cloud Messaging and Firebase Cloud Functions.
-  - [ ] Notification for task
+  - [ ] Notification for new task
   - [ ] ❓ Notification for group invite  
 
 ---
 # Access screens
-- [ ] 🔸 🔥 Add Firebase Auth
-  - [ ] keep user logged in. 
+- [x] 🔸 🔥 Add Firebase Auth
+  - [x] keep user logged in. 
 - [ ] Validate inputs of email/passwords
 - [ ] Add show password button
 ## Register screen
@@ -19,7 +20,7 @@ List of possible ideas that could be implemented into this project:
 
 ---
 # Task Screen
-- [ ] 🔸 Load and save tasks to Firebase
+- [x] 🔸 Load and save tasks to Firebase
 ## Calendar row
 - [ ] Button to go back to today
 - [ ] Date picker on click of selected date text 
@@ -33,7 +34,7 @@ List of possible ideas that could be implemented into this project:
 
 ---
 # Groups Screen
-- [ ] 🔸 🔥 Load and save groups to Firebase
+- [x] 🔸 🔥 Load and save groups to Firebase
 ## Create group
 - [ ] Add option to invite users
 - [ ] Add color pick
@@ -46,7 +47,7 @@ List of possible ideas that could be implemented into this project:
 # Settings Screen
 - [ ] 🔸 🔥 Load and save preferences to Firebase
 - [ ] 🔸 Add app releated preference
-- [ ] 🔸 Sync user network preference with app conections.
+- [x] 🔸 Sync user network preference with app conections.
 
 
 
