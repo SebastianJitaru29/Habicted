@@ -7,18 +7,13 @@ import androidx.navigation.navigation
 import com.example.habicted_app.navigation.routes.access.ForgotPasswordRoute
 import com.example.habicted_app.navigation.routes.access.RegisterRoute
 import com.example.habicted_app.navigation.routes.access.WelcomeRoute
-import com.google.firebase.auth.FirebaseAuth
 
 fun NavGraphBuilder.AuthenticationGraph(navController: NavHostController) {
-    val user = FirebaseAuth.getInstance().currentUser;
     navigation(
         startDestination = AuthRoute.Login.route,
         route = Graphs.AUTHENTICATION
     ) {
         composable(route = AuthRoute.Login.route) {
-            if (user != null) {
-                navController.navigate(route = Graphs.HOME)
-            }
             WelcomeRoute(
                 onConfirmLogIn = {
                     navController.navigate(route = Graphs.HOME)
