@@ -14,10 +14,11 @@ import com.google.firebase.auth.FirebaseAuth
 @Composable
 fun RootNavigationGraph(navController: NavHostController) {
     val user = FirebaseAuth.getInstance().currentUser
+    val startDestination = if (user == null) Graphs.AUTHENTICATION else Graphs.HOME
     NavHost(
         navController = navController,
         route = Graphs.ROOT,
-        startDestination = Graphs.AUTHENTICATION
+        startDestination = startDestination
     ) {
         AuthenticationGraph(navController = navController)
         composable(route = Graphs.HOME) {
