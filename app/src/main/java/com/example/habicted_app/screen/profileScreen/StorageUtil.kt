@@ -1,7 +1,8 @@
-package com.example.habicted_app.utils
+package com.example.habicted_app.screen.profileScreen
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import com.google.firebase.Firebase
 import com.google.firebase.storage.StorageReference
@@ -9,8 +10,11 @@ import com.google.firebase.storage.storage
 import com.google.firebase.auth.FirebaseAuth
 import java.util.UUID
 import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
-
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 class StorageUtil {
 
     companion object {
@@ -45,7 +49,7 @@ class StorageUtil {
                         }
                     }
                 } catch (e: Exception) {
-                    Toast.makeText(context, "Upload Failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(context, "Upload Failed: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             } ?: run {
                 Toast.makeText(context, "User not authenticated", Toast.LENGTH_SHORT).show()
@@ -53,12 +57,10 @@ class StorageUtil {
         }
 
         private fun writeToDatabase(userID: String, downloadUrl: String) {
-            // Here, you can write code to write downloadUrl to your database under the relevant employee userID
             val db = FirebaseFirestore.getInstance()
-            val employeeRef = db.collection("users").document(userID)
+            val userRF = db.collection("users").document(userID)
 
-            // Example: Writing download URL under a field named "photoUrl"
-            employeeRef.update("photoUrl", downloadUrl)
+            userRF.update("photoUrl", downloadUrl)
                 .addOnSuccessListener {
                     // Successfully wrote download URL to the database
                 }
@@ -67,5 +69,6 @@ class StorageUtil {
                     // Handle failure gracefully
                 }
         }
+
     }
 }
