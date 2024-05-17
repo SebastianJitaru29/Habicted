@@ -83,6 +83,8 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.49")
     implementation("com.google.firebase:firebase-auth:22.3.1")
     implementation("com.google.firebase:firebase-firestore:25.0.0")
+    implementation("com.google.firebase:firebase-messaging:24.0.0")
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
     kapt("com.google.dagger:hilt-android-compiler:2.49")
     kapt("androidx.hilt:hilt-compiler:1.2.0")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
@@ -91,9 +93,10 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth-ktx")
-    //Fucntions
-
+    //Functions
     implementation ("com.google.firebase:firebase-functions-ktx")
+    //Messaging
+    implementation("com.google.firebase:firebase-messaging")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

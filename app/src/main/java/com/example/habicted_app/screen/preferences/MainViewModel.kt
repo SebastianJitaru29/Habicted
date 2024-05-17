@@ -9,6 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.Firebase
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.functions
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.messaging
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -37,7 +39,7 @@ class MainViewModel @Inject constructor(
             myPreferencesDataStore.updateNetworkPreference(priority)
         }
     }
-
+    //Launch function for testing cloud functions
     fun launchFunction() {
         viewModelScope.launch {
             Log.d("TAG", "launchFunction")
@@ -59,6 +61,29 @@ class MainViewModel @Inject constructor(
                 .addOnFailureListener { e ->
                     Log.d("TAG", "launchFunction: ${e.message}")
                 }
+        }
+    }
+    //Get token of device for cloud messaging testing
+    fun getCurrentRegistrationToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.d("TAG1","Getching token failed", task.exception)
+                return@addOnCompleteListener
+            }
+            val token = task.result
+
+            Log.d("TAG", "getCurrentRegistrationToken: $token")
+        }
+    }
+
+    fun subscribeToMessagingTopic(topic:String){
+        Firebase.messaging.subscribeToTopic(topic).
+        addOnCompleteListener { task ->
+            var msg = "Subscribed"
+            if (!task.isSuccessful) {
+                msg = "Subscribed Failed"
+            }
+            Log.d("TAG", msg)
         }
     }
 }
