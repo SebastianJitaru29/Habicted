@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
     //Needed to display notifications on the phone bar
     private fun createNotificationChannel(){
         val name = "JetpackPushNotifications"
