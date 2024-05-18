@@ -128,6 +128,24 @@ fun SettingsScreen(mainViewModel: MainViewModel, modifier: Modifier = Modifier) 
                     }
                 }
             }
+            Surface(
+                shape = RoundedCornerShape(8.dp),
+                color = MaterialTheme.colorScheme.inversePrimary,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    Spacer(modifier = Modifier.size(16.dp))
+                    Button(
+                        onClick = { mainViewModel.sendTestMessage() },
+                    ) {
+                        Text(text = "send with fucntions")
+                    }
+                }
+            }
         }
     }
 }

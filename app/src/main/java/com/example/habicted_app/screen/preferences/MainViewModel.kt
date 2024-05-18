@@ -86,4 +86,28 @@ class MainViewModel @Inject constructor(
             Log.d("TAG", msg)
         }
     }
+
+    fun sendTestMessage() {
+        viewModelScope.launch {
+            Log.d("TAG", "launchFunction SendTestMessage")
+
+            functions.getHttpsCallable("sendNotification").call()
+                .addOnSuccessListener { result ->
+                    try {
+                        val data = result.data as? Map<*, *>
+                        if (data != null) {
+                            val message = data["message"] as? String
+                            Log.d("TAG", "launchFunction: $message")
+                        } else {
+                            Log.d("TAG", "launchFunction: Response is missing data field.")
+                        }
+                    } catch (e: Exception) {
+                        Log.e("TAG", "launchFunction: Failed to parse response", e)
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Log.d("TAG", "launchFunction Error: ${e.message}")
+                }
+        }
+    }
 }
