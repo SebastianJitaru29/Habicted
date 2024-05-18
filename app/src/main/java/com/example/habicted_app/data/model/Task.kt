@@ -7,7 +7,7 @@ import java.time.LocalDate
 
 data class Task(
     val id: Long,
-    val groupId: Int,
+    val groupId: String,
     val name: String,
     val description: String?,
     val date: LocalDate = LocalDate.now(),
@@ -19,7 +19,7 @@ data class Task(
     @RequiresApi(Build.VERSION_CODES.O)
     constructor() : this(
         0,
-        0,
+        "",
         "",
         "",
         LocalDate.now(),
@@ -32,7 +32,7 @@ data class Task(
     @RequiresApi(Build.VERSION_CODES.O)
     constructor(document: DocumentSnapshot) : this(
         id = document.get("id") as Long,
-        groupId = (document.get("groupId") as Long).toInt(),
+        groupId = document.get("groupId") as String,
         name = document.get("name") as String,
         description = document.get("description") as String,
         date = LocalDate.parse(document.get("date") as String),

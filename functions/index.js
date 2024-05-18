@@ -45,14 +45,14 @@ exports.sendNotification = functions.https.onRequest((request, response) => {
 });
 
 exports.sendNotificationOnNewTask = functions.firestore
-    .document("groupss/{groupID}/taskList/{taskID}")
+    .document("Groups/{groupID}/taskList/{taskID}")
     .onCreate(async (snap, context) => {
       const taskID = context.params.taskID;
       const groupID = context.params.groupID;
 
       try {
         // Fetch the group document from Firestore
-        const grpDoc = await admin.firestore().doc(`groupss/${groupID}`).get();
+        const grpDoc = await admin.firestore().doc(`Groups/${groupID}`).get();
         const groupData = grpDoc.data();
         const groupTitle = groupData ? groupData.title : "Unknown Group";
 

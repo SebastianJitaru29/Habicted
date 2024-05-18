@@ -340,13 +340,13 @@ fun GroupScreenPreview() {
 
     val groupList: List<Group> = listOf(
         Group(
-            id = 1,
+            id = "",
             name = "Group 1",
             color = Red500.value,
             tasksList = listOf(
                 Task(
                     id = 1,
-                    groupId = 1,
+                    groupId = "",
                     name = "Task 1",
                     description = null,
                     date = LocalDate.now(),
@@ -357,7 +357,7 @@ fun GroupScreenPreview() {
                 ),
                 Task(
                     id = 2,
-                    groupId = 1,
+                    groupId = "",
                     name = "Task 2",
                     description = null,
                     date = LocalDate.now(),
@@ -370,13 +370,13 @@ fun GroupScreenPreview() {
             members = emptyList()
         ),
         Group(
-            id = 2,
+            id = "",
             name = "Group 2",
             color = Red500.value,
             tasksList = listOf(
                 Task(
                     id = 1,
-                    groupId = 2,
+                    groupId = "",
                     name = "Task 1",
                     description = null,
                     date = LocalDate.now(),
@@ -387,7 +387,7 @@ fun GroupScreenPreview() {
                 ),
                 Task(
                     id = 2,
-                    groupId = 2,
+                    groupId = "",
                     name = "Task 2",
                     description = null,
                     date = LocalDate.now(),
@@ -416,7 +416,7 @@ private fun GroupsCardsPrev() {
             listOf(
                 Task(
                     id = 1,
-                    groupId = 2,
+                    groupId = "",
                     name = "Task 1",
                     description = null,
                     date = LocalDate.now(),
@@ -427,7 +427,7 @@ private fun GroupsCardsPrev() {
                 ),
                 Task(
                     id = 2,
-                    groupId = 2,
+                    groupId = "",
                     name = "Task 2",
                     description = null,
                     date = LocalDate.now(),
@@ -457,7 +457,7 @@ private fun Prevv() {
         tasksInfo = listOf(
             Task(
                 id = 1,
-                groupId = 1,
+                groupId = "",
                 name = "Task 1",
                 description = null,
                 date = LocalDate.now(),
@@ -468,7 +468,7 @@ private fun Prevv() {
             ),
             Task(
                 id = 2,
-                groupId = 2,
+                groupId = "",
                 name = "Task 2",
                 description = null,
                 date = LocalDate.now(),

@@ -43,7 +43,7 @@ import java.time.ZoneId
 fun TaskDialog(
     userGroups: List<Group>,
     onDismiss: () -> Unit,
-    onConfirm: (String, String, Int, LocalDate) -> Unit,
+    onConfirm: (String, String, String, LocalDate) -> Unit,
 ) {
     var title by rememberSaveable { mutableStateOf("") }
     var description by rememberSaveable { mutableStateOf("") }
@@ -225,10 +225,10 @@ private fun DatePicker() {
 private fun GroupSelectorPrev() {
     GroupSelect(
         userGroups = listOf(
-            Group(0, "Group 1", 0u, emptyList(), emptyList()),
-            Group(1, "Group 2", 0u, emptyList(), emptyList()),
-            Group(2, "Group 3", 0u, emptyList(), emptyList()),
-            Group(3, "Group 4", 0u, emptyList(), emptyList()),
+            Group("", "Group 1", 0u, emptyList(), emptyList()),
+            Group("", "Group 2", 0u, emptyList(), emptyList()),
+            Group("", "Group 3", 0u, emptyList(), emptyList()),
+            Group("", "Group 4", 0u, emptyList(), emptyList()),
         ),
         selectedGroup = null,
         onGroupChange = { },

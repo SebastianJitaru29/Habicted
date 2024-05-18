@@ -11,7 +11,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.habicted_app.data.model.Group
 import com.example.habicted_app.data.model.Task
 import com.example.habicted_app.data.repository.GroupRepository
-import com.example.habicted_app.data.repository.TaskRepository
 import com.example.habicted_app.data.repository.remote.RemoteGroupRepository
 import com.example.habicted_app.screen.preferences.MyPreferencesDataStore
 import com.example.habicted_app.screen.preferences.NetworkPreference
@@ -28,7 +27,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val tasksRepository: TaskRepository,
     private val groupRepository: GroupRepository,
     private val myPreferencesDataStore: MyPreferencesDataStore,
 ) : ViewModel() {

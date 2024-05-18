@@ -148,7 +148,7 @@ fun NavFloatingActionButton(
                     onEvent(
                         HomeUiEvents.SaveGroup(
                             Group(
-                                id = userGroups.size + 1, // TODO
+                                id = "", // TODO
                                 name = name,
                                 color = color.value,
                                 members = members, // TODO

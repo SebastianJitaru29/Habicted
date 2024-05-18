@@ -21,7 +21,7 @@ class RemoteGroupRepository : GroupRepository {
     private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
     private val groupCollection = if (auth.currentUser?.uid != null) {
-        db.collection("groupss")
+        db.collection("Groups")
     } else {
         // Handle the case where the user is not signed in
         null
@@ -54,7 +54,7 @@ class RemoteGroupRepository : GroupRepository {
         return groupList
     }
 
-    override suspend fun getGroup(groupId: Int): Group? {
+    override suspend fun getGroup(groupId: String): Group? {
         // Retrieve a specific group associated with the current user
         val documentSnapshot = groupCollection?.document(groupId.toString())?.get()?.await()
         var group: Group? = null
@@ -65,7 +65,7 @@ class RemoteGroupRepository : GroupRepository {
     }
 
 
-    override suspend fun insertGroup(group: Group): Long {
+    override suspend fun insertGroup(group: Group): String {
         // Convert the Group object into a map
         val groupMap = hashMapOf(
             "id" to group.id,
@@ -76,15 +76,13 @@ class RemoteGroupRepository : GroupRepository {
         )
 
         // Add the group document to Firestore associated with the current user
-        groupCollection?.document(group.id.toString())?.set(groupMap)?.await()
+        val documentId = groupCollection?.add(groupMap)?.await()
+        if (documentId != null) {
+            db.collection("users").document(auth.currentUser?.uid!!)
+                .update("groupsIDs", FieldValue.arrayUnion(documentId.id))
+        }
 
-        db.collection("users").document(auth.currentUser?.uid!!)
-            .set(
-                mapOf("groupsIDs" to FieldValue.arrayUnion(group.id)),
-            )
-            .await()
-
-        return group.id.toLong()
+        return group.id
     }
 
     override suspend fun upsertGroup(group: Group) {
@@ -92,12 +90,12 @@ class RemoteGroupRepository : GroupRepository {
         groupCollection?.document(group.id.toString())?.set(group)?.await()
     }
 
-    override suspend fun deleteGroup(groupId: Int) {
+    override suspend fun deleteGroup(groupId: String) {
         // Delete the group document from Firestore associated with the current user
         groupCollection?.document(groupId.toString())?.delete()?.await()
     }
 
-    override suspend fun addTaskToGroup(task: Task, groupId: Int) {
+    override suspend fun addTaskToGroup(task: Task, groupId: String) {
         // Reference to the group's taskList subcollection
         val groupTaskListRef = groupCollection
             ?.document(groupId.toString())
@@ -121,7 +119,7 @@ class RemoteGroupRepository : GroupRepository {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override suspend fun getGroupTasks(groupId: Int): List<Task> {
+    override suspend fun getGroupTasks(groupId: String): List<Task> {
         val taskList = mutableListOf<Task>()
 
         // Reference to the group's taskList subcollection
@@ -159,7 +157,7 @@ class RemoteGroupRepository : GroupRepository {
         // For each groupId in the groupsIDs array, retrieve the corresponding group document
         for (groupId in groupsIDs) {
             val documentSnapshot =
-                db.collection("groupss").document(groupId.toString()).get().await()
+                db.collection("Groups").document(groupId.toString()).get().await()
             val group = Group(documentSnapshot)
             groupList.add(group)
         }

@@ -20,7 +20,7 @@ class LocalGroupRepository : GroupRepository {
     @RequiresApi(Build.VERSION_CODES.O)
     private val allGroups: MutableList<Group> = mutableListOf(
         Group(
-            id = 1,
+            id = "",
             name = "Group 1",
             members = listOf(
                 User(1, "", "", "", emptyList()),
@@ -29,7 +29,7 @@ class LocalGroupRepository : GroupRepository {
             tasksList = listOf(
                 Task(
                     id = 1,
-                    groupId = 1,
+                    groupId = "",
                     name = "Task 1",
                     description = null,
                     date = LocalDate.now(),
@@ -40,7 +40,7 @@ class LocalGroupRepository : GroupRepository {
                 ),
                 Task(
                     id = 2,
-                    groupId = 2,
+                    groupId = "",
                     name = "Task 2",
                     description = null,
                     date = LocalDate.now(),
@@ -52,7 +52,7 @@ class LocalGroupRepository : GroupRepository {
             )
         ),
         Group(
-            id = 2,
+            id = "",
             name = "Group 2",
             members = listOf(
                 User(1, "User1", "", "", emptyList()),
@@ -80,14 +80,14 @@ class LocalGroupRepository : GroupRepository {
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override suspend fun getGroup(groupId: Int): Group? {
+    override suspend fun getGroup(groupId: String): Group? {
         return getAllGroups().firstOrNull { it.id == groupId }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override suspend fun insertGroup(group: Group): Long {
+    override suspend fun insertGroup(group: Group): String {
         allGroups.add(group)
-        return group.id.toLong()
+        return group.id
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -97,15 +97,15 @@ class LocalGroupRepository : GroupRepository {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override suspend fun deleteGroup(groupId: Int) {
+    override suspend fun deleteGroup(groupId: String) {
         allGroups.removeIf { it.id == groupId }
     }
 
-    override suspend fun getGroupTasks(groupId: Int): List<Task> {
+    override suspend fun getGroupTasks(groupId: String): List<Task> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun addTaskToGroup(task: Task, groupId: Int) {
+    override suspend fun addTaskToGroup(task: Task, groupId: String) {
         TODO("Not yet implemented")
     }
 

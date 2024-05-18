@@ -5,13 +5,10 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import com.example.habicted_app.data.repository.GroupRepository
-import com.example.habicted_app.data.repository.TaskRepository
 import com.example.habicted_app.data.repository.UserRepository
 import com.example.habicted_app.data.repository.local.LocalGroupRepository
-import com.example.habicted_app.data.repository.local.LocalTaskRepository
 import com.example.habicted_app.data.repository.local.LocalUserRepository
 import com.example.habicted_app.data.repository.remote.RemoteGroupRepository
-import com.example.habicted_app.data.repository.remote.RemoteTaskRepository
 import com.example.habicted_app.data.repository.remote.RemoteUserRepository
 import dagger.hilt.android.HiltAndroidApp
 
@@ -32,8 +29,6 @@ class HabictedAppContainer(private val context: Context) {
     private val localGroupRepository = LocalGroupRepository()
     private val remoteGroupRepository = RemoteGroupRepository()
 
-    private val localTaskRepository = LocalTaskRepository()
-    private val remoteTaskRepository = RemoteTaskRepository()
 
     private val localUserRepository = LocalUserRepository()
     private val remoteUserRepository = RemoteUserRepository()
@@ -41,8 +36,6 @@ class HabictedAppContainer(private val context: Context) {
     val groupRepository: GroupRepository
         get() = if (isNetworkAvailable(context)) remoteGroupRepository else localGroupRepository
 
-    val taskRepository: TaskRepository
-        get() = if (isNetworkAvailable(context)) remoteTaskRepository else localTaskRepository
 
     val userRepository: UserRepository
         get() = localUserRepository//if (isNetworkAvailable(context)) remoteUserRepository else localUserRepository
