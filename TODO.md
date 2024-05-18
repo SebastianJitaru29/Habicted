@@ -4,6 +4,7 @@ List of possible ideas that could be implemented into this project:
 
 # Global
 - [ ] Fix animations of navbar navigation. Currently is random (?)
+- [ ] 🔸 Ask for Notification permissions
 - [x] 🔸 🔥 Add media upload and download
 - [x] 🔸 🔥 Add push notifications with Firebase Cloud Messaging and Firebase Cloud Functions.
   - [x] Notification for new task
