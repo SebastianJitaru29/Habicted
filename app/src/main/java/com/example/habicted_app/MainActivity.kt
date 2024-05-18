@@ -1,5 +1,8 @@
 package com.example.habicted_app
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -22,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        createNotificationChannel()
         setContent {
             HabictedAppTheme {
 
@@ -35,6 +39,24 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    //Needed to display notifications on the phone bar
+    private fun createNotificationChannel(){
+        val name = "JetpackPushNotifications"
+        val description = "Jetpack Push Notification"
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+
+        val channel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel("Global",name,importance)
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        }
+        channel.description = description
+
+        val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        notificationManager.createNotificationChannel(channel)
     }
 }
 

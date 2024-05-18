@@ -1,3 +1,4 @@
+import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -6,6 +7,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.habicted_app.screen.preferences.MainViewModel
 import com.example.habicted_app.screen.preferences.NetworkPreference
@@ -53,7 +55,6 @@ fun SettingsScreen(mainViewModel: MainViewModel, modifier: Modifier = Modifier) 
                 }
             }
 
-            // Box for Priority
             Surface(
                 shape = RoundedCornerShape(8.dp),
                 color = MaterialTheme.colorScheme.inversePrimary,
@@ -70,6 +71,79 @@ fun SettingsScreen(mainViewModel: MainViewModel, modifier: Modifier = Modifier) 
                         mainViewModel = mainViewModel,
                         selectedNetworkPreference = selectedNetworkPreference
                     )
+                }
+            }
+            Surface(
+                shape = RoundedCornerShape(8.dp),
+                color = MaterialTheme.colorScheme.inversePrimary,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    Spacer(modifier = Modifier.size(16.dp))
+                    Button(
+                        onClick = { mainViewModel.launchFunction() },
+                    ) {
+                        Text(text = "Launch Cloud Function")
+                    }
+                }
+            }
+
+            Surface(
+                shape = RoundedCornerShape(8.dp),
+                color = MaterialTheme.colorScheme.inversePrimary,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    Spacer(modifier = Modifier.size(16.dp))
+                    Button(
+                        onClick = { mainViewModel.getCurrentRegistrationToken() },
+                    ) {
+                        Text(text = "GetToken")
+                    }
+                }
+            }
+            Surface(
+                shape = RoundedCornerShape(8.dp),
+                color = MaterialTheme.colorScheme.inversePrimary,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    Spacer(modifier = Modifier.size(16.dp))
+                    Button(
+                        onClick = { mainViewModel.subscribeToMessagingTopic("testTopic") },
+                    ) {
+                        Text(text = "Subscribe to topic")
+                    }
+                }
+            }
+            Surface(
+                shape = RoundedCornerShape(8.dp),
+                color = MaterialTheme.colorScheme.inversePrimary,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    Spacer(modifier = Modifier.size(16.dp))
+                    Button(
+                        onClick = { mainViewModel.sendTestMessage() },
+                    ) {
+                        Text(text = "send with fucntions")
+                    }
                 }
             }
         }

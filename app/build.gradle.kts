@@ -85,6 +85,8 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore:25.0.0")
     implementation("com.google.firebase:firebase-storage:21.0.0")
     implementation("androidx.lifecycle:lifecycle-runtime-compose-android:2.8.0")
+    implementation("com.google.firebase:firebase-messaging:24.0.0")
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
     kapt("com.google.dagger:hilt-android-compiler:2.49")
     kapt("androidx.hilt:hilt-compiler:1.2.0")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
@@ -96,6 +98,10 @@ dependencies {
     implementation("com.google.firebase:firebase-storage:21.0.0")
 
     implementation("io.coil-kt:coil-compose:2.4.0")
+    //Functions
+    implementation ("com.google.firebase:firebase-functions-ktx")
+    //Messaging
+    implementation("com.google.firebase:firebase-messaging")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
