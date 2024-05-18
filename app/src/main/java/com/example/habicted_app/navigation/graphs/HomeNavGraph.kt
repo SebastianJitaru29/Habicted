@@ -20,9 +20,9 @@ import com.example.habicted_app.data.model.Task
 import com.example.habicted_app.navigation.routes.GroupsRoute
 import com.example.habicted_app.navigation.routes.SettingsRoute
 import com.example.habicted_app.navigation.routes.TasksRoute
-import com.example.habicted_app.screen.profileScreen.ProfileScreen
 import com.example.habicted_app.screen.home.HomeUiEvents
 import com.example.habicted_app.screen.preferences.MainViewModel
+import com.example.habicted_app.screen.profileScreen.ProfileScreen
 import com.example.habicted_app.screen.taskscreen.TaskUIEvents
 import com.example.habicted_app.screen.taskscreen.TaskUIState
 import com.google.firebase.auth.FirebaseAuth
@@ -67,13 +67,12 @@ fun HomeNavGraph(
         }
         composable(route = Route.PROFILE.route) {
             ProfileScreen(onLogout = {
-                FirebaseAuth.getInstance().signOut()
                 rootNavController.navigate(Graphs.AUTHENTICATION) {
                     popUpTo(Graphs.AUTHENTICATION) {
                         inclusive = true
                     }
                 }
-
+                FirebaseAuth.getInstance().signOut()
 //                navController.clearBackStack()
 //                navController.navigate(Graphs.AUTHENTICATION)
             })
