@@ -5,12 +5,14 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.habicted_app.data.model.Group
 import com.example.habicted_app.data.model.Task
 import com.example.habicted_app.data.repository.GroupRepository
 import com.example.habicted_app.data.repository.TaskRepository
+import com.example.habicted_app.data.repository.remote.RemoteGroupRepository
 import com.example.habicted_app.screen.preferences.MyPreferencesDataStore
 import com.example.habicted_app.screen.preferences.NetworkPreference
 import com.example.habicted_app.screen.taskscreen.TaskUIEvents
@@ -85,7 +87,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             groupRepository.insertGroup(group)
             //TODO: wait for confirmation and then update the UI
-            _groupsList.update { groupRepository.getAllGroups() }
+            _groupsList.update { groupRepository.getUserGroups() }
             Log.d("HomeViewModel", "New groups: ${_groupsList.value.map { it.name }}")
         }
     }
@@ -109,27 +111,28 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getTaskUIStateWithGroupInfo(task: Task): TaskUIState {
-//        val group: Group =
-//            groupRepository.getGroup(task.groupId) ?: throw Exception("Group not found")
-//        return TaskUIState(
-//            task = task,
-//            groupName = group.name,
-//            color = Color(group.color),
-//        )
-        return TaskUIState(task)
+        val group = _groupsList.value.first { it.id == task.groupId }
+        return TaskUIState(
+            task = task,
+            groupName = group.name,
+            color = Color(group.color),
+        )
     }
 
     private fun updateTaskStatus(status: Boolean, task: Task) {
         val newTask = task.copy(isDone = status)
-        viewModelScope.launch {
-            tasksRepository.updateTask(newTask)
 
-            val index = _tasksList.value.indexOfFirst { it.id == task.id }
-            if (index != -1) {
-                val updatedTasks = _tasksList.value.toMutableList()
-                updatedTasks[index] = newTask
-                _tasksList.update { updatedTasks }
+        if (groupRepository is RemoteGroupRepository) {
+            viewModelScope.launch {
+                groupRepository.updateTasksStatus(newTask)
             }
+        }
+
+        val index = _tasksList.value.indexOfFirst { it.id == task.id }
+        if (index != -1) {
+            val updatedTasks = _tasksList.value.toMutableList()
+            updatedTasks[index] = newTask
+            _tasksList.update { updatedTasks }
         }
     }
 

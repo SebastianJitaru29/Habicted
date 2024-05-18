@@ -78,10 +78,6 @@ class LocalGroupRepository : GroupRepository {
         return allGroups.toList()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    override suspend fun getTasksForGroup(groupId: Int): List<Task> {
-        return getGroup(groupId)?.tasksList ?: emptyList()
-    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun getGroup(groupId: Int): Group? {

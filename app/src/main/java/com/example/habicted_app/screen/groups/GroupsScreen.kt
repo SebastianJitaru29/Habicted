@@ -1,6 +1,7 @@
 package com.example.habicted_app.screen.groups
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -105,6 +106,7 @@ fun GroupCard(
     todayDate: LocalDate,
     expandedInitialValue: Boolean = false,
 ) {
+    Log.d("GroupColor", "GrouColor: ${groupUIState.color}")
     var expanded by rememberSaveable { mutableStateOf(expandedInitialValue) }
     val palette = ColorPalette.colorToPalette(groupUIState.color)
     Card(

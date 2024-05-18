@@ -2,6 +2,7 @@ package com.example.habicted_app.data.model
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.google.firebase.firestore.DocumentSnapshot
 import java.time.LocalDate
 
 data class Task(
@@ -27,4 +28,18 @@ data class Task(
         0,
         0
     )
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    constructor(document: DocumentSnapshot) : this(
+        id = document.get("id") as Long,
+        groupId = (document.get("groupId") as Long).toInt(),
+        name = document.get("name") as String,
+        description = document.get("description") as String,
+        date = LocalDate.parse(document.get("date") as String),
+        isDone = document.get("isDone") as Boolean,
+        streakDays = (document.get("streakDays") as Long).toInt(),
+        doneBy = (document.get("doneBy") as Long).toInt(),
+        total = (document.get("total") as Long).toInt()
+    )
+
 }
