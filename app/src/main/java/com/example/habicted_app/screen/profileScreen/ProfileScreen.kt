@@ -1,7 +1,6 @@
 package com.example.habicted_app.screen.profileScreen
 
 import android.net.Uri
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
@@ -34,13 +33,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.habicted_app.ui.theme.HabictedAppTheme
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.habicted_app.R
+import com.example.habicted_app.ui.theme.HabictedAppTheme
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.DocumentSnapshot
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,9 +50,8 @@ fun ProfileScreen(modifier: Modifier = Modifier, onLogout: () -> Unit = {}) {
             uri = it
         }
     )
-    val auth = FirebaseAuth.getInstance()
-    val userId = auth.currentUser?.uid
-    val firestore = FirebaseFirestore.getInstance()
+    val user = FirebaseAuth.getInstance().currentUser
+    val userId = user?.uid ?: return
     val context = LocalContext.current
 
     // Fetch the user's photoUrl parameter from Firestore when the screen loads
@@ -128,7 +125,8 @@ private fun getUserParameter(userId: String, callback: (Any?) -> Unit) {
 
     userDocRef.get().addOnSuccessListener { documentSnapshot ->
         if (documentSnapshot != null && documentSnapshot.exists()) {
-            val parameterValue = documentSnapshot.getString("photoUrl") // Replace "parameterName" with your parameter name
+            val parameterValue =
+                documentSnapshot.getString("photoUrl") // Replace "parameterName" with your parameter name
             callback(parameterValue)
         } else {
             callback(null)
