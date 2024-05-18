@@ -20,7 +20,7 @@ import com.example.habicted_app.data.model.Task
 import com.example.habicted_app.navigation.routes.GroupsRoute
 import com.example.habicted_app.navigation.routes.SettingsRoute
 import com.example.habicted_app.navigation.routes.TasksRoute
-import com.example.habicted_app.screen.ProfileScreen
+import com.example.habicted_app.screen.profileScreen.ProfileScreen
 import com.example.habicted_app.screen.home.HomeUiEvents
 import com.example.habicted_app.screen.preferences.MainViewModel
 import com.example.habicted_app.screen.taskscreen.TaskUIEvents
