@@ -19,7 +19,8 @@ val Context.myPreferencesDataStore: DataStore<Preferences> by preferencesDataSto
 
 enum class NetworkPreference {
     WIFI,
-    ANY
+    ANY,
+    High
 }
 
 data class TaskStatus(
