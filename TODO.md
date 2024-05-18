@@ -4,9 +4,9 @@ List of possible ideas that could be implemented into this project:
 
 # Global
 - [ ] Fix animations of navbar navigation. Currently is random (?)
-- [ ] 🔸 🔥 Add media upload and download
-- [ ] 🔸 🔥 Add push notifications with Firebase Cloud Messaging and Firebase Cloud Functions.
-  - [ ] Notification for new task
+- [x] 🔸 🔥 Add media upload and download
+- [x] 🔸 🔥 Add push notifications with Firebase Cloud Messaging and Firebase Cloud Functions.
+  - [x] Notification for new task
   - [ ] ❓ Notification for group invite  
 
 ---
