@@ -12,9 +12,10 @@ List of possible ideas that could be implemented into this project:
 ---
 # Access screens
 - [x] 🔸 🔥 Add Firebase Auth
-  - [x] keep user logged in. 
-- [ ] Validate inputs of email/passwords
-- [ ] Add show password button
+  - [x] keep user logged in.
+  - [ ] Login using Google
+- [X] Validate inputs of email/passwords
+- [X] Add show password button
 ## Register screen
 - [ ] Add more fields like username, profile pic etc
 
@@ -25,6 +26,7 @@ List of possible ideas that could be implemented into this project:
 - [ ] Button to go back to today
 - [ ] Date picker on click of selected date text 
 ## Tasks list
+- [ ] 🔸 Update task status to Firebase
 - [ ] Apply new design for tasks card
 - [ ] Show details of task when click
 - [ ] ❓ Pre-screen/alert when confirm a task with biometric 
@@ -45,7 +47,7 @@ List of possible ideas that could be implemented into this project:
 
 ---
 # Settings Screen
-- [ ] 🔸 🔥 Load and save preferences to Firebase (No need to do this)
+- [ ] 🔥 Load and save preferences to Firebase (No need to do this)
 - [ ] 🔸 Add app releated preference
 - [x] 🔸 Sync user network preference with app conections.
 
