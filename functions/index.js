@@ -40,6 +40,35 @@ exports.sendNotification = functions.https.onRequest((request, response) => {
   admin.messaging().send(message).then((response) => {
     console.log("Successfully sent message:", response);
   });
-  //Response sent from firebase, has to be in json format with data camp
+  // Response sent from firebase, has to be in json format with data camp
   response.json({data: {message: "Hello from Firebase!"}});
 });
+
+exports.sendNotificationOnNewTask = functions.firestore
+    .document("groupss/{groupID}/taskList/{taskID}")
+    .onCreate(async (snap, context) => {
+      const taskID = context.params.taskID;
+      const groupID = context.params.groupID;
+
+      try {
+        // Fetch the group document from Firestore
+        const grpDoc = await admin.firestore().doc(`groupss/${groupID}`).get();
+        const groupData = grpDoc.data();
+        const groupTitle = groupData ? groupData.title : "Unknown Group";
+
+        // Construct the notification message
+        const message = {
+          notification: {
+            title: "New Task",
+            body: `${groupTitle}: ${taskID.title}`,
+          },
+          topic: "testTopic",
+        };
+
+        // Send the notification
+        await admin.messaging().send(message);
+        console.log("Successfully sent message");
+      } catch (error) {
+        console.error("Error sending notification", error);
+      }
+    });
