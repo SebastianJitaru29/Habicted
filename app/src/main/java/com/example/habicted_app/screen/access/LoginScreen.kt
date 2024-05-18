@@ -20,7 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -34,9 +33,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.habicted_app.R
-import com.example.habicted_app.auth.model.signin.SignInViewModel
+import com.example.habicted_app.auth.model.AuthState
 import com.example.habicted_app.screen.EmailInputField
 import com.example.habicted_app.screen.PasswordInputField
 import com.example.habicted_app.ui.theme.HabictedAppTheme
@@ -49,7 +47,8 @@ fun WelcomeScreen(
     onLogIn: () -> Unit,
     onSignUp: () -> Unit,
     onForgotedPassword: () -> Unit,
-    viewModel: SignInViewModel = hiltViewModel(),
+    state: AuthState,
+    tryLogin: (String, String) -> Unit,
 ) {
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
@@ -108,7 +107,8 @@ fun WelcomeScreen(
             onForgotedPassword = onForgotedPassword,
             email = email,
             password = password,
-            viewModel = viewModel,
+            state = state,
+            tryLogin = tryLogin
         )
     }
 }
@@ -121,11 +121,11 @@ fun ActionButtons(
     onForgotedPassword: () -> Unit,
     email: String,
     password: String,
-    viewModel: SignInViewModel,
+    state: AuthState,
+    tryLogin: (String, String) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
-    val state = viewModel.signInState.collectAsState(initial = null)
 
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -146,7 +146,7 @@ fun ActionButtons(
         Button(
             onClick = {
                 scope.launch {
-                    viewModel.loginUser(email, password)
+                    tryLogin(email, password)
                 }
             },
             shape = RoundedCornerShape(49.dp),
@@ -172,20 +172,20 @@ fun ActionButtons(
             Text(text = stringResource(id = R.string.signup))
         }
     }
-    LaunchedEffect(key1 = state.value?.isSuccess) {
+    LaunchedEffect(key1 = state.isSuccess) {
         scope.launch {
-            if (state.value?.isSuccess?.isNotEmpty() == true) {
-                val success = state.value?.isSuccess
+            if (state.isSuccess?.isNotEmpty() == true) {
+                val success = state.isSuccess
                 Toast.makeText(context, "${success}", Toast.LENGTH_LONG).show()
                 onLogIn()
             }
         }
     }
 
-    LaunchedEffect(key1 = state.value?.isError) {
+    LaunchedEffect(key1 = state.isError) {
         scope.launch {
-            if (state.value?.isError?.isNotEmpty() == true) {
-                val error = state.value?.isError
+            if (state.isError?.isNotEmpty() == true) {
+                val error = state.isError
                 Toast.makeText(context, "${error}", Toast.LENGTH_LONG).show()
             }
         }
@@ -198,7 +198,12 @@ fun ActionButtons(
 @Composable
 fun PreviewEmailOutlinedTextField() {
     HabictedAppTheme {
-        WelcomeScreen(onLogIn = {}, onSignUp = {}, onForgotedPassword = {})
+        WelcomeScreen(
+            onLogIn = {},
+            onSignUp = {},
+            onForgotedPassword = {},
+            state = AuthState(),
+            tryLogin = { _, _ -> })
     }
 }
 

@@ -24,7 +24,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -39,7 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.habicted_app.R
-import com.example.habicted_app.auth.model.signup.SignUpState
+import com.example.habicted_app.auth.model.AuthState
 import com.example.habicted_app.screen.EmailInputField
 import com.example.habicted_app.screen.PasswordInputField
 import com.example.habicted_app.ui.theme.righteousFamily
@@ -51,7 +50,7 @@ fun RegisterScreen(
     modifier: Modifier = Modifier,
     onBack: () -> Unit,
     onRegister: (String, String) -> Unit = { _, _ -> },
-    signUpState: State<SignUpState?>,
+    signUpState: AuthState,
 ) {
     var username by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
@@ -145,22 +144,22 @@ fun RegisterScreen(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    if (signUpState.value?.isLoading == true) {
+                    if (signUpState.isLoading) {
                         CircularProgressIndicator()
                     }
                 }
-                LaunchedEffect(key1 = signUpState.value?.isSuccess) {
+                LaunchedEffect(key1 = signUpState.isSuccess) {
                     scope.launch {
-                        if (signUpState.value?.isSuccess?.isNotEmpty() == true) {
-                            val success = signUpState.value?.isSuccess
+                        if (signUpState.isSuccess?.isNotEmpty() == true) {
+                            val success = signUpState.isSuccess
                             Toast.makeText(context, "$success", Toast.LENGTH_LONG).show()
                         }
                     }
                 }
-                LaunchedEffect(key1 = signUpState.value?.isError) {
+                LaunchedEffect(key1 = signUpState.isError) {
                     scope.launch {
-                        if (signUpState.value?.isError?.isNotBlank() == true) {
-                            val error = signUpState.value?.isError
+                        if (signUpState.isError?.isNotBlank() == true) {
+                            val error = signUpState.isError
                             Toast.makeText(context, "$error", Toast.LENGTH_LONG).show()
                         }
                     }
@@ -194,9 +193,8 @@ private fun RegisterPrev() {
         onBack = {},
         onRegister = { _, _ ->
         },
-        signUpState = SignUpState(isSuccess = "Success").let { state ->
-            mutableStateOf(state)
-        })
+        signUpState = AuthState(isSuccess = "Success")
+    )
 }
 
 

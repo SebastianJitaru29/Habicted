@@ -2,7 +2,6 @@ package com.example.habicted_app.auth.di
 
 import com.example.habicted_app.auth.AuthRepositoryImpl
 import com.example.habicted_app.auth.data.AuthRepository
-import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
@@ -19,7 +18,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesRepositoryImpl(firebaseAuth: FirebaseAuth):AuthRepository{
+    fun providesRepositoryImpl(firebaseAuth: FirebaseAuth): AuthRepository {
         return AuthRepositoryImpl(firebaseAuth)
     }
 }

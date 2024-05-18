@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -26,7 +25,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -40,9 +38,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.habicted_app.R
-import com.example.habicted_app.auth.model.forgotpass.ForgotPassViewModel
+import com.example.habicted_app.auth.model.AuthState
 import com.example.habicted_app.screen.EmailInputField
 import com.example.habicted_app.ui.theme.HabictedAppTheme
 import com.example.habicted_app.ui.theme.righteousFamily
@@ -54,14 +51,14 @@ import kotlinx.coroutines.launch
 fun ForgotPasswordScreen(
     modifier: Modifier = Modifier,
     onBack: () -> Unit,
-    viewModel: ForgotPassViewModel = hiltViewModel()
-){
+    state: AuthState,
+    recoverPassword: (String) -> Unit,
+) {
     var email by rememberSaveable { mutableStateOf("") }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
-    val state = viewModel.forgotPassState.collectAsState(initial = null)
 
-    Scaffold (
+    Scaffold(
         topBar = {
             TopAppBar(
                 title = {
@@ -78,8 +75,7 @@ fun ForgotPasswordScreen(
                 }
             )
         }
-    ){
-        innerPadding ->
+    ) { innerPadding ->
         Column(
             modifier = modifier
                 .padding(innerPadding)
@@ -99,8 +95,9 @@ fun ForgotPasswordScreen(
             Button(
                 onClick = {
                     scope.launch {
-                    viewModel.recoverPassword(email)
-                } },
+                        recoverPassword(email)
+                    }
+                },
                 shape = RoundedCornerShape(49.dp),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -112,22 +109,22 @@ fun ForgotPasswordScreen(
                 )
             }
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                if (state.value?.isLoading == true) {
+                if (state.isLoading) {
                     CircularProgressIndicator()
                 }
             }
-            LaunchedEffect(key1 = state.value?.isSuccess) {
+            LaunchedEffect(key1 = state.isSuccess) {
                 scope.launch {
-                    if (state.value?.isSuccess?.isNotEmpty() == true) {
-                        val success = state.value?.isSuccess
+                    if (state.isSuccess?.isNotEmpty() == true) {
+                        val success = state.isSuccess
                         Toast.makeText(context, "$success", Toast.LENGTH_LONG).show()
                     }
                 }
             }
-            LaunchedEffect(key1 = state.value?.isError) {
+            LaunchedEffect(key1 = state.isError) {
                 scope.launch {
-                    if (state.value?.isError?.isNotBlank() == true) {
-                        val error = state.value?.isError
+                    if (state.isError?.isNotBlank() == true) {
+                        val error = state.isError
                         Toast.makeText(context, "$error", Toast.LENGTH_LONG).show()
                     }
                 }
@@ -135,10 +132,14 @@ fun ForgotPasswordScreen(
         }
     }
 }
+
 @Preview(name = "Welcome dark theme", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun Preview() {
     HabictedAppTheme {
-        ForgotPasswordScreen(onBack = {})
+        ForgotPasswordScreen(
+            onBack = {},
+            state = AuthState(isLoading = false),
+            recoverPassword = {})
     }
 }
