@@ -15,7 +15,7 @@ class SignUpViewModel @Inject constructor(
     private val repository: AuthRepository
 ): ViewModel() {
 
-    val _signUpState = Channel<SignUpState> {}
+    private val _signUpState = Channel<SignUpState> {}
     val signUpState = _signUpState.receiveAsFlow()
 
 

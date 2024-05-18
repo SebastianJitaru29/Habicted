@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.habicted_app.R
 import com.example.habicted_app.auth.model.signin.SignInViewModel
-import com.example.habicted_app.auth.model.signup.SignUpViewModel
 import com.example.habicted_app.screen.EmailInputField
 import com.example.habicted_app.screen.PasswordInputField
 import com.example.habicted_app.ui.theme.HabictedAppTheme
@@ -50,10 +49,11 @@ fun WelcomeScreen(
     onLogIn: () -> Unit,
     onSignUp: () -> Unit,
     onForgotedPassword: () -> Unit,
-    viewModel: SignInViewModel = hiltViewModel()
+    viewModel: SignInViewModel = hiltViewModel(),
 ) {
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
+    val context = LocalContext.current
     Column(
         modifier = modifier
             .padding(20.dp)
@@ -62,6 +62,7 @@ fun WelcomeScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(modifier = Modifier.weight(1f))
         Row {
             //TODO: Add logo
             Text(
@@ -72,6 +73,7 @@ fun WelcomeScreen(
         }
 
         Spacer(modifier = Modifier.height(40.dp))
+
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
 
             EmailInputField(
@@ -80,34 +82,46 @@ fun WelcomeScreen(
                 onEmailChange = { email = it }
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Replace TextField with PasswordInputField
             PasswordInputField(
                 modifier = Modifier.fillMaxWidth(),
                 password = password,
-                onPasswordChange = { password = it }
-            ){
-                Text(
-                    text = stringResource(id = R.string.password),
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-            }
+                onPasswordChange = { password = it },
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.password),
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                },
+                isPasswordValid = {
+                    when {
+                        password.isEmpty() -> context.getString(R.string.password_cannot_be_empty)
+                        else -> null
+                    }
+                }
+            )
         }
 
-        Spacer(modifier = Modifier.height(10.dp))
-        ActionButtons(onLogIn = onLogIn, onSignUp = onSignUp, onForgotedPassword = onForgotedPassword, email,password,viewModel)
+        Spacer(modifier = Modifier.weight(1f))
+        ActionButtons(
+            onLogIn = onLogIn,
+            onSignUp = onSignUp,
+            onForgotedPassword = onForgotedPassword,
+            email = email,
+            password = password,
+            viewModel = viewModel,
+        )
     }
 }
 
 @Composable
 fun ActionButtons(
+    modifier: Modifier = Modifier,
     onLogIn: () -> Unit,
     onSignUp: () -> Unit,
     onForgotedPassword: () -> Unit,
     email: String,
     password: String,
-    viewModel: SignInViewModel
+    viewModel: SignInViewModel,
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -131,9 +145,9 @@ fun ActionButtons(
 
         Button(
             onClick = {
-                      scope.launch {
-                          viewModel.loginUser(email,password)
-                      }
+                scope.launch {
+                    viewModel.loginUser(email, password)
+                }
             },
             shape = RoundedCornerShape(49.dp),
             modifier = Modifier

@@ -2,6 +2,11 @@ package com.example.habicted_app.screen
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -16,6 +21,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import com.example.habicted_app.R
 import com.example.habicted_app.utils.ValidateEmail
 
@@ -24,7 +30,7 @@ import com.example.habicted_app.utils.ValidateEmail
 fun EmailInputField(
     modifier: Modifier = Modifier,
     email: String,
-    onEmailChange: (String) -> Unit
+    onEmailChange: (String) -> Unit,
 ) {
     var isFocused by remember { mutableStateOf(false) }
     var hasBeenTouched by rememberSaveable { mutableStateOf(false) }
@@ -72,17 +78,48 @@ fun PasswordInputField(
     modifier: Modifier = Modifier,
     password: String,
     onPasswordChange: (String) -> Unit,
-    label: @Composable () -> Unit = {}
+    label: @Composable () -> Unit = {},
+    isPasswordValid: (String) -> String? = { if (it.length > 6) null else "" },
 ) {
+    var passwordVisibility by remember { mutableStateOf(false) }
+    var isFocused by remember { mutableStateOf(false) }
+    var hasBeenTouched by rememberSaveable { mutableStateOf(false) }
+
+    val errorMessage = isPasswordValid(password)
+
     OutlinedTextField(
         value = password,
         onValueChange = { onPasswordChange(it) },
         label = label,
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .onFocusChanged { focusState ->
+                isFocused = focusState.isFocused
+                if (!hasBeenTouched && focusState.isFocused) {
+                    hasBeenTouched = true
+                }
+            },
         textStyle = MaterialTheme.typography.bodyMedium,
-        visualTransformation = PasswordVisualTransformation(),
+        visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+        trailingIcon = {
+            IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
+                Icon(
+                    imageVector = if (passwordVisibility) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                    contentDescription = stringResource(id = R.string.toggle_password_visibility)
+                )
+            }
+        },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         singleLine = true,
-        supportingText = {}
+        isError = errorMessage != null && hasBeenTouched && !isFocused,
+        supportingText = {
+            if (errorMessage != null && hasBeenTouched && !isFocused) {
+                Text(
+                    text = errorMessage,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+        }
     )
 }

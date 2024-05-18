@@ -15,5 +15,11 @@
     <string name="create_task">Create a new task\n</string>
     <string name="choose_task_options">Select task options\n</string>
     <string name="no_tasks">No tasks to do!\n</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="toggle_password_visibility">toggle password visibility</string>
+    <string name="password_must_be_at_least_6_characters_long">Password must be at least 6 characters long</string>
+    <string name="passwords_do_not_match">Passwords do not match</string>
+    <string name="password_must_be_at_least_6_characters_longg">Password must be at least 6 characters long.</string>
+    <string name="password_cannot_be_empty">Password cannot be empty.</string>
 
 </resources>
