@@ -345,7 +345,7 @@ fun GroupScreenPreview() {
             color = Red500.value,
             tasksList = listOf(
                 Task(
-                    id = 1,
+                    id = "",
                     groupId = "",
                     name = "Task 1",
                     description = null,
@@ -356,7 +356,7 @@ fun GroupScreenPreview() {
                     total = 2,
                 ),
                 Task(
-                    id = 2,
+                    id = "",
                     groupId = "",
                     name = "Task 2",
                     description = null,
@@ -375,7 +375,7 @@ fun GroupScreenPreview() {
             color = Red500.value,
             tasksList = listOf(
                 Task(
-                    id = 1,
+                    id = "",
                     groupId = "",
                     name = "Task 1",
                     description = null,
@@ -386,7 +386,7 @@ fun GroupScreenPreview() {
                     total = 2,
                 ),
                 Task(
-                    id = 2,
+                    id = "",
                     groupId = "",
                     name = "Task 2",
                     description = null,
@@ -415,7 +415,7 @@ private fun GroupsCardsPrev() {
             Red500,
             listOf(
                 Task(
-                    id = 1,
+                    id = "",
                     groupId = "",
                     name = "Task 1",
                     description = null,
@@ -426,7 +426,7 @@ private fun GroupsCardsPrev() {
                     total = 2,
                 ),
                 Task(
-                    id = 2,
+                    id = "",
                     groupId = "",
                     name = "Task 2",
                     description = null,
@@ -456,7 +456,7 @@ private fun Prevv() {
         onDateClickListener = { },
         tasksInfo = listOf(
             Task(
-                id = 1,
+                id = "",
                 groupId = "",
                 name = "Task 1",
                 description = null,
@@ -467,7 +467,7 @@ private fun Prevv() {
                 total = 2,
             ),
             Task(
-                id = 2,
+                id = "",
                 groupId = "",
                 name = "Task 2",
                 description = null,

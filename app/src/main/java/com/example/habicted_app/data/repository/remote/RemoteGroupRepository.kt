@@ -10,7 +10,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
 import com.google.firebase.messaging.messaging
 import dagger.Module
 import dagger.Provides
@@ -80,6 +79,9 @@ class RemoteGroupRepository : GroupRepository {
         // Add the group document to Firestore associated with the current user
         val documentId = groupCollection?.add(groupMap)?.await()
         if (documentId != null) {
+            group.id = documentId.id
+            groupMap["id"] = documentId.id
+            documentId.set(groupMap).await()
             db.collection("users").document(auth.currentUser?.uid!!)
                 .update("groupsIDs", FieldValue.arrayUnion(documentId.id))
         }
@@ -89,7 +91,7 @@ class RemoteGroupRepository : GroupRepository {
 
     override suspend fun upsertGroup(group: Group) {
         // Update the group document in Firestore associated with the current user
-        groupCollection?.document(group.id.toString())?.set(group)?.await()
+        groupCollection?.document(group.id)?.set(group)?.await()
     }
 
     override suspend fun deleteGroup(groupId: String) {
@@ -100,12 +102,11 @@ class RemoteGroupRepository : GroupRepository {
     override suspend fun addTaskToGroup(task: Task, groupId: String) {
         // Reference to the group's taskList subcollection
         val groupTaskListRef = groupCollection
-            ?.document(groupId.toString())
+            ?.document(groupId)
             ?.collection("taskList")
 
         // Convert the Task object into a map
         val taskMap = hashMapOf(
-            "id" to task.id,
             "groupId" to task.groupId,
             "name" to task.name,
             "description" to task.description,
@@ -117,8 +118,17 @@ class RemoteGroupRepository : GroupRepository {
         )
 
         // Add the task document to the group's taskList subcollection
-        groupTaskListRef?.add(taskMap)?.await()
-        subscribeToMessagingTopic(groupId)
+        try {
+            val documentRef = groupTaskListRef?.add(taskMap)?.await()
+            val documentId = documentRef?.id
+            if (documentId != null) {
+                taskMap["id"] = documentId
+                documentRef.set(taskMap).await()
+                task.id = documentId
+            }
+        } catch (e: Exception) {
+            Log.d("Remote Group", "Error while adding task: $e")
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -127,7 +137,7 @@ class RemoteGroupRepository : GroupRepository {
 
         // Reference to the group's taskList subcollection
         val groupTaskListRef = groupCollection
-            ?.document(groupId.toString())
+            ?.document(groupId)
             ?.collection("taskList")
 
         // Retrieve all tasks in the group's taskList subcollection
@@ -140,11 +150,12 @@ class RemoteGroupRepository : GroupRepository {
                     val task = Task(document)
                     taskList.add(task)
                 } catch (e: Exception) {
-                    Log.d("Remote Group", "Error while getting tasks: ${e}")
+                    Log.d("RemoteGroupRepository", "getGroupTasks: Error while getting tasks: ${e}")
                 }
             }
         }
 
+        Log.d("RemoteGroupRepository", "getGroupTasks: $taskList")
         return taskList.toList()
     }
 
@@ -184,9 +195,9 @@ class RemoteGroupRepository : GroupRepository {
         Log.d("RemoteGroupRepository", "getUserGroups: $groupList")
         return groupList
     }
-    fun subscribeToMessagingTopic(topic:String){
-        Firebase.messaging.subscribeToTopic(topic).
-        addOnCompleteListener { task ->
+
+    fun subscribeToMessagingTopic(topic: String) {
+        Firebase.messaging.subscribeToTopic(topic).addOnCompleteListener { task ->
             var msg = "Subscribed"
             if (!task.isSuccessful) {
                 msg = "Subscribed Failed"
@@ -196,16 +207,22 @@ class RemoteGroupRepository : GroupRepository {
     }
 
 
-    fun updateTasksStatus(task: Task) {
-        val taskRef = groupCollection
-            ?.document(task.groupId.toString())
-            ?.collection("taskList")
-            ?.document(task.id.toString())
+    fun updateTasksStatus(
+        task: Task,
+        onSuccess: () -> Unit = {},
+        onFailure: (Exception) -> Unit = {},
+    ) {
+        val taskRef = task.id?.let {
+            groupCollection
+                ?.document(task.groupId)
+                ?.collection("taskList")
+                ?.document(it)
+        }
 
-        taskRef?.set(task, SetOptions.merge())?.addOnSuccessListener {
-            Log.d("RemoteGroupRepository", "Task updated successfully")
+        taskRef?.update("isDone", task.isDone)?.addOnSuccessListener {
+            onSuccess()
         }?.addOnFailureListener {
-            Log.d("RemoteGroupRepository", "Error updating task: $it")
+            onFailure(it)
         }
     }
 }

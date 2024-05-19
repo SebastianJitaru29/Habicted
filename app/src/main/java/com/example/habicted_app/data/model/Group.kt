@@ -3,7 +3,7 @@ package com.example.habicted_app.data.model
 import com.google.firebase.firestore.DocumentSnapshot
 
 data class Group(
-    val id: String,
+    var id: String,
     val name: String,
     val color: ULong = 0xFF000000u,
     val members: List<User>,

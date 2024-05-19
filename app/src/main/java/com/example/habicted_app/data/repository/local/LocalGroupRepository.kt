@@ -28,7 +28,7 @@ class LocalGroupRepository : GroupRepository {
             color = Red500.value,
             tasksList = listOf(
                 Task(
-                    id = 1,
+                    id = "",
                     groupId = "",
                     name = "Task 1",
                     description = null,
@@ -39,7 +39,7 @@ class LocalGroupRepository : GroupRepository {
                     total = 2,
                 ),
                 Task(
-                    id = 2,
+                    id = "",
                     groupId = "",
                     name = "Task 2",
                     description = null,

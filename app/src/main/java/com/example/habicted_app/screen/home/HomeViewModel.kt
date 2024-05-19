@@ -76,6 +76,8 @@ class HomeViewModel @Inject constructor(
 
     private fun addTask(newTask: Task) {
         viewModelScope.launch {
+            val members = groupRepository.getGroup(newTask.groupId)?.members?.size
+            newTask.total = members ?: 0
             groupRepository.addTaskToGroup(newTask, newTask.groupId)
             fetchData()
         }
@@ -92,7 +94,7 @@ class HomeViewModel @Inject constructor(
 
     private fun fetchTasksByDate(date: LocalDate) {
         val filteredTasks = allTasks.filter { it.date == date }
-        Log.d("HomeViewModel", "Filtered tasks: ${filteredTasks.map { it.name }}")
+        Log.d("HomeViewModel", "Filtered tasks: ${filteredTasks.map { it }}")
         _tasksList.update { filteredTasks }
         _selectedDate.update { date }
     }
@@ -118,19 +120,20 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun updateTaskStatus(status: Boolean, task: Task) {
-        val newTask = task.copy(isDone = status)
-
+        val updatedTask = task.copy(isDone = status)
         if (groupRepository is RemoteGroupRepository) {
             viewModelScope.launch {
-                groupRepository.updateTasksStatus(newTask)
+                groupRepository.updateTasksStatus(updatedTask, onSuccess = {
+                    val updatedTasks =
+                        _tasksList.value.map { if (it.id == updatedTask.id) updatedTask else it }
+                    _tasksList.value = updatedTasks
+                    allTasks =
+                        allTasks.map { if (it.id == updatedTask.id) updatedTask else it }.toSet()
+                    fetchTasksByDate(_selectedDate.value)
+                }, onFailure = {
+                    Log.d("HomeViewModel", "Task update failed")
+                })
             }
-        }
-
-        val index = _tasksList.value.indexOfFirst { it.id == task.id }
-        if (index != -1) {
-            val updatedTasks = _tasksList.value.toMutableList()
-            updatedTasks[index] = newTask
-            _tasksList.update { updatedTasks }
         }
     }
 

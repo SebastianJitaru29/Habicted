@@ -123,7 +123,7 @@ fun NavFloatingActionButton(
                     onEvent(
                         HomeUiEvents.SaveTask(
                             Task(
-                                id = 0, //TODO
+                                id = null,
                                 groupId = group,
                                 name = title,
                                 description = description,
