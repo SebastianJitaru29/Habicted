@@ -6,10 +6,12 @@ import androidx.annotation.RequiresApi
 import com.example.habicted_app.data.model.Group
 import com.example.habicted_app.data.model.Task
 import com.example.habicted_app.data.repository.GroupRepository
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
+import com.google.firebase.messaging.messaging
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -116,6 +118,7 @@ class RemoteGroupRepository : GroupRepository {
 
         // Add the task document to the group's taskList subcollection
         groupTaskListRef?.add(taskMap)?.await()
+        subscribeToMessagingTopic(groupId)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -181,7 +184,16 @@ class RemoteGroupRepository : GroupRepository {
         Log.d("RemoteGroupRepository", "getUserGroups: $groupList")
         return groupList
     }
-
+    fun subscribeToMessagingTopic(topic:String){
+        Firebase.messaging.subscribeToTopic(topic).
+        addOnCompleteListener { task ->
+            var msg = "Subscribed"
+            if (!task.isSuccessful) {
+                msg = "Subscribed Failed"
+            }
+            Log.d("TAG", msg)
+        }
+    }
 
 
     fun updateTasksStatus(task: Task) {
