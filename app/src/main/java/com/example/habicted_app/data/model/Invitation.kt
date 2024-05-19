@@ -20,7 +20,7 @@ data class Invitation(
     val fromUserId: String,
     val toUserId: String,
     val groupId: String,
-    val status: InvitationStatus,
+    var status: InvitationStatus,
     val groupName: String? = null,
     val fromUserName: String? = null,
 ) {

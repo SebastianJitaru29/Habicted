@@ -23,6 +23,7 @@ import com.example.habicted_app.navigation.routes.NotificationsRoute
 import com.example.habicted_app.navigation.routes.SettingsRoute
 import com.example.habicted_app.navigation.routes.TasksRoute
 import com.example.habicted_app.screen.home.HomeUiEvents
+import com.example.habicted_app.screen.invitations.NotificationsViewModel
 import com.example.habicted_app.screen.preferences.MainViewModel
 import com.example.habicted_app.screen.profileScreen.ProfileScreen
 import com.example.habicted_app.screen.taskscreen.TaskUIEvents
@@ -41,6 +42,7 @@ fun HomeNavGraph(
     onEvent: (HomeUiEvents) -> Unit,
     onTaskUIEvents: (TaskUIEvents) -> TaskUIState?,
     rootNavController: NavHostController,
+    notificationsViewModel: NotificationsViewModel,
 ) {
     NavHost(
         navController = navController,
@@ -59,7 +61,7 @@ fun HomeNavGraph(
             )
         }
         composable(route = NavBar.Groups.route) {
-            GroupsRoute(groupList = groupsList.value)
+            GroupsRoute(groupList = groupsList.value, onInvite = notificationsViewModel::inviteUser)
         }
         composable(route = NavBar.Settings.route) { backStackEntry ->
             val parentEntry = remember(backStackEntry) {
@@ -82,7 +84,7 @@ fun HomeNavGraph(
             })
         }
         composable(route = Route.NOTIFICATIONS.route) {
-            NotificationsRoute()
+            NotificationsRoute(viewModel = notificationsViewModel)
         }
     }
 }

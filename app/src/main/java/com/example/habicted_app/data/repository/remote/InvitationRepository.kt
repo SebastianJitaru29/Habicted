@@ -1,5 +1,7 @@
 package com.example.habicted_app.data.repository.remote
 
+import android.util.Log
+import com.example.habicted_app.data.model.Group
 import com.example.habicted_app.data.model.Invitation
 import com.example.habicted_app.data.model.InvitationStatus
 import com.google.firebase.auth.ktx.auth
@@ -11,35 +13,39 @@ import javax.inject.Singleton
 @Singleton
 class InvitationRepository @Inject constructor() {
     private val firestore = FirebaseFirestore.getInstance()
-    fun inviteUser(groupId: String, fromUserId: String, toUserId: String) {
+    fun inviteUser(group: Group, toUserId: String) {
+        val fromUserId = Firebase.auth.currentUser!!.uid
         val invitation = Invitation(
             fromUserId = fromUserId,
             toUserId = toUserId,
-            groupId = groupId,
+            groupId = group.id,
+            groupName = group.name,
+            fromUserName = Firebase.auth.currentUser!!.email,
             status = InvitationStatus.PENDING,
         )
 
         firestore.collection("Invitations").add(invitation.toMap())
             .addOnSuccessListener {
                 // Handle success
+                Log.d("InvitationRepository", "Invitation sent")
             }
             .addOnFailureListener {
                 // Handle failure
             }
     }
 
-    fun acceptInvitation(invitation: Invitation) {
+    fun acceptInvitation(invitation: Invitation, onInvitationAccepted: () -> Unit) {
         val invitationRef = firestore.collection("Invitations").document(invitation.id!!)
         invitationRef.update("status", InvitationStatus.ACCEPTED.name)
             .addOnSuccessListener {
-                // Handle success
+                onInvitationAccepted()
             }
             .addOnFailureListener {
                 // Handle failure
             }
     }
 
-    fun declineInvitation(invitation: Invitation) {
+    fun declineInvitation(invitation: Invitation, onDeclined: () -> Unit) {
         val invitationRef = firestore.collection("Invitations").document(invitation.id!!)
         invitationRef.update("status", InvitationStatus.DECLINED.name)
             .addOnSuccessListener {
@@ -56,7 +62,12 @@ class InvitationRepository @Inject constructor() {
             .whereEqualTo("toUserId", userId)
             .get()
             .addOnSuccessListener { documents ->
-                val invitations = documents.map { doc -> doc.toObject(Invitation::class.java) }
+                val invitations = emptyList<Invitation>().toMutableList()
+                documents.map { doc ->
+                    if (Invitation(doc).status == InvitationStatus.PENDING) {
+                        invitations += Invitation(doc)
+                    }
+                }
                 onInvitationsFetched(invitations)
             }
             .addOnFailureListener {

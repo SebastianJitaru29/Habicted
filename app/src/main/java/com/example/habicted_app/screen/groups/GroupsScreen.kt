@@ -64,6 +64,7 @@ import androidx.compose.ui.unit.dp
 import com.example.habicted_app.R
 import com.example.habicted_app.data.model.Group
 import com.example.habicted_app.data.model.Task
+import com.example.habicted_app.data.model.User
 import com.example.habicted_app.screen.taskscreen.calendar.CalendarData
 import com.example.habicted_app.screen.taskscreen.calendar.CalendarDataSource
 import com.example.habicted_app.ui.styling.ColorPalette
@@ -77,7 +78,8 @@ import java.time.LocalDate
 fun GroupScreen(
     modifier: Modifier = Modifier,
     groupList: List<Group>,
-    searchUsersByEmail: (String, (List<String>) -> Unit) -> List<String>,
+    searchUsersByEmail: (String, (List<User>) -> Unit) -> Unit,
+    onInvite: (Group, String) -> Unit,
 ) {
     val showSheet = remember { mutableStateOf(false) }
     val clickedGroup = remember { mutableStateOf(Group()) }
@@ -120,7 +122,11 @@ fun GroupScreen(
                 onDismiss = {
                     showSheet.value = false
                 },
-                searchUsersByEmail = searchUsersByEmail
+                searchUsersByEmail = searchUsersByEmail,
+                onInvite = { group, id ->
+                    showSheet.value = false
+                    onInvite(group, id)
+                }
             )
         }
     }
@@ -132,11 +138,12 @@ fun BottomSheet(
     modifier: Modifier = Modifier,
     group: Group,
     onDismiss: () -> Unit = {},
-    searchUsersByEmail: (String, (List<String>) -> Unit) -> List<String>,
+    searchUsersByEmail: (String, (List<User>) -> Unit) -> Unit,
+    onInvite: (Group, String) -> Unit,
 ) {
     val modalBottomSheet = rememberModalBottomSheetState()
     var searchQuery by remember { mutableStateOf("") }
-    var searchResults by remember { mutableStateOf(listOf<String>()) }
+    var searchResults by remember { mutableStateOf(listOf<User>()) }
 
     ModalBottomSheet(
         modifier = Modifier
@@ -154,7 +161,7 @@ fun BottomSheet(
                 singleLine = true,
                 onValueChange = { newValue ->
                     searchQuery = newValue
-                    searchResults = searchUsersByEmail(searchQuery) {
+                    searchUsersByEmail(searchQuery) {
                         searchResults = it
                     }
                 },
@@ -168,8 +175,8 @@ fun BottomSheet(
                 modifier = Modifier.fillMaxWidth()
             )
             LazyColumn {
-                items(searchResults) { email ->
-                    UserSearchResultCard(email = email, onInvite = {})
+                items(searchResults) { user ->
+                    UserSearchResultCard(user = user, onInvite = { u -> onInvite(group, u.id) })
                 }
             }
         }
@@ -178,12 +185,11 @@ fun BottomSheet(
 }
 
 @Composable
-fun UserSearchResultCard(modifier: Modifier = Modifier, email: String, onInvite: () -> Unit) {
+fun UserSearchResultCard(modifier: Modifier = Modifier, user: User, onInvite: (User) -> Unit) {
     Card(
         modifier = modifier
             .fillMaxWidth()
             .padding(8.dp),
-        onClick = { /*TODO*/ }
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
@@ -192,10 +198,10 @@ fun UserSearchResultCard(modifier: Modifier = Modifier, email: String, onInvite:
         ) {
             Icon(imageVector = Icons.Default.Person, contentDescription = "User")
             Text(
-                text = email,
+                text = user.email,
             )
             Spacer(modifier = Modifier.weight(1f))
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = { onInvite(user) }) {
                 Icon(
                     imageVector = Icons.Default.Check,
                     contentDescription = "Add User",
@@ -548,9 +554,7 @@ fun GroupScreenPreview() {
             members = emptyList()
         ),
     )
-    GroupScreen(groupList = groupList, searchUsersByEmail = { _, _ ->
-        emptyList()
-    })
+    GroupScreen(groupList = groupList, searchUsersByEmail = { _, _ -> }, onInvite = { _, _ -> })
 }
 
 

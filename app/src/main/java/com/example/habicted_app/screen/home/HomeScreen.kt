@@ -29,6 +29,7 @@ import com.example.habicted_app.data.model.Task
 import com.example.habicted_app.navigation.graphs.HomeNavGraph
 import com.example.habicted_app.navigation.graphs.NavBar
 import com.example.habicted_app.screen.groups.GroupAddDialog
+import com.example.habicted_app.screen.invitations.NotificationsViewModel
 import com.example.habicted_app.screen.taskscreen.TaskDialog
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -38,7 +39,7 @@ fun HomeScreen(
     navController: NavHostController = rememberNavController(),
 ) {
     val homeViewModel: HomeViewModel = hiltViewModel()
-
+    val notificationsViewModel: NotificationsViewModel = hiltViewModel()
 
     Scaffold(
         bottomBar = { NavBottomBar(navController = navController) },
@@ -59,6 +60,7 @@ fun HomeScreen(
             groupsList = homeViewModel.groupsList.collectAsState(),
             onEvent = homeViewModel::onEvent,
             onTaskUIEvents = homeViewModel::onTaskEvent,
+            notificationsViewModel = notificationsViewModel,
         )
     }
 }
