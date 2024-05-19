@@ -1,7 +1,6 @@
 package com.example.habicted_app.screen.taskscreen
 
 import TaskListApp
-import android.content.res.Configuration
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
@@ -18,7 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Update
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -30,13 +29,10 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.habicted_app.R
 import com.example.habicted_app.data.model.Task
 import com.example.habicted_app.screen.home.HomeUiEvents
 import com.example.habicted_app.screen.taskscreen.components.CalendarRow
-import com.example.habicted_app.ui.theme.HabictedAppTheme
 import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -46,6 +42,7 @@ fun TaskScreen(
     username: String,
     profilePicture: Int,
     onProfilePic: () -> Unit,
+    onNotifications: () -> Unit,
     selectedDate: LocalDate,
     tasksList: List<Task>,
     onEvent: (HomeUiEvents) -> Unit,
@@ -60,7 +57,8 @@ fun TaskScreen(
             onProfilePic = onProfilePic,
             username = username,
             profilePicture = profilePicture,
-            onEvent = onEvent
+            onEvent = onEvent,
+            onNotifications = onNotifications
         )
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -80,6 +78,7 @@ fun TaskScreen(
 @Composable
 fun TopRow(
     onProfilePic: () -> Unit,
+    onNotifications: () -> Unit,
     username: String,
     profilePicture: Int,
     onEvent: (HomeUiEvents) -> Unit,
@@ -108,10 +107,15 @@ fun TopRow(
         }
         Spacer(modifier = Modifier.weight(1f))
         IconButton(
-            onClick = { onEvent(HomeUiEvents.UpdateNetworkCurrentStatus(context = context)) },
+            onClick = onNotifications,
         ) {
-            Icon(imageVector = Icons.Filled.Update, contentDescription = "update")
+            Icon(imageVector = Icons.Filled.Notifications, contentDescription = "notifications")
         }
+//        IconButton(
+//            onClick = { onEvent(HomeUiEvents.UpdateNetworkCurrentStatus(context = context)) },
+//        ) {
+//            Icon(imageVector = Icons.Filled.Update, contentDescription = "update")
+//        }
     }
 }
 

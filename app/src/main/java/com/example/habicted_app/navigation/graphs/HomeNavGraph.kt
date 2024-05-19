@@ -11,14 +11,15 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.habicted_app.data.model.Group
 import com.example.habicted_app.data.model.Task
 import com.example.habicted_app.navigation.routes.GroupsRoute
+import com.example.habicted_app.navigation.routes.NotificationsRoute
 import com.example.habicted_app.navigation.routes.SettingsRoute
 import com.example.habicted_app.navigation.routes.TasksRoute
 import com.example.habicted_app.screen.home.HomeUiEvents
@@ -32,7 +33,7 @@ import java.time.LocalDate
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeNavGraph(
-    navController: NavHostController,
+    navController: NavHostController = rememberNavController(),
     modifier: Modifier = Modifier,
     selectedDate: LocalDate,
     taskList: State<List<Task>>,
@@ -53,7 +54,8 @@ fun HomeNavGraph(
                 tasksList = taskList.value,
                 onEvent = onEvent,
                 onTaskUIEvents = onTaskUIEvents,
-                onProfileClick = { navController.navigate(Route.PROFILE.route) }
+                onProfileClick = { navController.navigate(Route.PROFILE.route) },
+                onNotifications = { navController.navigate(Route.NOTIFICATIONS.route) }
             )
         }
         composable(route = NavBar.Groups.route) {
@@ -73,10 +75,14 @@ fun HomeNavGraph(
                         inclusive = true
                     }
                 }
+                navController.clearBackStack(Graphs.HOME)
                 FirebaseAuth.getInstance().signOut()
 //                navController.clearBackStack()
 //                navController.navigate(Graphs.AUTHENTICATION)
             })
+        }
+        composable(route = Route.NOTIFICATIONS.route) {
+            NotificationsRoute()
         }
     }
 }
@@ -87,6 +93,7 @@ data class Route(val route: String) {
         val GROUPS = Route("groups")
         val SETTINGS = Route("settings")
         val PROFILE = Route("profile")
+        val NOTIFICATIONS = Route("notifications")
     }
 }
 

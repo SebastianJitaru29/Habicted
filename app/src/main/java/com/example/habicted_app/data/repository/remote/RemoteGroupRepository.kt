@@ -28,7 +28,6 @@ class RemoteGroupRepository : GroupRepository {
         null
     }
 
-
     @Module
     @InstallIn(SingletonComponent::class)
     object RepositoryModule {

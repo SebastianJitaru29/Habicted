@@ -67,17 +67,18 @@ fun HomeScreen(
 @Composable
 fun NavBottomBar(navController: NavHostController) {
     val screens = listOf(NavBar.Tasks, NavBar.Groups, NavBar.Settings)
-
-    NavigationBar {
-        screens.forEach { navBar ->
-            NavigationBarItem(
-                icon = { Icon(navBar.icon, contentDescription = null) },
-                label = { navBar.title },
-                selected = navController.currentDestination?.route == navBar.route,
-                onClick = {
-                    navController.navigate(navBar.route)
-                }
-            )
+    if (navController.currentDestination?.route in screens.map { it.route }) {
+        NavigationBar {
+            screens.forEach { navBar ->
+                NavigationBarItem(
+                    icon = { Icon(navBar.icon, contentDescription = null) },
+                    label = { navBar.title },
+                    selected = navController.currentDestination?.route == navBar.route,
+                    onClick = {
+                        navController.navigate(navBar.route)
+                    }
+                )
+            }
         }
     }
 }
