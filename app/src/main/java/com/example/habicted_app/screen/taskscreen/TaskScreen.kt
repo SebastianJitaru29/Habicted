@@ -138,35 +138,35 @@ fun ProfilePicture(
     }
 }
 
-//Modifier change the size, layout, behaivour and appearance of a Composable
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(
-    name = "Welcome dark theme",
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
-@Preview(
-    name = "Welcome light theme",
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_NO
-)
-@Composable
-fun Preview() {
-    HabictedAppTheme {
-        TaskScreen(
-            username = "User",
-            profilePicture = R.drawable.outline_groups_24,
-            selectedDate = LocalDate.now(),
-            tasksList = emptyList(),
-            onProfilePic = {},
-            onEvent = {},
-            onTaskUIEvents = { event ->
-                when (event) {
-                    is TaskUIEvents.ConvertTaskToTaskUIState -> TODO()
-                    is TaskUIEvents.UpdateIsDone -> TODO()
-                }
-            }
-        )
-    }
-}
+////Modifier change the size, layout, behaivour and appearance of a Composable
+//
+//@RequiresApi(Build.VERSION_CODES.O)
+//@Preview(
+//    name = "Welcome dark theme",
+//    showBackground = true,
+//    uiMode = Configuration.UI_MODE_NIGHT_YES
+//)
+//@Preview(
+//    name = "Welcome light theme",
+//    showBackground = true,
+//    uiMode = Configuration.UI_MODE_NIGHT_NO
+//)
+//@Composable
+//fun Preview() {
+//    HabictedAppTheme {
+//        TaskScreen(
+//            username = "User",
+//            profilePicture = R.drawable.outline_groups_24,
+//            selectedDate = LocalDate.now(),
+//            tasksList = emptyList(),
+//            onProfilePic = {},
+//            onEvent = {},
+//            onTaskUIEvents = { event ->
+//                when (event) {
+//                    is TaskUIEvents.ConvertTaskToTaskUIState -> TODO()
+//                    is TaskUIEvents.UpdateIsDone -> TODO()
+//                }
+//            }
+//        )
+//    }
+//}

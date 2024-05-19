@@ -19,12 +19,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.habicted_app.navigation.graphs.RootNavigationGraph
+import com.example.habicted_app.screen.preferences.MyPreferencesDataStore
 import com.example.habicted_app.ui.theme.HabictedAppTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
+    @Inject
+    lateinit var myPreferencesDataStore: MyPreferencesDataStore
     private val REQUEST_NOTIFICATION_PERMISSION = 1
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -36,7 +39,7 @@ class MainActivity : AppCompatActivity() {
             requestNotificationPermission()
         }
         setContent {
-            HabictedAppTheme {
+            HabictedAppTheme(myPreferencesDataStore) {
 
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -94,10 +97,10 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    HabictedAppTheme {
-        Greeting("Android")
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun GreetingPreview() {
+//    HabictedAppTheme {
+//        Greeting("Android")
+//    }
+//}

@@ -133,13 +133,13 @@ fun ForgotPasswordScreen(
     }
 }
 
-@Preview(name = "Welcome dark theme", uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun Preview() {
-    HabictedAppTheme {
-        ForgotPasswordScreen(
-            onBack = {},
-            state = AuthState(isLoading = false),
-            recoverPassword = {})
-    }
-}
+//@Preview(name = "Welcome dark theme", uiMode = Configuration.UI_MODE_NIGHT_YES)
+//@Composable
+//fun Preview() {
+//    HabictedAppTheme {
+//        ForgotPasswordScreen(
+//            onBack = {},
+//            state = AuthState(isLoading = false),
+//            recoverPassword = {})
+//    }
+//}

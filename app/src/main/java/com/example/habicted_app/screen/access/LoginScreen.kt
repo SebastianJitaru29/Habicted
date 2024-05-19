@@ -193,17 +193,17 @@ fun ActionButtons(
 
 }
 
-@Preview(name = "Welcome light theme", uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Preview(name = "Welcome dark theme", uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun PreviewEmailOutlinedTextField() {
-    HabictedAppTheme {
-        WelcomeScreen(
-            onLogIn = {},
-            onSignUp = {},
-            onForgotedPassword = {},
-            state = AuthState(),
-            tryLogin = { _, _ -> })
-    }
-}
+//@Preview(name = "Welcome light theme", uiMode = Configuration.UI_MODE_NIGHT_NO)
+//@Preview(name = "Welcome dark theme", uiMode = Configuration.UI_MODE_NIGHT_YES)
+//@Composable
+//fun PreviewEmailOutlinedTextField() {
+//    HabictedAppTheme {
+//        WelcomeScreen(
+//            onLogIn = {},
+//            onSignUp = {},
+//            onForgotedPassword = {},
+//            state = AuthState(),
+//            tryLogin = { _, _ -> })
+//    }
+//}
 

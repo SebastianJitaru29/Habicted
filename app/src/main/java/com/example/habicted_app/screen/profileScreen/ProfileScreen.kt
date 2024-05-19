@@ -137,10 +137,10 @@ private fun getUserParameter(userId: String, callback: (Any?) -> Unit) {
     }
 }
 
-@Composable
-@Preview
-fun ProfilePrev() {
-    HabictedAppTheme {
-        ProfileScreen()
-    }
-}
+//@Composable
+//@Preview
+//fun ProfilePrev() {
+//    HabictedAppTheme {
+//        ProfileScreen()
+//    }
+//}

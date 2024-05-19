@@ -11,11 +11,17 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import com.example.habicted_app.screen.preferences.MyPreferencesDataStore
+import com.example.habicted_app.screen.preferences.NetworkPreference
+import com.example.habicted_app.screen.preferences.TaskStatus
+import kotlinx.coroutines.flow.map
 
 //@Immutable
 //data class ExtendedColorScheme(
@@ -252,24 +258,17 @@ private val highContrastDarkColorScheme = darkColorScheme(
 
 @Composable
 fun HabictedAppTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-//    dynamicColor: Boolean = true,
-    content: @Composable() () -> Unit
+    myPreferencesDataStore: MyPreferencesDataStore,
+    content: @Composable () -> Unit
 ) {
-//    val colorScheme = when {
-//        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-//            val context = LocalContext.current
-//            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-//        }
-//
-//        darkTheme -> darkScheme
-//        else -> lightScheme
-//    }
-    val colorScheme = if (darkTheme) {
-        darkScheme
-    } else {
+    val taskStatus by myPreferencesDataStore.taskStatusFlow
+        .map { it ?: TaskStatus(false, NetworkPreference.WIFI) } // Provide initial value here
+        .collectAsState(initial = TaskStatus(false, NetworkPreference.WIFI)) // Provide initial value here
+
+    val colorScheme = if (taskStatus.isLight) {
         lightScheme
+    } else {
+        darkScheme
     }
 
     val view = LocalView.current
@@ -279,7 +278,7 @@ fun HabictedAppTheme(
             window.statusBarColor = colorScheme.primary.toArgb()
             WindowCompat
                 .getInsetsController(window, view)
-                .isAppearanceLightStatusBars = darkTheme
+                .isAppearanceLightStatusBars = !taskStatus.isLight
         }
     }
 
@@ -289,3 +288,5 @@ fun HabictedAppTheme(
         typography = Typography,
     )
 }
+
+
