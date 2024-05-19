@@ -129,6 +129,7 @@ private fun getUserParameter(userId: String, callback: (Any?) -> Unit) {
                 documentSnapshot.getString("photoUrl") // Replace "parameterName" with your parameter name
             callback(parameterValue)
         } else {
+            userDocRef.update("photoUrl", "")
             callback(null)
         }
     }.addOnFailureListener {

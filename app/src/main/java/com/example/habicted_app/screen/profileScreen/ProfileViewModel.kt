@@ -13,7 +13,7 @@ class ProfileViewModel @Inject constructor() : ViewModel() {
     val profilePicUri: Uri = _profilePicUri.asStateFlow().value
 
 
-    fun updateProfilePic(newUri: Uri) {
+    fun uploadNewProfilePic(newUri: Uri) {
         _profilePicUri.value = newUri
     }
 
