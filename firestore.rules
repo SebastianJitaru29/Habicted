@@ -13,7 +13,28 @@ service cloud.firestore {
     // all client requests to your Firestore database will be denied until you Update
     // your rules
     match /{document=**} {
-      allow read, write: if request.time < timestamp.date(2024, 6, 10);
+      allow read, write: if request.auth.uid != null;
+    }
+
+    // Match any document in the 'users' collection
+    match /users/{userId} {
+      // Only the authenticated user can read and write their own document
+      allow read, write: if request.auth.uid == userId;
+
+      // Match any document in the 'groupsIDs' subcollection
+      match /groupsIDs/{groupId} {
+        // Only the authenticated user can read and write their own groups
+        allow read, write: if request.auth.uid == userId;
+      }
+    }
+
+    // Match any document in the 'groupss' collection
+    match /groupss/{groupId} {
+      // Any authenticated user can read any group
+      allow read: if request.auth != null;
+
+      // Only users who are a member of the group can write to the group
+      allow write: if request.auth.uid in get(/databases/$(database)/documents/users/$(request.auth.uid)).data.groupsIDs;
     }
   }
 }

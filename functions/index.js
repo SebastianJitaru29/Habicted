@@ -47,33 +47,34 @@ exports.sendNotification = functions.https.onRequest((request, response) => {
 exports.sendNotificationOnNewTask = functions.firestore
     .document("Groups/{groupID}/taskList/{taskID}")
     .onCreate(async (snap, context) => {
-        const taskID = context.params.taskID;
-        const groupID = context.params.groupID;
+      const taskID = context.params.taskID;
+      const groupID = context.params.groupID;
 
-        try {
-            // Fetch the task document to get task details if necessary
-            const taskDoc = await admin.firestore().doc(`Groups/${groupID}/taskList/${taskID}`).get();
-            const taskData = taskDoc.data();
-            const taskTitle = taskData ? taskData.title : "New Task";
+      try {
+        // Fetch the task document to get task details if necessary
+        const taskDoc = await admin.firestore().
+            doc(`Groups/${groupID}/taskList/${taskID}`).get();
+        const taskData = taskDoc.data();
+        const taskTitle = taskData ? taskData.title : "New Task";
 
-            // Fetch the group document from Firestore
-            const grpDoc = await admin.firestore().doc(`Groups/${groupID}`).get();
-            const groupData = grpDoc.data();
-            const groupTitle = groupData ? groupData.title : "Unknown Group";
+        // Fetch the group document from Firestore
+        const grpDoc = await admin.firestore().doc(`Groups/${groupID}`).get();
+        const groupData = grpDoc.data();
+        const groupTitle = groupData ? groupData.title : "Unknown Group";
 
-            // Construct the notification message
-            const message = {
-                notification: {
-                    title: "New Task",
-                    body: `${groupTitle}: ${taskTitle}`,
-                },
-                topic: groupID, // Use groupID as the topic
-            };
+        // Construct the notification message
+        const message = {
+          notification: {
+            title: "New Task",
+            body: `${groupTitle}: ${taskTitle}`,
+          },
+          topic: groupID, // Use groupID as the topic
+        };
 
-            // Send the notification
-            await admin.messaging().send(message);
-            console.log("Successfully sent message");
-        } catch (error) {
-            console.error("Error sending notification", error);
-        }
+        // Send the notification
+        await admin.messaging().send(message);
+        console.log("Successfully sent message");
+      } catch (error) {
+        console.error("Error sending notification", error);
+      }
     });
