@@ -49,6 +49,7 @@ exports.sendNotificationOnNewTask = functions.firestore
     .onCreate(async (snap, context) => {
       const taskID = context.params.taskID;
       const groupID = context.params.groupID;
+      const groupName = context.params.groupName;
 
       try {
         // Fetch the task document to get task details if necessary
@@ -61,14 +62,15 @@ exports.sendNotificationOnNewTask = functions.firestore
         const grpDoc = await admin.firestore().doc(`Groups/${groupID}`).get();
         const groupData = grpDoc.data();
         const groupTitle = groupData ? groupData.title : "Unknown Group";
-
+        console.log("TopicName: ", groupName);
+        console.log("GroupTitle: ", groupID);
         // Construct the notification message
         const message = {
           notification: {
             title: "New Task",
             body: `${groupTitle}: ${taskTitle}`,
           },
-          topic: groupID, // Use groupID as the topic
+          topic: "Groups", // Use groupID as the topic
         };
 
         // Send the notification

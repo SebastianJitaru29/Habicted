@@ -83,6 +83,11 @@ class RemoteGroupRepository : GroupRepository {
     override suspend fun insertGroup(group: Group): String {
         group.members += auth.currentUser?.uid!!
         group.usersTokens += getCurrentRegistrationToken()
+        if (group.id == null){
+            Log.d("tagGROUPID", "GROUP ID IS NULL")
+        }
+        Log.d("tagGROUPID", "GROUP ID IS ${group.id.toString()}")
+        subscribeToMessagingTopic("Groups")
         // Convert the Group object into a map
         val groupMap = hashMapOf(
             "id" to group.id,
@@ -216,13 +221,14 @@ class RemoteGroupRepository : GroupRepository {
 
     fun subscribeToMessagingTopic(topic: String) {
         Firebase.messaging.subscribeToTopic(topic).addOnCompleteListener { task ->
-            var msg = "Subscribed"
+            var msg = "Subscribed to $topic"
             if (!task.isSuccessful) {
-                msg = "Subscribed Failed"
+                msg = "Subscription to $topic failed: ${task.exception?.message}"
             }
             Log.d("TAG", msg)
         }
     }
+
 
 
     fun updateTasksStatus(
