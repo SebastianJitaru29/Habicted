@@ -1,11 +1,13 @@
 package com.example.habicted_app.screen.invitations
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -36,7 +38,7 @@ import com.example.habicted_app.data.model.InvitationStatus
 @Composable
 fun NotificationScreen(
     modifier: Modifier = Modifier,
-    reload: () -> Unit,
+    reload: (() -> Unit) -> Unit,
     invitations: List<Invitation>,
     onAccept: (Invitation) -> Unit,
     onDecline: (Invitation) -> Unit,
@@ -51,8 +53,8 @@ fun NotificationScreen(
         val state = rememberPullToRefreshState()
         if (state.isRefreshing) {
             LaunchedEffect(true) {
-                reload()
-                state.endRefresh()
+                reload { state.endRefresh() }
+                Log.d("NotificationScreen", "Refreshing")
             }
         }
         Box(
@@ -61,12 +63,25 @@ fun NotificationScreen(
                 .padding(it)
         ) {
             LazyColumn {
-                items(invitations) { invitation ->
-                    NotificationCard(
-                        invitation = invitation,
-                        onAccept = { onAccept(invitation) },
-                        onDecline = { onDecline(invitation) },
-                    )
+                if (invitations.isEmpty()) {
+                    item {
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp),
+                            text = "No invitations",
+                            style = MaterialTheme.typography.bodyLarge,
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        )
+                    }
+                } else {
+                    items(invitations) { invitation ->
+                        NotificationCard(
+                            invitation = invitation,
+                            onAccept = { onAccept(invitation) },
+                            onDecline = { onDecline(invitation) },
+                        )
+                    }
                 }
             }
             PullToRefreshContainer(
@@ -74,11 +89,7 @@ fun NotificationScreen(
                 state = state,
             )
         }
-
-
     }
-
-
 }
 
 @Composable
@@ -154,7 +165,7 @@ private fun prev() {
         ),
         onAccept = {},
         onDecline = {},
-        reload = {}
+        reload = { }
     )
 
 }

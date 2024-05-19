@@ -1,5 +1,6 @@
 package com.example.habicted_app.screen.invitations
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.habicted_app.data.model.Invitation
 import com.example.habicted_app.data.repository.remote.InvitationRepository
@@ -16,9 +17,11 @@ class NotificationsViewModel @Inject constructor(
     private val _invitationsList = MutableStateFlow<List<Invitation>>(emptyList())
     val invitationsList = _invitationsList.asStateFlow()
 
-    fun fetchInvitations() {
+    fun fetchInvitations(onFinish: () -> Unit) {
         invitationRepository.fetchInvitations { invitations ->
             _invitationsList.value = invitations
+            Log.d("NotificationsViewModel", "Invitations fetched")
+            onFinish()
         }
     }
 
