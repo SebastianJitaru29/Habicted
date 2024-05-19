@@ -4,7 +4,7 @@ List of possible ideas that could be implemented into this project:
 
 # Global
 - [ ] Fix animations of navbar navigation. Currently is random (?)
-- [ ] 🔸 Ask for Notification permissions
+- [x] 🔸 Ask for Notification permissions
 - [x] 🔸 🔥 Add media upload and download
 - [x] 🔸 🔥 Add push notifications with Firebase Cloud Messaging and Firebase Cloud Functions.
   - [x] Notification for new task
@@ -14,7 +14,7 @@ List of possible ideas that could be implemented into this project:
 # Access screens
 - [x] 🔸 🔥 Add Firebase Auth
   - [x] keep user logged in.
-  - [ ] Login using Google
+  - [x] Login using Google
 - [X] Validate inputs of email/passwords
 - [X] Add show password button
 ## Register screen
@@ -27,7 +27,7 @@ List of possible ideas that could be implemented into this project:
 - [ ] Button to go back to today
 - [ ] Date picker on click of selected date text 
 ## Tasks list
-- [ ] 🔸 Update task status to Firebase
+- [x] 🔸 Update task status to Firebase
 - [ ] Apply new design for tasks card
 - [ ] Show details of task when click
 - [ ] ❓ Pre-screen/alert when confirm a task with biometric 
