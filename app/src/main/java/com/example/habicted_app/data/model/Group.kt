@@ -18,6 +18,7 @@ data class Group(
         (document.get("color") as Long).toULong(),
         document.get("members") as List<String>,
         document.get("tasksList") as List<Task>,
-        document.get("usersTokens") as List<String>,
+//        document.get("usersTokens") as List<String>,
+        usersTokens = emptyList()
     )
 }

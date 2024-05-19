@@ -65,14 +65,6 @@ class RemoteGroupRepository : GroupRepository {
         return group
     }
 
-    fun getCurrentRegistrationToken():String {
-        var token = ""
-        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                Log.d("TAG1","fetching token failed", task.exception)
-                return@addOnCompleteListener
-            }
-            token = task.result
     override suspend fun addUserToGroup(groupId: String) {
         val userId = auth.currentUser?.uid ?: return
         // Add the user to the group's members array
@@ -82,16 +74,28 @@ class RemoteGroupRepository : GroupRepository {
             .update("groupsIDs", FieldValue.arrayUnion(groupId))
     }
 
+    fun getCurrentRegistrationToken(): String {
+        var token = ""
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.d("TAG1", "fetching token failed", task.exception)
+                return@addOnCompleteListener
+            }
+            token = task.result
+
+
+
 
             Log.d("TAG", "getCurrentRegistrationToken: $token")
         }
         Log.d("TAG3", "getCurrentRegistrationToken: $token")
         return token
     }
+
     override suspend fun insertGroup(group: Group): String {
         group.members += auth.currentUser?.uid!!
         group.usersTokens += getCurrentRegistrationToken()
-        if (group.id == null){
+        if (group.id == null) {
             Log.d("tagGROUPID", "GROUP ID IS NULL")
         }
         Log.d("tagGROUPID", "GROUP ID IS ${group.id.toString()}")
@@ -236,7 +240,6 @@ class RemoteGroupRepository : GroupRepository {
             Log.d("TAG", msg)
         }
     }
-
 
 
     fun updateTasksStatus(
