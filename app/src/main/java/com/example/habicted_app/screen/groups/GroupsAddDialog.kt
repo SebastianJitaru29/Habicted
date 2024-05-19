@@ -63,7 +63,13 @@ fun GroupAddDialog(
                         text = "Add members to the group:",
                         style = MaterialTheme.typography.titleMedium
                     )
-                    Icon(imageVector = Icons.Filled.PersonAdd, contentDescription = "icon")
+                    Icon(
+                        imageVector = Icons.Filled.PersonAdd,
+                        contentDescription = "icon",
+                      //  modifier = Modifier.clickable {
+                        //    viewModel.fetchAllUsers()
+                        //}
+                    )
                 }
                 item {
                     // Color pick boxes

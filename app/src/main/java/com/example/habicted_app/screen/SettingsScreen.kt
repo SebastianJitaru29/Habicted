@@ -87,7 +87,7 @@ fun SettingsScreen(mainViewModel: MainViewModel, modifier: Modifier = Modifier) 
                     Button(
                         onClick = { mainViewModel.launchFunction() },
                     ) {
-                        Text(text = "Launch Cloud Function")
+                        Text(text = "Set maximum group number ")
                     }
                 }
             }
