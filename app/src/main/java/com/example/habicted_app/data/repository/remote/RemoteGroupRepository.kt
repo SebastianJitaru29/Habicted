@@ -29,7 +29,6 @@ class RemoteGroupRepository : GroupRepository {
         null
     }
 
-
     @Module
     @InstallIn(SingletonComponent::class)
     object RepositoryModule {
@@ -74,6 +73,15 @@ class RemoteGroupRepository : GroupRepository {
                 return@addOnCompleteListener
             }
             token = task.result
+    override suspend fun addUserToGroup(groupId: String) {
+        val userId = auth.currentUser?.uid ?: return
+        // Add the user to the group's members array
+        groupCollection?.document(groupId)?.update("members", FieldValue.arrayUnion(userId))
+            ?.await()
+        db.collection("users").document(userId)
+            .update("groupsIDs", FieldValue.arrayUnion(groupId))
+    }
+
 
             Log.d("TAG", "getCurrentRegistrationToken: $token")
         }

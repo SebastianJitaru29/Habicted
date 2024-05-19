@@ -22,6 +22,7 @@ fun TasksRoute(
     tasksList: List<Task>,
     onEvent: (HomeUiEvents) -> Unit,
     onProfileClick: () -> Unit,
+    onNotifications: () -> Unit,
     onTaskUIEvents: (TaskUIEvents) -> TaskUIState?,
 ) {
     val viewModel: UserViewModel = viewModel(factory = UserViewModel.Factory)
@@ -32,6 +33,7 @@ fun TasksRoute(
         selectedDate = selectedDate,
         username = username,
         profilePicture = profileId,
+        onNotifications = onNotifications,
         onProfilePic = onProfileClick,
         tasksList = tasksList,
         onEvent = onEvent,

@@ -13,4 +13,7 @@ interface GroupRepository {
     suspend fun addTaskToGroup(task: Task, groupId: String)
 
     suspend fun getUserGroups(): List<Group>
+    suspend fun addUserToGroup(groupId: String) {
+
+    }
 }
