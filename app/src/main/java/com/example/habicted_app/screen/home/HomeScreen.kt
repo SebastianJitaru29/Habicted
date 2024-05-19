@@ -152,7 +152,8 @@ fun NavFloatingActionButton(
                                 name = name,
                                 color = color.value,
                                 members = members, // TODO
-                                tasksList = emptyList()
+                                tasksList = emptyList(),
+                                usersTokens = emptyList(),
                             )
                         )
                     )

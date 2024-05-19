@@ -10,6 +10,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.messaging
 import dagger.Module
 import dagger.Provides
@@ -65,16 +66,31 @@ class RemoteGroupRepository : GroupRepository {
         return group
     }
 
+    fun getCurrentRegistrationToken():String {
+        var token = ""
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.d("TAG1","fetching token failed", task.exception)
+                return@addOnCompleteListener
+            }
+            token = task.result
 
+            Log.d("TAG", "getCurrentRegistrationToken: $token")
+        }
+        Log.d("TAG3", "getCurrentRegistrationToken: $token")
+        return token
+    }
     override suspend fun insertGroup(group: Group): String {
         group.members += auth.currentUser?.uid!!
+        group.usersTokens += getCurrentRegistrationToken()
         // Convert the Group object into a map
         val groupMap = hashMapOf(
             "id" to group.id,
             "name" to group.name,
             "color" to group.color.toLong(),
             "members" to group.members,
-            "tasksList" to group.tasksList
+            "tasksList" to group.tasksList,
+            "usersTokens" to group.usersTokens
         )
 
         // Add the group document to Firestore associated with the current user

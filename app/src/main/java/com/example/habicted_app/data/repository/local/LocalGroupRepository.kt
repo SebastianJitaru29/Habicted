@@ -46,7 +46,8 @@ class LocalGroupRepository : GroupRepository {
                     doneBy = 1,
                     total = 2,
                 ),
-            )
+            ),
+            usersTokens = emptyList(),
         ),
         Group(
             id = "",
@@ -54,6 +55,7 @@ class LocalGroupRepository : GroupRepository {
             members = listOf(""),
             color = Amber500.value,
             tasksList = emptyList(),
+            usersTokens = emptyList(),
         )
     )
 

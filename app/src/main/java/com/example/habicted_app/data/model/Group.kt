@@ -8,13 +8,16 @@ data class Group(
     val color: ULong = 0xFF000000u,
     var members: List<String>,
     val tasksList: List<Task>,
+    var usersTokens: List<String>,
 ) {
-    constructor() : this("", "", 0xFF000000u, emptyList(), emptyList())
+
+    constructor() : this("", "", 0xFF000000u, emptyList(), emptyList(), emptyList())
     constructor(document: DocumentSnapshot) : this(
         document.id,
         document.get("name") as String,
         (document.get("color") as Long).toULong(),
         document.get("members") as List<String>,
-        document.get("tasksList") as List<Task>
+        document.get("tasksList") as List<Task>,
+        document.get("usersTokens") as List<String>,
     )
 }

@@ -225,10 +225,10 @@ private fun DatePicker() {
 private fun GroupSelectorPrev() {
     GroupSelect(
         userGroups = listOf(
-            Group("", "Group 1", 0u, emptyList(), emptyList()),
-            Group("", "Group 2", 0u, emptyList(), emptyList()),
-            Group("", "Group 3", 0u, emptyList(), emptyList()),
-            Group("", "Group 4", 0u, emptyList(), emptyList()),
+            Group("", "Group 1", 0u, emptyList(), emptyList(), emptyList()),
+            Group("", "Group 2", 0u, emptyList(), emptyList(),emptyList()),
+            Group("", "Group 3", 0u, emptyList(), emptyList(),emptyList()),
+            Group("", "Group 4", 0u, emptyList(), emptyList(),emptyList()),
         ),
         selectedGroup = null,
         onGroupChange = { },

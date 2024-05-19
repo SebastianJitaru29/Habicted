@@ -371,7 +371,8 @@ fun GroupScreenPreview() {
                     total = 2,
                 ),
             ),
-            members = emptyList()
+            members = emptyList(),
+            usersTokens = emptyList(),
         ),
         Group(
             id = "",
@@ -401,7 +402,8 @@ fun GroupScreenPreview() {
                     total = 2,
                 ),
             ),
-            members = emptyList()
+            members = emptyList(),
+            usersTokens = emptyList(),
         ),
     )
     GroupScreen(groupList = groupList)

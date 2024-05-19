@@ -67,7 +67,7 @@ class MainViewModel @Inject constructor(
     fun getCurrentRegistrationToken() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
             if (!task.isSuccessful) {
-                Log.d("TAG1","Getching token failed", task.exception)
+                Log.d("TAG1","fetching token failed", task.exception)
                 return@addOnCompleteListener
             }
             val token = task.result
