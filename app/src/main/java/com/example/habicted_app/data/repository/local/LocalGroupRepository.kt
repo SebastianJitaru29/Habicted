@@ -4,7 +4,6 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.habicted_app.data.model.Group
 import com.example.habicted_app.data.model.Task
-import com.example.habicted_app.data.model.User
 import com.example.habicted_app.data.repository.GroupRepository
 import com.example.habicted_app.ui.theme.Amber500
 import com.example.habicted_app.ui.theme.Red500
@@ -22,9 +21,7 @@ class LocalGroupRepository : GroupRepository {
         Group(
             id = "",
             name = "Group 1",
-            members = listOf(
-                User(1, "", "", "", emptyList()),
-            ),
+            members = listOf(""),
             color = Red500.value,
             tasksList = listOf(
                 Task(
@@ -54,9 +51,7 @@ class LocalGroupRepository : GroupRepository {
         Group(
             id = "",
             name = "Group 2",
-            members = listOf(
-                User(1, "User1", "", "", emptyList()),
-            ),
+            members = listOf(""),
             color = Amber500.value,
             tasksList = emptyList(),
         )

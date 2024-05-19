@@ -67,6 +67,7 @@ class RemoteGroupRepository : GroupRepository {
 
 
     override suspend fun insertGroup(group: Group): String {
+        group.members += auth.currentUser?.uid!!
         // Convert the Group object into a map
         val groupMap = hashMapOf(
             "id" to group.id,
@@ -78,6 +79,7 @@ class RemoteGroupRepository : GroupRepository {
 
         // Add the group document to Firestore associated with the current user
         val documentId = groupCollection?.add(groupMap)?.await()
+        // Update the user document with the new group's ID and the group itself
         if (documentId != null) {
             group.id = documentId.id
             groupMap["id"] = documentId.id

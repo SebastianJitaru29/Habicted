@@ -120,6 +120,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun updateTaskStatus(status: Boolean, task: Task) {
+        // TODO: Update the task doneBy +1
         val updatedTask = task.copy(isDone = status)
         if (groupRepository is RemoteGroupRepository) {
             viewModelScope.launch {

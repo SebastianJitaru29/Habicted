@@ -6,7 +6,7 @@ data class Group(
     var id: String,
     val name: String,
     val color: ULong = 0xFF000000u,
-    val members: List<User>,
+    var members: List<String>,
     val tasksList: List<Task>,
 ) {
     constructor() : this("", "", 0xFF000000u, emptyList(), emptyList())
@@ -14,7 +14,7 @@ data class Group(
         document.id,
         document.get("name") as String,
         (document.get("color") as Long).toULong(),
-        document.get("members") as List<User>,
+        document.get("members") as List<String>,
         document.get("tasksList") as List<Task>
     )
 }

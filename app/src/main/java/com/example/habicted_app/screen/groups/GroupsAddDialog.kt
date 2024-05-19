@@ -29,17 +29,16 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.habicted_app.data.model.User
 import com.example.habicted_app.ui.theme.allColors
 
 @Composable
 fun GroupAddDialog(
     onDismiss: () -> Unit,
-    onConfirm: (String, Color, List<User>) -> Unit,
+    onConfirm: (String, Color, List<String>) -> Unit,
 ) {
     // Do state hoisting ?
     var name by rememberSaveable { mutableStateOf("") }
-    val members by rememberSaveable { mutableStateOf(listOf<User>()) }
+    val members by rememberSaveable { mutableStateOf(listOf<String>()) }
     var color by remember { mutableStateOf(Color.Transparent) }
     var isExpanded by remember { mutableStateOf(false) }
 
@@ -66,7 +65,7 @@ fun GroupAddDialog(
                     Icon(
                         imageVector = Icons.Filled.PersonAdd,
                         contentDescription = "icon",
-                      //  modifier = Modifier.clickable {
+                        //  modifier = Modifier.clickable {
                         //    viewModel.fetchAllUsers()
                         //}
                     )

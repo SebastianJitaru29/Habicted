@@ -3,11 +3,10 @@ package com.example.habicted_app.screen.groups
 import androidx.compose.ui.graphics.Color
 import com.example.habicted_app.data.model.Group
 import com.example.habicted_app.data.model.Task
-import com.example.habicted_app.data.model.User
 
 data class GroupUIState(
     val name: String = "",
-    val members: List<User> = emptyList(),
+    val members: List<String> = emptyList(),
     val color: Color = Color.Transparent,
     val tasks: List<Task> = emptyList(),
     val isInStreak: Boolean = false,

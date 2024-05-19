@@ -23,6 +23,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.filled.Today
@@ -268,7 +269,7 @@ fun GroupCalendarItem(
                 when (allTasksTotal) {
                     0 -> {
                         Icon(
-                            imageVector = Icons.Default.Timer,
+                            imageVector = Icons.Default.Check,
                             contentDescription = "No tasks done",
                             modifier = Modifier.align(Alignment.CenterHorizontally)
                         )
@@ -293,8 +294,11 @@ fun GroupCalendarItem(
                 }
 
             }
+            val displayText =
+                if (allTasksTotal == 0) "" else allTasksDone.toString().plus("/")
+                    .plus(allTasksTotal)
             Text(
-                text = allTasksDone.toString().plus("/").plus(allTasksTotal),
+                text = displayText,
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 style = MaterialTheme.typography.bodySmall
             )
