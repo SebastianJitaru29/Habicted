@@ -64,6 +64,15 @@ class RemoteGroupRepository : GroupRepository {
         return group
     }
 
+    override suspend fun addUserToGroup(groupId: String) {
+        val userId = auth.currentUser?.uid ?: return
+        // Add the user to the group's members array
+        groupCollection?.document(groupId)?.update("members", FieldValue.arrayUnion(userId))
+            ?.await()
+        db.collection("users").document(userId)
+            .update("groupsIDs", FieldValue.arrayUnion(groupId))
+    }
+
 
     override suspend fun insertGroup(group: Group): String {
         group.members += auth.currentUser?.uid!!
