@@ -147,24 +147,42 @@ class RemoteGroupRepository : GroupRepository {
 
     override suspend fun getUserGroups(): List<Group> {
         val userId = auth.currentUser?.uid ?: return emptyList()
+
+        // Reference to the user document
+        val userDocumentRef = db.collection("users").document(userId)
+        val userDocumentSnapshot = userDocumentRef.get().await()
+
+        // If the user document doesn't exist, create one with default values
+        if (!userDocumentSnapshot.exists()) {
+            val defaultData = hashMapOf(
+                "groupsIDs" to listOf<String>() // You can add other default fields here
+            )
+            userDocumentRef.set(defaultData).await()
+            return emptyList() // Return empty list since the user just got created
+        }
+
         // Retrieve the groupsIDs array from the user document
-        val groupsIDs = db.collection("users").document(auth.currentUser?.uid!!)
-            .get().await().get("groupsIDs") as? List<*> ?: return emptyList()
+        val groupsIDs = userDocumentSnapshot.get("groupsIDs") as? List<*> ?: return emptyList()
 
         val groupList = mutableListOf<Group>()
 
-
         // For each groupId in the groupsIDs array, retrieve the corresponding group document
         for (groupId in groupsIDs) {
-            val documentSnapshot =
-                db.collection("Groups").document(groupId.toString()).get().await()
-            val group = Group(documentSnapshot)
-            groupList.add(group)
+            val groupIdStr = groupId.toString()
+            if (groupIdStr.isNotEmpty()) {
+                val documentSnapshot = db.collection("Groups").document(groupIdStr).get().await()
+                if (documentSnapshot.exists()) {
+                    val group = Group(documentSnapshot)
+                    groupList.add(group)
+                }
+            }
         }
 
         Log.d("RemoteGroupRepository", "getUserGroups: $groupList")
         return groupList
     }
+
+
 
     fun updateTasksStatus(task: Task) {
         val taskRef = groupCollection
