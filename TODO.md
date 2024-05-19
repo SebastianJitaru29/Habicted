@@ -48,7 +48,6 @@ List of possible ideas that could be implemented into this project:
 
 ---
 # Settings Screen
-- [ ] 🔥 Load and save preferences to Firebase (No need to do this)
 - [ ] 🔸 Add app releated preference
 - [x] 🔸 Sync user network preference with app conections.
 
