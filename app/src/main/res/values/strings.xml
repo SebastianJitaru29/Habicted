@@ -22,4 +22,5 @@
     <string name="password_must_be_at_least_6_characters_longg">Password must be at least 6 characters long.</string>
     <string name="password_cannot_be_empty">Password cannot be empty.</string>
     <string name="webIDGoogleSignIn">908053663135-4b44ritaqfu9387ojmfakladphquo4ve.apps.googleusercontent.com</string>
+    <string name="googlesignin">Sign in with Google\n</string>
 </resources>
