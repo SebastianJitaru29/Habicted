@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -20,19 +21,28 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.filled.Today
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -57,6 +67,7 @@ import com.example.habicted_app.data.model.Task
 import com.example.habicted_app.screen.taskscreen.calendar.CalendarData
 import com.example.habicted_app.screen.taskscreen.calendar.CalendarDataSource
 import com.example.habicted_app.ui.styling.ColorPalette
+import com.example.habicted_app.ui.theme.Green500
 import com.example.habicted_app.ui.theme.Red500
 import com.example.habicted_app.ui.theme.onPrimaryLight
 import java.time.LocalDate
@@ -66,7 +77,10 @@ import java.time.LocalDate
 fun GroupScreen(
     modifier: Modifier = Modifier,
     groupList: List<Group>,
+    searchUsersByEmail: (String, (List<String>) -> Unit) -> List<String>,
 ) {
+    val showSheet = remember { mutableStateOf(false) }
+    val clickedGroup = remember { mutableStateOf(Group()) }
     Column {
         // TODO: Move to topbar in scaffold ?
         Row(
@@ -91,7 +105,107 @@ fun GroupScreen(
                     modifier = modifier.padding(8.dp),
                     groupUIState = GroupUIState(group),
                     todayDate = LocalDate.now(),
-                    expandedInitialValue = false
+                    expandedInitialValue = false,
+                    onInviteClick = {
+                        showSheet.value = true
+                        clickedGroup.value = group
+                    }
+                )
+            }
+        }
+
+        if (showSheet.value) {
+            BottomSheet(
+                group = clickedGroup.value,
+                onDismiss = {
+                    showSheet.value = false
+                },
+                searchUsersByEmail = searchUsersByEmail
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BottomSheet(
+    modifier: Modifier = Modifier,
+    group: Group,
+    onDismiss: () -> Unit = {},
+    searchUsersByEmail: (String, (List<String>) -> Unit) -> List<String>,
+) {
+    val modalBottomSheet = rememberModalBottomSheetState()
+    var searchQuery by remember { mutableStateOf("") }
+    var searchResults by remember { mutableStateOf(listOf<String>()) }
+
+    ModalBottomSheet(
+        modifier = Modifier
+            .fillMaxSize(),
+        onDismissRequest = onDismiss
+    ) {
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            OutlinedTextField(
+                value = searchQuery,
+                singleLine = true,
+                onValueChange = { newValue ->
+                    searchQuery = newValue
+                    searchResults = searchUsersByEmail(searchQuery) {
+                        searchResults = it
+                    }
+                },
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Outlined.Search,
+                        contentDescription = "Invite",
+                    )
+                },
+                label = { Text("Search by email") },
+                modifier = Modifier.fillMaxWidth()
+            )
+            LazyColumn {
+                items(searchResults) { email ->
+                    UserSearchResultCard(email = email, onInvite = {})
+                }
+            }
+        }
+    }
+
+}
+
+@Composable
+fun UserSearchResultCard(modifier: Modifier = Modifier, email: String, onInvite: () -> Unit) {
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        onClick = { /*TODO*/ }
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(imageVector = Icons.Default.Person, contentDescription = "User")
+            Text(
+                text = email,
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(
+                    imageVector = Icons.Default.Check,
+                    contentDescription = "Add User",
+                    tint = Color.White,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .background(
+                            color = Green500,
+                            shape = CircleShape
+                        )
                 )
             }
         }
@@ -106,6 +220,7 @@ fun GroupCard(
     groupUIState: GroupUIState,
     todayDate: LocalDate,
     expandedInitialValue: Boolean = false,
+    onInviteClick: () -> Unit = {},
 ) {
     Log.d("GroupColor", "GrouColor: ${groupUIState.color}")
     var expanded by rememberSaveable { mutableStateOf(expandedInitialValue) }
@@ -141,13 +256,22 @@ fun GroupCard(
                         fontFamily = MaterialTheme.typography.headlineMedium.fontFamily
                     )
                 }
+                Spacer(modifier = Modifier.weight(1f))
+                if (expanded)
+                    Invite(color = groupUIState.color, onClick = onInviteClick)
 
             }
 
             if (expanded) {
                 val dataSource = CalendarDataSource()
                 // we use `mutableStateOf` and `remember` inside composable function to schedules recomposition
-                val calendarUiModel by remember { mutableStateOf(dataSource.getData(lastSelectedDate = dataSource.today)) }
+                val calendarUiModel by remember {
+                    mutableStateOf(
+                        dataSource.getData(
+                            lastSelectedDate = dataSource.today
+                        )
+                    )
+                }
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -165,6 +289,26 @@ fun GroupCard(
         }
     }
 
+}
+
+@Composable
+fun Invite(color: Color, onClick: () -> Unit) {
+    Icon(
+        imageVector = Icons.Outlined.Add,
+        contentDescription = "Invite",
+        modifier = Modifier
+            .size(50.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .border(
+                width = 1.dp,
+                color = Color.White,
+                shape = RoundedCornerShape(10.dp)
+            )
+            .background(color)
+            .padding(10.dp)
+            .clickable { onClick() },
+        tint = Color.White
+    )
 }
 
 
@@ -404,7 +548,9 @@ fun GroupScreenPreview() {
             members = emptyList()
         ),
     )
-    GroupScreen(groupList = groupList)
+    GroupScreen(groupList = groupList, searchUsersByEmail = { _, _ ->
+        emptyList()
+    })
 }
 
 

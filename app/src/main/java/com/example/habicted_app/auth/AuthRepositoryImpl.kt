@@ -3,6 +3,8 @@ package com.example.habicted_app.auth
 import com.example.habicted_app.auth.data.AuthRepository
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -16,6 +18,8 @@ class AuthRepositoryImpl @Inject constructor(
         return flow {
             emit(Resource.Loading())
             val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
+            Firebase.firestore.collection("users").document(result.user!!.uid)
+                .set(hashMapOf("email" to email)).await()
             emit(Resource.Success(result))
         }.catch {
             emit(Resource.Error(it.message.toString()))
@@ -26,6 +30,8 @@ class AuthRepositoryImpl @Inject constructor(
         return flow {
             emit(Resource.Loading())
             val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
+            Firebase.firestore.collection("users").document(result.user!!.uid)
+                .set(hashMapOf("email" to email)).await()
             emit(Resource.Success(result))
         }.catch {
             emit(Resource.Error(it.message.toString()))

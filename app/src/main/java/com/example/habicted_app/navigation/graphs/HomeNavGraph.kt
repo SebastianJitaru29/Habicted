@@ -33,8 +33,8 @@ import java.time.LocalDate
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeNavGraph(
-    navController: NavHostController = rememberNavController(),
     modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController(),
     selectedDate: LocalDate,
     taskList: State<List<Task>>,
     groupsList: State<List<Group>>,
