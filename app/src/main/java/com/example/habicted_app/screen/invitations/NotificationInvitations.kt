@@ -78,8 +78,14 @@ fun NotificationScreen(
                     items(invitations) { invitation ->
                         NotificationCard(
                             invitation = invitation,
-                            onAccept = { onAccept(invitation) },
-                            onDecline = { onDecline(invitation) },
+                            onAccept = {
+                                onAccept(invitation)
+                                state.startRefresh()
+                            },
+                            onDecline = {
+                                onDecline(invitation)
+                                state.startRefresh()
+                            },
                         )
                     }
                 }
