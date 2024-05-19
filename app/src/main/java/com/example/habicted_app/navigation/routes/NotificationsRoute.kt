@@ -13,6 +13,7 @@ fun NotificationsRoute(modifier: Modifier = Modifier) {
     NotificationScreen(
         invitations = viewModel.invitationsList.value,
         onAccept = viewModel::acceptInvitation,
-        onDecline = viewModel::declineInvitation
+        onDecline = viewModel::declineInvitation,
+        reload = viewModel::fetchInvitations,
     )
 }
